@@ -7,8 +7,6 @@
     android:layout_height="match_parent"
     tools:context="it.uniba.di.sms.carpooling.SplashActivity">
     
-    <ImageView
-        android:layout_width=""
-        android:layout_height="" />
+
 
 </android.support.constraint.ConstraintLayout>
