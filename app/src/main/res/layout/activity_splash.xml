@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:contentDescription="@string/img_splash"
+        android:contentDescription="@string/immaginesplash"
         android:src="@mipmap/ic_launcher3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

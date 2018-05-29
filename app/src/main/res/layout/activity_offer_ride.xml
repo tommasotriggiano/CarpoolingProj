@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="it.uniba.di.sms.carpooling.OfferRideActivity">
+
+    <TextView
+        android:id="@+id/casa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/casa"
+        android:layout_marginTop="24dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lavoro"
+        android:text="@string/lavoro"
+        android:layout_toRightOf="@id/casa"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="50dp" />
+
+    <TextView
+        android:id="@+id/data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/data"
+        android:layout_below="@+id/casa"
+        android:layout_marginTop="24dp"
+        android:layout_alignParentLeft="true" />
+</RelativeLayout>
