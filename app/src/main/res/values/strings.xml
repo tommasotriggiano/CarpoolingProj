@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name" translatable="false">Carpooling</string>
+    <string name="data">Date </string>
+    <string name="casa">Home</string>
+    <string name="lavoro">Work</string>
+    <string name="immaginesplash">imageSplash</string>
 
-    <string name="title_activity_fullscreen2">FullscreenActivity2</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+
 </resources>
