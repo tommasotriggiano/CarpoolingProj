@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name" translatable="false">Carpooling</string>
-    <string name="img_splash">img_car</string>
+    <string name="data">Date </string>
+    <string name="casa">Home</string>
+    <string name="lavoro">Work</string>
+    <string name="immaginesplash">imageSplash</string>
+
+
 
 </resources>

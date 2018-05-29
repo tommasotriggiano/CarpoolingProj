@@ -30,4 +30,15 @@
         android:layout_below="@+id/casa"
         android:layout_marginTop="24dp"
         android:layout_alignParentLeft="true" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/data"
+        android:layout_alignBottom="@+id/data"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="date" />
+
 </RelativeLayout>
