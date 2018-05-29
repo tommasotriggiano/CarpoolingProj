@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Carpooling</string>
+    <string name="img_splash">img_car</string>
 
 </resources>
