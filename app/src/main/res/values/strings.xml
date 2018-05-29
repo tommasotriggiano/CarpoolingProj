@@ -1,10 +1,20 @@
 <resources>
-    <string name="app_name" translatable="false">Carpooling</string>
+    <string name="app_name">Carpooling</string>
     <string name="data">Date </string>
     <string name="casa">Home</string>
     <string name="lavoro">Work</string>
     <string name="immaginesplash">imageSplash</string>
-
+    <string name="etUsername">Username</string>
+    <string name="etName">Username</string>
+    <string name="etUserEmail">E-mail</string>
+    <string name="etUserPassword">Password</string>
+    <string name="btnRegister">Create new account</string>
+    <string name="Welcome">Welcome back!</string>
+    <string name="Welcome2">Let\'s get started!</string>
+    <string name="tvUserLogin">Login</string>
+    <string name="Register">Aren\'t you registered?</string>
+    <string name="Login">Are you registered yet?</string>
+    <string name="Register2">Sign up now</string>
 
 
 </resources>

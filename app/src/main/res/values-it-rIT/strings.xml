@@ -5,5 +5,16 @@
     <string name="casa">Casa </string>
     <string name="lavoro">Lavoro</string>
     <string name="immaginesplash">ImmagineSplash</string>
+    <string name="etUsername">Username</string>
+    <string name="etName">Username</string>
+    <string name="etUserEmail">E-mail</string>
+    <string name="etUserPassword">Password</string>
+    <string name="btnRegister">Registra</string>
+    <string name="Welcome">Bentornato!</string>
+    <string name="Welcome2">Let\'s get started</string>
+    <string name="tvUserLogin">Login</string>
+    <string name="Register">Non sei registrato?</string>
+    <string name="Login">Sei già registrato?</string>
+    <string name="Register2">Crea nuovo account</string>
 
 </resources>

@@ -1,9 +1,9 @@
 package it.uniba.di.sms.carpooling;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 
-public class OfferRideActivity extends AppCompatActivity {
+public class OfferRideActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
