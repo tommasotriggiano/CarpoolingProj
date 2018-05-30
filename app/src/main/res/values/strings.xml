@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">Carpooling</string>
-    <string name="data">Date </string>
+    <string name="data">Date</string>
     <string name="casa">Home</string>
+    <string name="partenza">Departure\'s Hour</string>
     <string name="lavoro">Work</string>
+    <string name="giorno">Day of week</string>
     <string name="immaginesplash">imageSplash</string>
+    <string name="posti">N. available places</string>
+    <string name="offri">Offer</string>
     <string name="etUsername">Username</string>
     <string name="etName">Username</string>
     <string name="etUserEmail">E-mail</string>
@@ -23,7 +27,6 @@
     <string name="date_button_set">Set Date</string>
     <string name="date_view_set">The Date is: </string>
     <string name="date_selected"></string>
-
 
 
 </resources>

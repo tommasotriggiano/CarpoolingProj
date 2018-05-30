@@ -10,9 +10,9 @@
         android:id="@+id/casa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/button"
+        android:layout_marginLeft="70dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="50dp"
         android:text="@string/casa"
         android:textColor="#000"
         android:textSize="20sp" />
@@ -21,54 +21,40 @@
         android:id="@+id/lavoro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="41dp"
-        android:layout_toEndOf="@+id/button"
+        android:layout_alignTop="@+id/casa"
+        android:layout_toEndOf="@+id/imageView"
         android:text="@string/lavoro"
         android:textColor="#000"
-        android:textSize="20sp"
-        />
+        android:textSize="20sp" />
 
-
-    <Button
-        android:id="@+id/btnSetDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp"
-        android:text="@string/date_button_set" />
-
-
-
-    <TextView
-        android:id="@+id/textData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/btnSetDate"
-        android:layout_below="@+id/btnSetDate"
-        android:layout_marginTop="20dp"
-        android:text="@string/date_selected"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/tvTime"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="14dp"
-        android:onClick="showTimePickerDialog"
-        android:text="Get Time"
-        android:id="@+id/button" />
 
     <TextView
         android:id="@+id/tvTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_alignStart="@+id/textData"
         android:layout_below="@+id/textData"
-        android:layout_marginTop="42dp"
-        android:textSize="18dp" />
+        android:layout_marginTop="37dp"
+        android:background="?attr/editTextBackground"
+        android:drawableRight="@drawable/ic_arrow"
+        android:gravity="center_vertical"
+        android:hint="@string/partenza"
+        android:textColor="?attr/editTextColor"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textData"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_alignStart="@+id/casa"
+        android:layout_below="@+id/Invert"
+        android:layout_marginTop="35dp"
+        android:background="?attr/editTextBackground"
+        android:drawableRight="@drawable/ic_arrow"
+        android:gravity="center_vertical"
+        android:hint="@string/data"
+        android:textColor="?attr/editTextColor"
+        android:textSize="20sp" />
 
     <ImageButton
         android:id="@+id/Invert"
@@ -77,29 +63,82 @@
         android:layout_alignBottom="@+id/imageView"
         android:layout_toRightOf="@id/lavoro"
         android:layout_marginLeft="5dp"
+        android:elevation="2dp"
         app:srcCompat="@drawable/ic_action_name" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="2dp"
-        android:layout_alignTop="@+id/lavoro"
+        android:layout_alignTop="@+id/casa"
         android:layout_toEndOf="@+id/casa"
         app:srcCompat="@drawable/ic_arrow_forward" />
 
-    <EditText
-        android:id="@+id/data"
+    <TextView
+        android:id="@+id/textGiorno"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/textData"
+        android:layout_alignStart="@+id/tvTime"
+        android:layout_below="@+id/tvTime"
+        android:layout_marginTop="27dp"
+        android:textSize="20sp"
+        android:hint="@string/giorno" />
+
+    <TextView
+        android:id="@+id/textPosti"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textGiorno"
+        android:layout_below="@+id/textGiorno"
+        android:layout_marginTop="45dp"
+        android:text="@string/posti"
+        android:textSize="20sp"
+        android:textColor="#000"/>
+
+    <ImageButton
+        android:id="@+id/btnMinus"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignTop="@+id/textPosti"
+        android:layout_marginStart="12dp"
+        android:layout_toEndOf="@+id/Invert"
+        app:srcCompat="@drawable/ic_minus"
+        />
+
+    <ImageButton
+        android:id="@+id/btnPlus"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignTop="@+id/textPostiInseriti"
+        android:layout_toEndOf="@+id/textPostiInseriti"
+        app:srcCompat="@drawable/ic_plus" />
+
+
+    <EditText
+        android:id="@+id/textPostiInseriti"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignTop="@+id/btnMinus"
+        android:layout_toEndOf="@+id/btnMinus"
+        android:text="1"
+        android:textSize="20sp"
+        android:gravity="center"
         android:ems="10"
-        android:text="@string/data"
-        android:inputType="none"
-        android:bufferType="editable"
-        android:drawableRight="@drawable/ic_arrow"/>
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/btnOffri"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnMinus"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="31dp"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/offri"
+        android:textSize="20sp"
+        android:textColor="#FFF" />
+
+
 
 
 </RelativeLayout>

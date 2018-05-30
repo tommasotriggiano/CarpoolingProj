@@ -3,6 +3,8 @@
     <string name="app_name">Carpooling</string>
     <string name="data">Data</string>
     <string name="casa">Casa </string>
+    <string name="partenza">Ora di partenza</string>
+    <string name="giorno">Giorno</string>
     <string name="lavoro">Lavoro</string>
     <string name="immaginesplash">ImmagineSplash</string>
     <string name="etUsername">Username</string>
@@ -16,5 +18,8 @@
     <string name="Register">Non sei registrato?</string>
     <string name="Login">Sei già registrato?</string>
     <string name="Register2">Crea nuovo account</string>
+    <string name="posti">N. posti disponibili</string>
+    <string name="offri">Offri</string>
+
 
 </resources>
