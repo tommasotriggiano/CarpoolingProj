@@ -67,10 +67,8 @@ public class LoginActivity extends AppCompatActivity {
                             // there was an error
                             if (password.length() < 6) {
                                 Toast.makeText(getApplicationContext(), "Password is too short!", Toast.LENGTH_SHORT).show();
-                                return;
                             } else {
                                 Toast.makeText(getApplicationContext(), "Authentication failed!", Toast.LENGTH_SHORT).show();
-                                return;
                             }
                         } else {
                             Intent intent = new Intent(LoginActivity.this, OfferRideActivity.class);

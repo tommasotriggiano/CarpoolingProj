@@ -11,7 +11,7 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="213dp"
         android:layout_height="56dp"
-        android:layout_marginBottom="136dp"
+        android:layout_marginBottom="184dp"
         android:layout_marginEnd="86dp"
         android:layout_marginStart="85dp"
         android:background="@color/colorPrimaryDark"
@@ -24,7 +24,7 @@
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="wrap_content"
+        android:layout_width="368dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="80dp"
         android:ems="10"
@@ -33,22 +33,21 @@
         app:layout_constraintBottom_toTopOf="@+id/Reg2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
 
     <EditText
         android:id="@+id/email"
-        android:layout_width="wrap_content"
+        android:layout_width="368dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="84dp"
-        android:layout_marginStart="85dp"
+        android:layout_marginTop="88dp"
         android:ems="10"
         android:hint="@string/etUserEmail"
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@+id/password"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/textView2"
@@ -62,6 +61,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/Messaggio"
+        android:layout_width="215dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="137dp"
+        android:layout_marginEnd="84dp"
+        android:layout_marginStart="85dp"
+        android:layout_marginTop="7dp"
+        android:gravity="center"
+        android:text="@string/Messaggio"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Reg2" />
 
 
 </android.support.constraint.ConstraintLayout>
