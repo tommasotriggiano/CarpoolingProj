@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
@@ -71,14 +72,26 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Authentication failed!", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Intent intent = new Intent(LoginActivity.this, OfferRideActivity.class);
-                            startActivity(intent);
-                            finish();
+                            checkIfEmailVerified();
+
                         }
                     }
                 });
             }
         });
+    }
+    private void checkIfEmailVerified(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user.isEmailVerified()){
+            //user is verified and we can go to the new activity
+            Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
+            Intent success = new Intent(LoginActivity.this,OfferRideActivity.class);
+            startActivity(success);
+        }
+        else{
+            Toast.makeText(LoginActivity.this, "Email is not verified yet", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }
 
