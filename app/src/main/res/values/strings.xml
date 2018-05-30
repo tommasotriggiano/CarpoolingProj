@@ -16,6 +16,8 @@
     <string name="Login">Are you registered yet?</string>
     <string name="Register2">Sign up now</string>
     <string name="Messaggio">By clicking "Create New Account", it will send you a verification email</string>
+    <string name="date_button_set"></string>
+    <string name="date_selected"></string>
 
 
 
