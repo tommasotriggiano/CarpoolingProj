@@ -58,11 +58,12 @@
 
     <ImageButton
         android:id="@+id/Invert"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_alignBottom="@+id/imageView"
-        android:layout_toRightOf="@id/lavoro"
-        android:layout_marginLeft="5dp"
+        android:layout_toEndOf="@+id/lavoro"
+        android:layout_marginLeft="10dp"
+        android:background="@android:color/transparent"
         android:elevation="2dp"
         app:srcCompat="@drawable/ic_action_name" />
 
@@ -80,9 +81,9 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/tvTime"
         android:layout_below="@+id/tvTime"
-        android:layout_marginTop="27dp"
-        android:textSize="20sp"
-        android:hint="@string/giorno" />
+        android:layout_marginTop="37dp"
+        android:hint="@string/giorno"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/textPosti"
@@ -99,45 +100,47 @@
         android:id="@+id/btnMinus"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_alignTop="@+id/textPosti"
-        android:layout_marginStart="12dp"
-        android:layout_toEndOf="@+id/Invert"
-        app:srcCompat="@drawable/ic_minus"
-        />
+        android:layout_above="@+id/btnOffri"
+        android:layout_toEndOf="@+id/textPosti"
+        android:layout_marginLeft="5dp"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/ic_minus" />
 
     <ImageButton
         android:id="@+id/btnPlus"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_alignTop="@+id/textPostiInseriti"
+        android:layout_alignTop="@+id/btnMinus"
         android:layout_toEndOf="@+id/textPostiInseriti"
+        android:background="@android:color/transparent"
         app:srcCompat="@drawable/ic_plus" />
 
 
     <EditText
         android:id="@+id/textPostiInseriti"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignTop="@+id/btnMinus"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btnPlus"
         android:layout_toEndOf="@+id/btnMinus"
-        android:text="1"
-        android:textSize="20sp"
-        android:gravity="center"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         android:ems="10"
-        android:inputType="number" />
+        android:gravity="center"
+        android:inputType="number"
+        android:text="1"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/btnOffri"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnMinus"
+        android:layout_below="@+id/textPosti"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp"
         android:background="@color/colorPrimaryDark"
         android:text="@string/offri"
         android:textSize="20sp"
         android:textColor="#FFF" />
-
 
 
 
