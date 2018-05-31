@@ -10,6 +10,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
@@ -32,7 +33,7 @@ public class OfferRideActivity extends AppCompatActivity {
     private int year, month, day,hour,minute,dayOfWeek;
     private TextView tvTime;
     private EditText posti;
-
+    private int postiIns;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,15 +51,6 @@ public class OfferRideActivity extends AppCompatActivity {
         dayOfWeek= calendar.get(Calendar.DAY_OF_WEEK);
 
 
-
-       /* Button btnSetDate = (Button) findViewById(R.id.btnSetDate);
-        btnSetDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @SuppressWarnings("deprecation")
-            public void onClick(View view) {
-                showDialog(999);
-            }
-        });*/
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             @SuppressWarnings("deprecation")
@@ -78,27 +70,34 @@ public class OfferRideActivity extends AppCompatActivity {
         ImageButton btnInvert = (ImageButton) findViewById(R.id.Invert);
         btnInvert.setOnClickListener(btnInvertListner);
 
+
+
+        posti=(EditText) findViewById(R.id.textPostiInseriti);
+        postiIns= Integer.parseInt(posti.getText().toString());
+
         ImageButton btnMinus=(ImageButton) findViewById(R.id.btnMinus);
         btnMinus.setOnClickListener(btnMinusListner);
 
         ImageButton btnPlus=(ImageButton) findViewById(R.id.btnPlus);
-        btnMinus.setOnClickListener(btnPlusListner);
+        btnPlus.setOnClickListener(btnPlusListner);
+
     }
+
     public View.OnClickListener btnMinusListner= new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-
-            posti=(EditText) findViewById(R.id.textPostiInseriti);
-            posti.setText((Integer.parseInt(posti.getText().toString())-1)+"");
+            if(postiIns>1){
+                posti.setText((Integer.parseInt(posti.getText().toString())-1)+"");
+                postiIns= Integer.parseInt(posti.getText().toString());
+            }
 
         }
     };
     public View.OnClickListener btnPlusListner= new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-
-            posti=(EditText) findViewById(R.id.textPostiInseriti);
             posti.setText((Integer.parseInt(posti.getText().toString())+1)+"");
+            postiIns= Integer.parseInt(posti.getText().toString());
 
         }
     };
@@ -128,7 +127,11 @@ public class OfferRideActivity extends AppCompatActivity {
             return new DatePickerDialog(this,
                     myDateListener, year, month, day);
         }
-        return new TimePickerDialog(this,myTimeListener, hour, minute, true);
+        if (Locale.getDefault().getLanguage() == "en" ){
+            return new TimePickerDialog(this,myTimeListener, hour, minute, false);
+        }else{
+            return new TimePickerDialog(this,myTimeListener, hour, minute, true);
+        }
     }
 
 

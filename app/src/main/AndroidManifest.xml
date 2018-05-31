@@ -22,7 +22,6 @@
         </activity>
         <activity android:name=".OfferRideActivity" />
         <activity android:name=".RegistrationActivity" />
-        <activity android:name=".RegistrationFormActivity"></activity>
     </application>
 
 </manifest>
