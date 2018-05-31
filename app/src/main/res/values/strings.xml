@@ -6,6 +6,8 @@
     <string name="lavoro">Work</string>
     <string name="giorno">Day of week</string>
     <string name="immaginesplash">imageSplash</string>
+    <string name="cerca">Search</string>
+    <string name="autista">Name and surname driver</string>
     <string name="posti">N. available places</string>
     <string name="offri">Offer</string>
     <string name="etUsername">Username</string>
@@ -20,9 +22,18 @@
     <string name="Login">Are you registered yet?</string>
     <string name="Register2">Sign up now</string>
     <string name="Messaggio">By clicking "Create New Account", it will send you a verification email</string>
-    <string name="date_button_set"></string>
-    <string name="date_selected"></string>
-
+    <string name="Toast1">Enter email!</string>
+    <string name="Toast2">Enter password!</string>
+    <string name="TstPassShort">Password is too short(at least 6 characters)</string>
+    <string name="Authenticationf">Authentication failed</string>
+    <string name="Successful">Login successful</string>
+    <string name="NotVerified">Email is not verified yet</string>
+    <string name="Name">Name</string>
+    <string name="Surname">Surname</string>
+    <string name="Address">Home Address</string>
+    <string name="Company">Company</string>
+    <string name="Phone">Phone Number</string>
+    <string name="Conferma">Account Confirmation</string>
 
 
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,71 +7,104 @@
     tools:context="it.uniba.di.sms.carpooling.RegistrationFormActivity">
 
 
-    <ScrollView
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/Linear"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="46dp"
+            android:layout_marginEnd="142dp"
+            android:layout_marginStart="142dp"
+            android:layout_marginTop="58dp"
+            android:contentDescription="@string/etUsername"
+            android:src="@drawable/ic_portrait_black_24dp"
+            app:layout_constraintBottom_toTopOf="@+id/Nome"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/Nome"
+            android:layout_width="179dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="208dp"
+            android:ems="10"
+            android:hint="@string/Name"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toStartOf="@+id/Cognome"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/Cognome"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="48dp"
+            android:ems="10"
+            android:hint="@string/Surname"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/Nome"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+        <EditText
+            android:id="@+id/Indirizzo"
+            android:layout_width="274dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="100dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/Address"
+            android:inputType="textPostalAddress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Nome" />
+
+        <AutoCompleteTextView
+            android:id="@+id/Azienda"
+            android:layout_width="272dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.089"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Indirizzo" />
+
+        <EditText
+            android:id="@+id/phone"
+            android:layout_width="272dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="100dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:inputType="phone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Azienda" />
+
+        <Button
+            android:id="@+id/button3"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="186dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@color/colorAccent"
+            android:text="@string/Conferma"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phone" />
 
 
-            <EditText
-                android:id="@+id/Nome"
-                android:layout_width="245dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Name"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="16dp" />
+    </android.support.constraint.ConstraintLayout>
 
-            <EditText
-                android:id="@+id/Cognome"
-                android:layout_width="245dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="50dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Name"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="62dp" />
-
-            <EditText
-                android:id="@+id/editText3"
-                android:layout_width="245dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Name"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="108dp" />
-
-            <EditText
-                android:id="@+id/editText4"
-                android:layout_width="245dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Name"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="154dp" />
-
-            <EditText
-                android:id="@+id/editText5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Name" />
-        </LinearLayout>
-    </ScrollView>
-</android.support.constraint.ConstraintLayout>
+</ScrollView>

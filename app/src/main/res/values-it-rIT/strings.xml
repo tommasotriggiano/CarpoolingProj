@@ -10,8 +10,6 @@
     <string name="autista">Nome e Cognome autista</string>
     <string name="posti">N. posti disponibili</string>
     <string name="immaginesplash">ImmagineSplash</string>
-    <string name="etUsername">Username</string>
-    <string name="etName">Username</string>
     <string name="etUserEmail">E-mail</string>
     <string name="etUserPassword">Password</string>
     <string name="btnRegister">Registra</string>
@@ -28,6 +26,11 @@
     <string name="Authenticationf">Autenticazione fallita</string>
     <string name="Successful">Login effettuato con successo</string>
     <string name="NotVerified">L\'email non è stata ancora verificata</string>
-
+    <string name="Name">Nome</string>
+    <string name="Surname">Cognome</string>
+    <string name="Address">Indirizzo di casa</string>
+    <string name="Company">Azienda</string>
+    <string name="Phone">Numero di telefono</string>
+    <string name="Conferma">Conferma account</string>
 
 </resources>
