@@ -11,22 +11,23 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="213dp"
         android:layout_height="56dp"
-        android:layout_marginBottom="184dp"
-        android:layout_marginEnd="86dp"
-        android:layout_marginStart="85dp"
+        android:layout_marginBottom="180dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:background="@color/colorPrimaryDark"
         android:text="@string/Register2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="368dp"
+        android:layout_width="302dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="80dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:ems="10"
         android:hint="@string/etUserPassword"
         android:inputType="textPassword"
@@ -38,8 +39,10 @@
 
     <EditText
         android:id="@+id/email"
-        android:layout_width="368dp"
+        android:layout_width="305dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="88dp"
         android:ems="10"
         android:hint="@string/etUserEmail"
@@ -51,10 +54,10 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="368dp"
+        android:layout_width="296dp"
         android:layout_height="56dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/Welcome2"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
@@ -64,7 +67,7 @@
 
     <TextView
         android:id="@+id/Messaggio"
-        android:layout_width="215dp"
+        android:layout_width="244dp"
         android:layout_height="48dp"
         android:layout_marginBottom="112dp"
         android:layout_marginEnd="84dp"

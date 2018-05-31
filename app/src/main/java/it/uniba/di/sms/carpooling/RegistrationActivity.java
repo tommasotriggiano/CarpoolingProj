@@ -41,17 +41,17 @@ public class RegistrationActivity extends AppCompatActivity {
                 String password = inputPassword.getText().toString().trim();
 
                 if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.Toast1, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.Toast2, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (password.length() < 6) {
-                    Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.TstPassShort, Toast.LENGTH_SHORT).show();
                     return;
                 }
 

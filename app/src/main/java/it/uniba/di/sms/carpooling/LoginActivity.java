@@ -28,11 +28,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
-
-        /*if (mAuth.getCurrentUser() != null) {
-            startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
+        //controls if the user is already logged in
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null){
             finish();
-        }*/
+            startActivity(new Intent(LoginActivity.this,OfferRideActivity.class));
+        }
+
+
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         btnLogin = (Button)findViewById(R.id.Reg2);
@@ -52,12 +55,12 @@ public class LoginActivity extends AppCompatActivity {
                 final String password = inputPassword.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),R.string.Toast1, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.Toast2, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -67,9 +70,9 @@ public class LoginActivity extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             // there was an error
                             if (password.length() < 6) {
-                                Toast.makeText(getApplicationContext(), "Password is too short!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.TstPassShort, Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(getApplicationContext(), "Authentication failed!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.Authenticationf, Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             checkIfEmailVerified();
@@ -80,16 +83,18 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    //metodo per controllare se l'email è stata verificata
     private void checkIfEmailVerified(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user.isEmailVerified()){
             //user is verified and we can go to the new activity
-            Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, R.string.Authenticationf, Toast.LENGTH_SHORT).show();
             Intent success = new Intent(LoginActivity.this,OfferRideActivity.class);
             startActivity(success);
         }
         else{
-            Toast.makeText(LoginActivity.this, "Email is not verified yet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, R.string.NotVerified, Toast.LENGTH_SHORT).show();
         }
 
     }
