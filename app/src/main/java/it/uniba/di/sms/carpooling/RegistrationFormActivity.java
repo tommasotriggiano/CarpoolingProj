@@ -49,7 +49,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addUser();
-                startActivity(new Intent(RegistrationFormActivity.this,OfferRideActivity.class));
+                startActivity(new Intent(RegistrationFormActivity.this, MainActivity.class));
 
             }
         });
@@ -76,6 +76,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
 
             databaseUsers.child(id).setValue(user);
             Toast.makeText(getApplicationContext(), R.string.ConfirmUser, Toast.LENGTH_SHORT).show();}
+
             else{
             Toast.makeText(getApplicationContext(), R.string.EntName, Toast.LENGTH_SHORT).show();
 

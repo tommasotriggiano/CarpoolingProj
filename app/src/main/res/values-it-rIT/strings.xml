@@ -39,4 +39,12 @@
     <string name="EntCompany">Inserisci il nome della tua azienda</string>
     <string name="ConfirmUser">Utente aggiunto al database</string>
 
+    <string name="profile">Profilo</string>
+    <string name="myroutes">I miei viaggi</string>
+    <string name="findaroute">Cerca Passaggio</string>
+    <string name="mypoints">I miei punti</string>
+    <string name="offeraride">Offri passaggio</string>
+    <string name="settings">Impostazioni</string>
+    <string name="logout">Esci</string>
+
 </resources>
