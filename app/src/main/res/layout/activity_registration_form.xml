@@ -74,35 +74,52 @@
             android:layout_width="272dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:completionHint="@string/Company"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.089"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Indirizzo" />
 
         <EditText
-            android:id="@+id/phone"
+            android:id="@+id/Telefono"
             android:layout_width="272dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="100dp"
+            android:layout_marginStart="14dp"
             android:layout_marginTop="8dp"
             android:ems="10"
+            android:hint="@string/Phone"
             android:inputType="phone"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Azienda" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/confirm"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="186dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="13dp"
             android:background="@color/colorAccent"
             android:text="@string/Conferma"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/phone" />
+            app:layout_constraintTop_toBottomOf="@+id/Auto" />
+
+        <EditText
+            android:id="@+id/Auto"
+            android:layout_width="268dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="102dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="9dp"
+            android:ems="10"
+            android:hint="@string/Car"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Telefono" />
 
 
     </android.support.constraint.ConstraintLayout>

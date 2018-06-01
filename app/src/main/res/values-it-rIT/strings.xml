@@ -32,5 +32,6 @@
     <string name="Company">Azienda</string>
     <string name="Phone">Numero di telefono</string>
     <string name="Conferma">Conferma account</string>
+    <string name="Car">La tua auto</string>
 
 </resources>

@@ -34,6 +34,7 @@
     <string name="Company">Company</string>
     <string name="Phone">Phone Number</string>
     <string name="Conferma">Account Confirmation</string>
+    <string name="Car">Your car</string>
 
 
 </resources>
