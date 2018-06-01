@@ -33,5 +33,10 @@
     <string name="Phone">Numero di telefono</string>
     <string name="Conferma">Conferma account</string>
     <string name="Car">La tua auto</string>
+    <string name="EntName">Inserisci il tuo nome</string>
+    <string name="EntSurname">Inserisci il tuo cognome</string>
+    <string name="EntAddress">Inserisci l\'indirizzo di casa</string>
+    <string name="EntCompany">Inserisci il nome della tua azienda</string>
+    <string name="ConfirmUser">Utente aggiunto al database</string>
 
 </resources>

@@ -1,0 +1,52 @@
+package it.uniba.di.sms.carpooling;
+
+
+public class UserConfirmation {
+    private String UserId;
+    private String UserEmail;
+    private String UsernName;
+    private String UserSurname;
+    private String UserAddress;
+    private String UserCompany;
+    private String UserPhone;
+
+    //la macchina non è obbligatoria ma si può inserire
+
+    private String UserCar;
+
+    public UserConfirmation(String UserId,String UserEmail,String UsernName,String UserSurname,String UserAddress,String UserCompany,String UserPhone){
+        this.UserId = UserId;
+        this.UserEmail = UserEmail;
+        this.UsernName = UsernName;
+        this.UserSurname = UserSurname;
+        this.UserAddress = UserAddress;
+        this.UserCompany = UserCompany;
+        this.UserPhone = UserPhone;
+    }
+
+    //metodi di get
+
+    public String getUserId(){
+        return UserId;
+    }
+    public String getUserEmail(){
+        return UserEmail;
+    }
+    public String getUsernName() {
+        return UsernName;}
+    public String getUserSurname() {
+        return UserSurname;}
+
+    public String getUserAddress() {
+        return UserAddress;}
+
+    public String getUserCompany() {
+        return UserCompany;}
+
+    public String getUserPhone() {
+        return UserPhone;}
+
+    public String getUserCar() {
+        return UserCar;}
+
+}

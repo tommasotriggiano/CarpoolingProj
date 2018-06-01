@@ -28,17 +28,21 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
+
         //controls if the user is already logged in
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
+        //inserire il pulsante di log out
+
+        /*if(user != null){
             finish();
             startActivity(new Intent(LoginActivity.this,OfferRideActivity.class));
-        }
+        }*/
 
 
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         btnLogin = (Button)findViewById(R.id.Reg2);
+
         register = (Button)findViewById(R.id.Register);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,8 +93,8 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user.isEmailVerified()){
             //user is verified and we can go to the new activity
-            Toast.makeText(LoginActivity.this, R.string.Authenticationf, Toast.LENGTH_SHORT).show();
-            Intent success = new Intent(LoginActivity.this,OfferRideActivity.class);
+            Toast.makeText(LoginActivity.this, R.string.Successful, Toast.LENGTH_SHORT).show();
+            Intent success = new Intent(LoginActivity.this,RegistrationFormActivity.class);
             startActivity(success);
         }
         else{
