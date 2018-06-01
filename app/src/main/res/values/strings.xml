@@ -35,9 +35,6 @@
     <string name="Phone">Phone Number</string>
     <string name="Conferma">Account Confirmation</string>
     <string name="Car">Your car</string>
-    <string name="EntName">Enter your name</string>
-    <string name="EntSurname">Enter your surname</string>
-    <string name="EntAddress">Enter the address of your home</string>
-    <string name="EntCompany">Enter the name of your company</string>
-    <string name="ConfirmUser">User added to database</string>
+
+
 </resources>
