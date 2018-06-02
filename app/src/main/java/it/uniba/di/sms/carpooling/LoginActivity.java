@@ -30,10 +30,10 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         //controls if the user is already logged in
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
+        /*if(user != null){
             finish();
             startActivity(new Intent(LoginActivity.this,OfferRideActivity.class));
-        }
+        }*/
 
 
         inputEmail = (EditText) findViewById(R.id.email);
@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         if(user.isEmailVerified()){
             //user is verified and we can go to the new activity
             Toast.makeText(LoginActivity.this, R.string.Authenticationf, Toast.LENGTH_SHORT).show();
-            Intent success = new Intent(LoginActivity.this,OfferRideActivity.class);
+            Intent success = new Intent(LoginActivity.this,MainActivity.class);
             startActivity(success);
         }
         else{
