@@ -64,10 +64,8 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="profile">Profile</string>
     <string name="myrides">My Rides</string>
-
     <string name="searchride">Search a Ride</string>
     <string name="mypoints">My Points</string>
-
     <string name="offeraride">Offer a Ride</string>
     <string name="settings">Settings</string>
     <string name="logout">Log Out</string>

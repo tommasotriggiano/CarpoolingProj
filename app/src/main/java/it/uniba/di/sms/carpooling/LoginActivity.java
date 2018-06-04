@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
         /*if(user != null){
             finish();
-            startActivity(new Intent(LoginActivity.this,OfferRideActivity.class));
+            startActivity(new Intent(LoginActivity.this,MainActivity.class));
         }*/
 
 
@@ -92,10 +92,18 @@ public class LoginActivity extends AppCompatActivity {
     private void checkIfEmailVerified(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user.isEmailVerified()){
-            //user is verified and we can go to the new activity
+            if(user.getEmail() == null
+                    ){
+            //l'utente non ha inserito i campi nella registration form activity
             Toast.makeText(LoginActivity.this, R.string.Successful, Toast.LENGTH_SHORT).show();
-            Intent success = new Intent(LoginActivity.this,RegistrationFormActivity.class);
-            startActivity(success);
+            Intent regform = new Intent(LoginActivity.this,RegistrationFormActivity.class);
+            startActivity(regform);}
+            else{
+                //l'utente ha già inserito i campi nella registration form activity
+                Toast.makeText(LoginActivity.this, R.string.Successful, Toast.LENGTH_SHORT).show();
+                Intent mainact = new Intent(LoginActivity.this,MainActivity.class);
+                startActivity(mainact);
+            }
         }
         else{
             Toast.makeText(LoginActivity.this, R.string.NotVerified, Toast.LENGTH_SHORT).show();
