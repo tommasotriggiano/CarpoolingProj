@@ -46,8 +46,10 @@
     <string name="Failure">Operazione fallita</string>
 
     <string name="profile">Profilo</string>
-    <string name="myroutes">I miei viaggi</string>
-    <string name="findaroute">Cerca Passaggio</string>
+    <string name="myrides">I miei passaggi</string>
+
+    <string name="searchride">Cerca passaggio</string>
+
     <string name="mypoints">I miei punti</string>
     <string name="offeraride">Offri passaggio</string>
     <string name="settings">Impostazioni</string>

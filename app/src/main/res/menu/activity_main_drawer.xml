@@ -5,37 +5,42 @@
     android:background="@color/colorPrimary">
 
     <group android:checkableBehavior="single">
+
+
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_person_black_24dp"
-            android:title="@string/profile" />
+            android:icon="@drawable/ic_person_black"
+            android:title="@string/profile"/>
+
         <item
-            android:id="@+id/nav_myroutes"
-            android:icon="@drawable/ic_streetview_black_24dp"
-            android:title="@string/myroutes" />
+            android:id="@+id/nav_myrides"
+            android:icon="@drawable/ic_streetview_black"
+            android:title="@string/myrides" />
         <item
-            android:id="@+id/nav_findroute"
-            android:icon="@drawable/ic_search_black_24dp"
-            android:title="@string/findaroute" />
+            android:id="@+id/nav_searchride"
+            android:icon="@drawable/ic_search_black"
+            android:title="@string/searchride" />
+
         <item
             android:id="@+id/nav_offeraride"
-            android:icon="@drawable/ic_add_circle_black_24dp"
+            android:icon="@drawable/ic_add_circle_black"
             android:title="@string/offeraride" />
-
         <item
             android:id="@+id/nav_points"
-            android:icon="@drawable/ic_stars_black_24dp"
+            android:icon="@drawable/ic_stars_black"
             android:title="@string/mypoints"/>
 
+        
         <item
             android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_settings_applications_black_24dp"
+            android:icon="@drawable/ic_settings_black"
             android:title="@string/settings" />
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_arrow_back_black_24dp"
+            android:icon="@drawable/ic_arrow_back_black"
             android:title="@string/logout" />
     </group>
+
 
 
 </menu>

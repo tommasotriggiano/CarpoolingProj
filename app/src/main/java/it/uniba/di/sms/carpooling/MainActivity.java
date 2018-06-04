@@ -16,7 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        /*getSupportFragmentManager().beginTransaction().replace(R.id.content_frame,new OfferRideFragment()).commit();
+        navigationView.setCheckedItem(R.id.nav_offeraride);*/
     }
 
     @Override
@@ -76,16 +78,17 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         Fragment fragment = null;
 
-        /*if (id == R.id.nav_profile) {
+        if (id == R.id.nav_profile) {
             // Handle the camera action
-        } else if (id == R.id.nav_myroutes) {
+        } else if (id == R.id.nav_myrides) {
 
-        } else if (id == R.id.nav_findroute) {
-
+        } else if (id == R.id.nav_searchride) {
+            fragment= new SearchRideFragment();
         } else if (id == R.id.nav_points) {
 
-        }*/ if (id == R.id.nav_offeraride) {
+        } if (id == R.id.nav_offeraride) {
             fragment = new OfferRideFragment();}
+
 
 
 
