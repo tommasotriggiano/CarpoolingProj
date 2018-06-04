@@ -1,5 +1,6 @@
 package it.uniba.di.sms.carpooling;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -87,7 +88,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_points) {
 
         } if (id == R.id.nav_offeraride) {
-            fragment = new OfferRideFragment();}
+          fragment= new OfferRideFragment();
+        }
 
 
 
