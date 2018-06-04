@@ -3,6 +3,7 @@
     <item name="ic_streetview_black_24dp" type="drawable">@drawable/ic_streetview_black</item>
     <item name="ic_search_black_24dp" type="drawable">@drawable/ic_search_black</item>
     <item name="ic_stars_black_24dp" type="drawable">@drawable/ic_stars_black</item>
+
     <item name="ic_add_circle_black_24dp" type="drawable">@drawable/ic_add_circle_black</item>
     <item name="ic_settings_applications_black_24dp" type="drawable">@drawable/ic_settings_black</item>
     <item name="ic_arrow_back_black_24dp" type="drawable">@drawable/ic_arrow_back_black</item>
