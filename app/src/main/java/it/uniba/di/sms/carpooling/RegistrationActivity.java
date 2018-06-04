@@ -40,20 +40,21 @@ public class RegistrationActivity extends AppCompatActivity {
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
 
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(), R.string.Toast1, Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                if (email.isEmpty()) {
+                    inputEmail.setError(getResources().getString(R.string.Toast1));
+                    inputEmail.requestFocus();
+                    return;}
 
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(), R.string.Toast2, Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                if (password.isEmpty()) {
+                    inputPassword.setError(getResources().getString(R.string.Toast2));
+                    inputPassword.requestFocus();
+                    return;}
 
                 if (password.length() < 6) {
-                    Toast.makeText(getApplicationContext(), R.string.TstPassShort, Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                    inputPassword.setError(getResources().getString(R.string.TstPassShort));
+                    inputPassword.requestFocus();
+                    return;}
+
 
                 //create user
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {

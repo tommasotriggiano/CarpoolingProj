@@ -69,24 +69,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Nome" />
 
-        <AutoCompleteTextView
-            android:id="@+id/Azienda"
-            android:layout_width="272dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:completionHint="@string/Company"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.089"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Indirizzo" />
-
         <EditText
             android:id="@+id/Telefono"
             android:layout_width="272dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="100dp"
             android:layout_marginStart="14dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="18dp"
             android:ems="10"
             android:hint="@string/Phone"
             android:inputType="phone"
@@ -102,10 +91,13 @@
             android:layout_marginTop="13dp"
             android:background="@color/colorAccent"
             android:text="@string/Conferma"
-            android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Auto" />
+            app:layout_constraintTop_toBottomOf="@+id/Auto"
+            tools:text="@string/Conferma" />
 
         <EditText
             android:id="@+id/Auto"
@@ -120,6 +112,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Telefono" />
+
+        <Spinner
+            android:id="@+id/Azienda"
+            android:layout_width="274dp"
+            android:layout_height="35dp"
+            android:layout_marginBottom="18dp"
+            android:layout_marginEnd="100dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="9dp"
+            android:entries="@array/Companies"
+            app:layout_constraintBottom_toTopOf="@+id/Telefono"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Indirizzo" />
 
 
     </android.support.constraint.ConstraintLayout>

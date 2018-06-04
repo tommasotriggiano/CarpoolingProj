@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Carpooling</string>
+
     <string name="data">Date</string>
     <string name="casa">Home</string>
     <string name="partenza">Departure\'s Hour</string>
@@ -28,14 +29,30 @@
     <string name="Authenticationf">Authentication failed</string>
     <string name="Successful">Login successful</string>
     <string name="NotVerified">Email is not verified yet</string>
+
+    <!--Registration form activity-->
+        <!--Layout-->
     <string name="Name">Name</string>
     <string name="Surname">Surname</string>
     <string name="Address">Home Address</string>
-    <string name="Company">Company</string>
+    <array name="Companies">
+        <item>Grifo srl</item>
+        <item>Exprivia srl</item>
+    </array>
     <string name="Phone">Phone Number</string>
-    <string name="Conferma">Account Confirmation</string>
     <string name="Car">Your car</string>
+    <string name="Conferma">Account Confirmation</string>
+        <!--message-->
+    <string name="EntName">Enter your name</string>
+    <string name="EntSurname">Enter your surname</string>
+    <string name="EntAddress">Enter your address</string>
+    <string name="EntCompany">Enter your company</string>
+    <string name="EntPhone">Enter your phone</string>
+    <string name="EntPhone2">Enter a valid phone number</string>
+    <string name="ConfirmUser">User stored into the database</string>
+    <string name="Failure">Operation failed</string>
 
+    <!--Drawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -43,6 +60,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+    <!--Main activity-->
     <string name="title_activity_main">MainActivity</string>
     <string name="profile">Profile</string>
     <string name="myroutes">My Routes</string>
