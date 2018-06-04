@@ -58,15 +58,15 @@ public class LoginActivity extends AppCompatActivity {
                 String email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
 
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(),R.string.Toast1, Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                if (email.isEmpty()) {
+                    inputEmail.setError(getResources().getString(R.string.Toast1));
+                    inputEmail.requestFocus();
+                    return;}
 
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(), R.string.Toast2, Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                if (password.isEmpty()) {
+                    inputPassword.setError(getResources().getString(R.string.Toast2));
+                    inputPassword.requestFocus();
+                    return;}
 
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override

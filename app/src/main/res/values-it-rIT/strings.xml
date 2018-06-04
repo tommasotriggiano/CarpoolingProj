@@ -29,7 +29,10 @@
     <string name="Name">Nome</string>
     <string name="Surname">Cognome</string>
     <string name="Address">Indirizzo di casa</string>
-    <string name="Company">Azienda</string>
+    <array name="Companies">
+        <item>Grifo srl</item>
+        <item>Exprivia srl</item>
+    </array>
     <string name="Phone">Numero di telefono</string>
     <string name="Conferma">Conferma account</string>
     <string name="Car">La tua auto</string>
@@ -37,7 +40,10 @@
     <string name="EntSurname">Inserisci il tuo cognome</string>
     <string name="EntAddress">Inserisci l\'indirizzo di casa</string>
     <string name="EntCompany">Inserisci il nome della tua azienda</string>
+    <string name="EntPhone">Inserisci numero di telefono</string>
+    <string name="EntPhone2">inserisci un numero di telefono valido</string>
     <string name="ConfirmUser">Utente aggiunto al database</string>
+    <string name="Failure">Operazione fallita</string>
 
     <string name="profile">Profilo</string>
     <string name="myrides">I miei passaggi</string>
