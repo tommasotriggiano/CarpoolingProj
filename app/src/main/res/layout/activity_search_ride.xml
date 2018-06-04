@@ -79,12 +79,12 @@
     <EditText
         android:id="@+id/autista"
         android:layout_width="wrap_content"
-        android:hint="@string/autista"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvTime"
-        android:layout_marginTop="30dp"
-        android:textSize="20sp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_alignStart="@+id/tvTime"
+        android:layout_below="@+id/tvTime"
+        android:layout_marginTop="32dp"
+        android:hint="@string/autista"
+        android:textSize="20sp" />
     <Button
         android:id="@+id/btnSearch"
         android:layout_width="wrap_content"

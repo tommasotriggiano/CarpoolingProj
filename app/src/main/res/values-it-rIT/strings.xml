@@ -33,5 +33,18 @@
     <string name="Phone">Numero di telefono</string>
     <string name="Conferma">Conferma account</string>
     <string name="Car">La tua auto</string>
+    <string name="EntName">Inserisci il tuo nome</string>
+    <string name="EntSurname">Inserisci il tuo cognome</string>
+    <string name="EntAddress">Inserisci l\'indirizzo di casa</string>
+    <string name="EntCompany">Inserisci il nome della tua azienda</string>
+    <string name="ConfirmUser">Utente aggiunto al database</string>
+
+    <string name="profile">Profilo</string>
+    <string name="myrides">I miei passaggi</string>
+    <string name="searchride">Cerca passaggio</string>
+    <string name="mypoints">I miei punti</string>
+    <string name="offeraride">Offri passaggio</string>
+    <string name="settings">Impostazioni</string>
+    <string name="logout">Esci</string>
 
 </resources>
