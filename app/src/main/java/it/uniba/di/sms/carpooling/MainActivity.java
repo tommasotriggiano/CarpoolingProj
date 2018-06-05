@@ -16,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -87,18 +89,16 @@ public class MainActivity extends AppCompatActivity
             fragment= new SearchRideFragment();
         } else if (id == R.id.nav_points) {
 
-        } if (id == R.id.nav_offeraride) {
+        } else if (id == R.id.nav_offeraride) {
           fragment= new OfferRideFragment();
-        }
 
-
-
-
-        /*} else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_settings) {
 
         }else if (id == R.id.nav_logout) {
-
-        }*/
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(MainActivity.this,LoginActivity.class));
+            finish();
+        }
 
         //replacing the fragment
         if(fragment != null){

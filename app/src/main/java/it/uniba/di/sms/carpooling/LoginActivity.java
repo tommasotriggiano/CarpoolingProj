@@ -31,12 +31,11 @@ public class LoginActivity extends AppCompatActivity {
 
         //controls if the user is already logged in
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        //inserire il pulsante di log out
 
-        /*if(user != null){
+        if(user != null){
             finish();
             startActivity(new Intent(LoginActivity.this,MainActivity.class));
-        }*/
+        }
 
 
         inputEmail = (EditText) findViewById(R.id.email);
@@ -92,19 +91,11 @@ public class LoginActivity extends AppCompatActivity {
     private void checkIfEmailVerified(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user.isEmailVerified()){
-            if(user.getEmail() == null
-                    ){
-            //l'utente non ha inserito i campi nella registration form activity
             Toast.makeText(LoginActivity.this, R.string.Successful, Toast.LENGTH_SHORT).show();
             Intent regform = new Intent(LoginActivity.this,RegistrationFormActivity.class);
-            startActivity(regform);}
-            else{
-                //l'utente ha già inserito i campi nella registration form activity
-                Toast.makeText(LoginActivity.this, R.string.Successful, Toast.LENGTH_SHORT).show();
-                Intent mainact = new Intent(LoginActivity.this,MainActivity.class);
-                startActivity(mainact);
-            }
-        }
+            startActivity(regform);
+            finish();}
+
         else{
             Toast.makeText(LoginActivity.this, R.string.NotVerified, Toast.LENGTH_SHORT).show();
         }
