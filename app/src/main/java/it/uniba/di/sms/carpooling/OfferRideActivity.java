@@ -7,23 +7,12 @@ import java.util.Locale;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.format.DateFormat;
 import android.view.View;
 
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -42,7 +31,7 @@ public class OfferRideActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_offer_ride);
+        setContentView(R.layout.offer_ride);
 
 
         tvTime = (TextView) findViewById(R.id.tvTime);

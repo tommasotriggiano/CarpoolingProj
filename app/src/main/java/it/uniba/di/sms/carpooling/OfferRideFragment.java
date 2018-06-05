@@ -1,11 +1,7 @@
 package it.uniba.di.sms.carpooling;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -32,10 +27,10 @@ public class OfferRideFragment extends Fragment {
     int postiIns;
     ImageButton btnMinus;
     ImageButton btnPlus;
-    ArrayAdapter spinnerAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.activity_offer_ride, container,false);
+        View view=inflater.inflate(R.layout.offer_ride, container,false);
         dateText=(TextView)view.findViewById(R.id.textData);
         tvTime = (TextView) view.findViewById(R.id.tvTime);
         btnInvert = (ImageButton) view.findViewById(R.id.Invert);

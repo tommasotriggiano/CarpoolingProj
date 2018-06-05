@@ -25,7 +25,7 @@ public class SearchRideActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_ride);
+        setContentView(R.layout.search_ride);
         tvTime = (TextView) findViewById(R.id.tvTime);
 
         dateView = (TextView) findViewById(R.id.textData);

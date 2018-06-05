@@ -2,9 +2,9 @@ package it.uniba.di.sms.carpooling;
 
 
 public class UserConfirmation {
-
+    private String UserId;
     private String UserEmail;
-    private String UserName;
+    private String UsernName;
     private String UserSurname;
     private String UserAddress;
     private String UserCompany;
@@ -17,7 +17,7 @@ public class UserConfirmation {
     public UserConfirmation(String UserEmail,String UserName,String UserSurname,String UserAddress,String UserCompany,String UserPhone){
 
         this.UserEmail = UserEmail;
-        this.UserName = UserName;
+        this.UsernName = UserName;
         this.UserSurname = UserSurname;
         this.UserAddress = UserAddress;
         this.UserCompany = UserCompany;
@@ -26,12 +26,11 @@ public class UserConfirmation {
 
     //metodi di get
 
-
     public String getUserEmail(){
         return UserEmail;
     }
-    public String getUsernName() {
-        return UserName;}
+    public String getUserName() {
+        return UsernName;}
     public String getUserSurname() {
         return UserSurname;}
 

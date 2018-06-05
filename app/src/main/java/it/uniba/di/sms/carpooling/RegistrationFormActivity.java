@@ -111,7 +111,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     //visualizza messaggio di successo e proseguo con l'altra activity
                     Toast.makeText(getApplicationContext(), R.string.ConfirmUser, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(RegistrationFormActivity.this, OfferRideActivity.class));
+                    startActivity(new Intent(RegistrationFormActivity.this, MainActivity.class));
                 }
                 else{
                     //visualizza messaggio di errore
