@@ -129,7 +129,7 @@
             android:layout_below="@+id/textPosti"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="31dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@drawable/button_shape_normal"
             android:text="@string/offri"
             android:textSize="20sp"
             android:textColor="#FFF" />

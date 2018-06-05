@@ -8,11 +8,12 @@
 
     <Button
         android:id="@+id/Reg2"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="213dp"
-        android:layout_height="56dp"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="264dp"
+        android:background="@drawable/button_shape_accent"
         android:text="@string/tvUserLogin"
+        android:textColor="#ffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
@@ -22,14 +23,14 @@
         android:id="@+id/email"
         android:layout_width="276dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="50dp"
         android:ems="10"
         android:hint="@string/etUserEmail"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
         android:id="@+id/password"
@@ -60,12 +61,12 @@
 
     <Button
         android:id="@+id/Register"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="206dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="144dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/button_shape_normal"
         android:text="@string/Register2"
+        android:textColor="#ffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.522"

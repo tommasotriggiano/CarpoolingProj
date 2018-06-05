@@ -54,6 +54,7 @@
     <string name="logout">Esci</string>
 
     <array name="day_of_week">
+        <item>Giorno della settimana</item>
         <item>Lunedi</item>
         <item>Martedi</item>
         <item>Mercoledi</item>
