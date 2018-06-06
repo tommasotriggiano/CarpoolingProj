@@ -32,12 +32,11 @@ public class LoginActivity extends AppCompatActivity {
 
         //controls if the user is already logged in
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        //inserire il pulsante di log out
 
-        /*if(user != null){
+        if(user != null){
             finish();
-            startActivity(new Intent(LoginActivity.this,OfferRideActivity.class));
-        }*/
+            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+        }
 
 
         inputEmail = (EditText) findViewById(R.id.email);
@@ -93,11 +92,11 @@ public class LoginActivity extends AppCompatActivity {
     private void checkIfEmailVerified(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user.isEmailVerified()){
-            //user is verified and we can go to the new activity
             Toast.makeText(LoginActivity.this, R.string.Successful, Toast.LENGTH_SHORT).show();
-            Intent success = new Intent(LoginActivity.this,RegistrationFormActivity.class);
-            startActivity(success);
-        }
+            Intent regform = new Intent(LoginActivity.this,RegistrationFormActivity.class);
+            startActivity(regform);
+            finish();}
+
         else{
             Toast.makeText(LoginActivity.this, R.string.NotVerified, Toast.LENGTH_SHORT).show();
         }
