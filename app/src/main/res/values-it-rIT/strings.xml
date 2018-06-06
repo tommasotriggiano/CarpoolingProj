@@ -44,6 +44,8 @@
     <string name="EntPhone2">inserisci un numero di telefono valido</string>
     <string name="ConfirmUser">Utente aggiunto al database</string>
     <string name="Failure">Operazione fallita</string>
+    <string name="offered">Offerti</string>
+    <string name="required">Richiesti</string>
 
     <string name="profile">Profilo</string>
     <string name="myrides">I miei passaggi</string>

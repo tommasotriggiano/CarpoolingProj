@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.uniba.di.sms.carpooling.LoginActivity">
+    tools:context="it.uniba.di.sms.carpooling.LoginActivity"
+    android:background="@drawable/wallpaper">
 
     <Button
         android:id="@+id/Reg2"
-        android:layout_width="213dp"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="180dp"
         android:layout_marginEnd="8dp"
@@ -31,6 +32,8 @@
         android:ems="10"
         android:hint="@string/etUserPassword"
         android:inputType="textPassword"
+        android:textColor="#ffff"
+        android:textColorHint="#ffff"
         app:layout_constraintBottom_toTopOf="@+id/Reg2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
@@ -46,6 +49,8 @@
         android:layout_marginTop="88dp"
         android:ems="10"
         android:hint="@string/etUserEmail"
+        android:textColor="#ffff"
+        android:textColorHint="#ffff"
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@+id/password"
         app:layout_constraintEnd_toEndOf="parent"

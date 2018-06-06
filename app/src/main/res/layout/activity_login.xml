@@ -4,84 +4,83 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.uniba.di.sms.carpooling.LoginActivity">
+    tools:context="it.uniba.di.sms.carpooling.LoginActivity"
+    android:background="@drawable/sfondo">
 
     <Button
         android:id="@+id/Reg2"
-        android:layout_width="150dp"
+        android:layout_width="274dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="264dp"
+        android:layout_marginBottom="96dp"
         android:background="@drawable/button_shape_accent"
         android:text="@string/tvUserLogin"
         android:textColor="#ffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/email"
-        android:layout_width="276dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_width="274dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="68dp"
         android:ems="10"
         android:hint="@string/etUserEmail"
         android:inputType="textEmailAddress"
+        android:background="@drawable/edittext_shape"
+        android:paddingLeft="15dp"
+        android:textColor="#000"
+        android:textColorHint="#000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="274dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/edittext_shape"
         android:ems="10"
         android:hint="@string/etUserPassword"
         android:inputType="textPassword"
+        android:paddingLeft="15dp"
+        android:textColor="#000"
+        android:textColorHint="#000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email" />
 
-    <TextView
-        android:id="@+id/Register1"
-        android:layout_width="209dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="40dp"
-        android:gravity="center"
-        android:text="@string/Register"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Reg2" />
+
 
     <Button
         android:id="@+id/Register"
-        android:layout_width="150dp"
+        android:layout_width="274dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="144dp"
+        android:layout_marginBottom="28dp"
         android:background="@drawable/button_shape_normal"
         android:text="@string/Register2"
         android:textColor="#ffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.522"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="341dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/Welcome"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:layout_marginTop="112dp"
+        android:gravity="center"
+        android:text="Carpooling"
+        android:textColor="#fff"
+        android:textSize="50sp"
+        android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.461"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

@@ -31,7 +31,7 @@
     <string name="NotVerified">Email is not verified yet</string>
 
     <!--Registration form activity-->
-        <!--Layout-->
+    <!--Layout-->
     <string name="Name">Name</string>
     <string name="Surname">Surname</string>
     <string name="Address">Home Address</string>
@@ -42,7 +42,7 @@
     <string name="Phone">Phone Number</string>
     <string name="Car">Your car</string>
     <string name="Conferma">Account Confirmation</string>
-        <!--message-->
+    <!--message-->
     <string name="EntName">Enter your name</string>
     <string name="EntSurname">Enter your surname</string>
     <string name="EntAddress">Enter your address</string>
@@ -59,6 +59,8 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="offered">Offered</string>
+    <string name="required">Required</string>
 
     <!--Main activity-->
     <string name="title_activity_main">MainActivity</string>
@@ -83,6 +85,7 @@
     </array>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_maps">Map</string>
 
 
 </resources>
