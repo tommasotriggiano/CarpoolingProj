@@ -15,6 +15,7 @@
     <string name="etName">Username</string>
     <string name="etUserEmail">E-mail</string>
     <string name="etUserPassword">Password</string>
+    <string name="registrazione">SIGN UP</string>
     <string name="btnRegister">Create new account</string>
     <string name="Welcome">Welcome back!</string>
     <string name="Welcome2">Let\'s get started!</string>
@@ -35,6 +36,9 @@
     <string name="Name">Name</string>
     <string name="Surname">Surname</string>
     <string name="Address">Home Address</string>
+    <string name="città">City</string>
+    <string name="cap">PostCode</string>
+    <string name="nazione">Country</string>
     <array name="Companies">
         <item>Grifo srl</item>
         <item>Exprivia srl</item>

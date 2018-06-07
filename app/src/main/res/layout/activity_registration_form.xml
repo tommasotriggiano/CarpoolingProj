@@ -85,7 +85,7 @@
 
         <Button
             android:id="@+id/confirm"
-            android:background="@drawable/button_shape_normal"
+            android:background="@drawable/button_shape"
             android:layout_width="186dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="13dp"
@@ -124,7 +124,52 @@
             app:layout_constraintBottom_toTopOf="@+id/Telefono"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nazione" />
+
+        <EditText
+            android:id="@+id/città"
+            android:layout_width="268dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="@string/città"
+            android:layout_marginEnd="102dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="9dp"
+            app:layout_constraintBottom_toTopOf="@+id/cap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Indirizzo" />
+
+        <EditText
+            android:id="@+id/cap"
+            android:layout_width="268dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            android:hint="@string/cap"
+            android:layout_marginEnd="102dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="9dp"
+            app:layout_constraintBottom_toTopOf="@+id/nazione"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/città" />
+        <EditText
+            android:id="@+id/nazione"
+
+            android:layout_width="268dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="@string/nazione"
+            android:layout_marginEnd="102dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="9dp"
+            app:layout_constraintBottom_toTopOf="@+id/spinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cap" />
 
 
     </android.support.constraint.ConstraintLayout>

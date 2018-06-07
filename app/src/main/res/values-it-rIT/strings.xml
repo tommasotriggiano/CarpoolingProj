@@ -12,6 +12,7 @@
     <string name="immaginesplash">ImmagineSplash</string>
     <string name="etUserEmail">E-mail</string>
     <string name="etUserPassword">Password</string>
+    <string name="registrazione">REGISTRAZIONE</string>
     <string name="btnRegister">Registra</string>
     <string name="Welcome">Bentornato!</string>
     <string name="Welcome2">Let\'s get started</string>
@@ -29,6 +30,9 @@
     <string name="Name">Nome</string>
     <string name="Surname">Cognome</string>
     <string name="Address">Indirizzo di casa</string>
+    <string name="città">Città</string>
+    <string name="cap">C.A.P.</string>
+    <string name="nazione">Nazione</string>
     <array name="Companies">
         <item>Grifo srl</item>
         <item>Exprivia srl</item>
