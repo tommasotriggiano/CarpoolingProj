@@ -4,22 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.uniba.di.sms.carpooling.LoginActivity">
+    tools:context="it.uniba.di.sms.carpooling.LoginActivity"
+    android:background="@drawable/sfondo">
 
     <Button
         android:id="@+id/Reg2"
-        android:layout_width="213dp"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="180dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/button_shape_normal"
+        android:background="@drawable/button_shape"
         android:textColor="#fff"
-        android:text="@string/Register2"
+        android:text="@string/btnRegister"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="305dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="88dp"
+        android:background="@drawable/edittext_shape"
+        android:ems="10"
+        android:hint="@string/etUserEmail"
+        android:inputType="textEmailAddress"
+        android:paddingBottom="25dp"
+        android:textColor="#ffff"
+        android:textColorHint="#ffff"
+        app:layout_constraintBottom_toTopOf="@+id/password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.521"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <EditText
         android:id="@+id/password"
@@ -29,38 +48,31 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:ems="10"
+        android:paddingBottom="25dp"
+        android:background="@drawable/edittext_shape"
         android:hint="@string/etUserPassword"
         android:inputType="textPassword"
+        android:textColor="#ffff"
+        android:textColorHint="#ffff"
         app:layout_constraintBottom_toTopOf="@+id/Reg2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email" />
 
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="305dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="88dp"
-        android:ems="10"
-        android:hint="@string/etUserEmail"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView2" />
+
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="296dp"
-        android:layout_height="56dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
         android:layout_marginTop="16dp"
-        android:text="@string/Welcome2"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:text="@string/registrazione"
+        android:paddingBottom="35dp"
+        android:textColor="#fff"
+        android:background="@drawable/edittext_shape"
+        android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -74,6 +86,7 @@
         android:layout_marginStart="85dp"
         android:layout_marginTop="24dp"
         android:gravity="center"
+        android:textColor="#fff"
         android:text="@string/Messaggio"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

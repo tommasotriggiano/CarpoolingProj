@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             // Handle the camera action
         } else if (id == R.id.nav_myrides) {
-
+            fragment= new MyRidesFragment();
         } else if (id == R.id.nav_searchride) {
             fragment= new SearchRideFragment();
         } else if (id == R.id.nav_points) {
