@@ -15,13 +15,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
     private Button btnLogin;
     private Button register;
     private FirebaseAuth mAuth;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +35,6 @@ public class LoginActivity extends AppCompatActivity {
 
         //controls if the user is already logged in
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if(user != null){
-            finish();
-            startActivity(new Intent(LoginActivity.this,MainActivity.class));
-        }
 
 
         inputEmail = (EditText) findViewById(R.id.email);
@@ -89,19 +88,39 @@ public class LoginActivity extends AppCompatActivity {
 
     //metodo per controllare se l'email è stata verificata
     private void checkIfEmailVerified(){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user.isEmailVerified()){
             Toast.makeText(LoginActivity.this, R.string.Successful, Toast.LENGTH_SHORT).show();
-            Intent regform = new Intent(LoginActivity.this,RegistrationFormActivity.class);
-            startActivity(regform);
-            finish();}
+            //leggo l'instanza del database creato nella regsitration form
+            ref.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()){
+                        //se l'istanza del database esiste, quindi l'utente ha già inserito le sue informazioni, si passa all'activity principale
+                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                        finish();
+                    }
+                    else{
+                        startActivity(new Intent(LoginActivity.this,RegistrationFormActivity.class));
+                        finish();
+                    }
 
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+        //se l'email non è stata verificata
         else{
             Toast.makeText(LoginActivity.this, R.string.NotVerified, Toast.LENGTH_SHORT).show();
         }
+}}
 
-    }
-}
 
 
 

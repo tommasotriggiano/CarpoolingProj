@@ -4,15 +4,25 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -23,22 +33,30 @@ public class OfferRideFragment extends Fragment {
     ImageButton btnInvert;
     TextView mWork;
     TextView mHome;
-    EditText posti;
+    TextView posti;
     int postiIns;
     ImageButton btnMinus;
     ImageButton btnPlus;
+    Button offer;
+
+    //creazione del database
+    DatabaseReference databasePassaggi;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view=inflater.inflate(R.layout.offer_ride, container,false);
         dateText=(TextView)view.findViewById(R.id.textData);
         tvTime = (TextView) view.findViewById(R.id.tvTime);
         btnInvert = (ImageButton) view.findViewById(R.id.Invert);
         mHome = (TextView) view.findViewById(R.id.casa);
         mWork = (TextView) view.findViewById(R.id.lavoro);
-
-        posti=(EditText) view.findViewById(R.id.textPostiInseriti);
+        posti=(TextView) view.findViewById(R.id.textPostiInseriti);
         postiIns= Integer.parseInt(posti.getText().toString());
+        offer = (Button)view.findViewById(R.id.btnOffri);
+
+        //istanza del database riguardanti i passaggi
+        databasePassaggi = FirebaseDatabase.getInstance().getReference("passaggi");
 
         btnMinus=(ImageButton) view.findViewById(R.id.btnMinus);
 
@@ -70,6 +88,15 @@ public class OfferRideFragment extends Fragment {
         btnInvert.setOnClickListener(btnInvertListener);
         btnMinus.setOnClickListener(btnMinusListener);
         btnPlus.setOnClickListener(btnPlusListener);
+        offer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addPassaggio();
+
+
+            }}
+
+        );
     }
     public View.OnClickListener btnInvertListener= new View.OnClickListener(){
         @Override
@@ -170,4 +197,52 @@ public class OfferRideFragment extends Fragment {
     };
 
 
-}
+    public void addPassaggio(){
+
+        final String dataPassaggio = dateText.getText().toString().trim();
+        final String ora = tvTime.getText().toString().trim();
+        final int postiDisponibili = postiIns;
+
+        if(dataPassaggio.isEmpty()){
+            dateText.setError(getResources().getString(R.string.EntName));
+            dateText.requestFocus();
+            return;
+        }
+        if(ora.isEmpty()){
+            tvTime.setError(getResources().getString(R.string.EntSurname));
+            tvTime.requestFocus();
+            return;
+        }
+
+        //ricavo l'user id per collegare l'istanza del passaggio all'utente
+        final FirebaseUser profile = FirebaseAuth.getInstance().getCurrentUser();
+        //leggo il database degli utenti per inserire l'oggetto user nel database dei passaggi
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(profile.getUid());
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                User user = dataSnapshot.child(profile.getUid()).getValue(User.class);
+
+                Passaggio passaggio = new Passaggio(user,dataPassaggio,ora,postiDisponibili);
+                databasePassaggi.child(profile.getUid()).setValue(passaggio);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+}}
+
+

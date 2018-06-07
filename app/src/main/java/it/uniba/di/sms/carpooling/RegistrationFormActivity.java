@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -48,27 +46,16 @@ public class RegistrationFormActivity extends AppCompatActivity {
         //istanza del profilo autenticato all'applicazione
         final FirebaseUser profile = FirebaseAuth.getInstance().getCurrentUser();
 
-        databaseUsers.child(profile.getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    if (dataSnapshot.exists()) {
-                        //se l'utente ha già compilato il form di registrazione allora viene indirizzato alla home page
-
-                        finish();
-                        startActivity(new Intent(RegistrationFormActivity.this, MainActivity.class));
-                    } else {
-
-                        nome = (EditText) findViewById(R.id.Nome);
-                        cognome = (EditText) findViewById(R.id.Cognome);
-                        indirizzoCasa = (EditText) findViewById(R.id.Indirizzo);
-                        azienda = (Spinner) findViewById(R.id.Azienda);
-                        telefono = (EditText) findViewById(R.id.Telefono);
-                        automobile = (EditText) findViewById(R.id.Auto);
-                        confermaAccount = (Button) findViewById(R.id.confirm);
+        nome = (EditText) findViewById(R.id.Nome);
+        cognome = (EditText) findViewById(R.id.Cognome);
+        indirizzoCasa = (EditText) findViewById(R.id.Indirizzo);
+        azienda = (Spinner) findViewById(R.id.Azienda);
+        telefono = (EditText) findViewById(R.id.Telefono);
+        automobile = (EditText) findViewById(R.id.Auto);
+        confermaAccount = (Button) findViewById(R.id.confirm);
 
 
-                        confermaAccount.setOnClickListener(new View.OnClickListener() {
+        confermaAccount.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 addUser();
@@ -76,12 +63,9 @@ public class RegistrationFormActivity extends AppCompatActivity {
 
                             }
                         });
-                    }//chiusura else
 
-            }//chiusura on data change
-                    @Override
-                    public void onCancelled (DatabaseError databaseError){}
-                });
+
+
             }
 
 
@@ -127,8 +111,8 @@ public class RegistrationFormActivity extends AppCompatActivity {
 
 
 
-        //creo un'instanza dell'oggetto UserConfirmation
-        UserConfirmation user = new UserConfirmation(email,name,surname,address,company,phone);
+        //creo un'instanza dell'oggetto User
+        User user = new User(email,name,surname,address,company,phone);
 
         //aggiungo l'instanza al database mettendo come chiave primaria l'UID creato al momento dell'autenticazione
         databaseUsers.child(profile.getUid()).setValue(user)
@@ -137,7 +121,6 @@ public class RegistrationFormActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     //visualizza messaggio di successo e proseguo con l'altra activity
-                    Toast.makeText(getApplicationContext(), R.string.ConfirmUser, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(RegistrationFormActivity.this, MainActivity.class));
                     finish();
                 }

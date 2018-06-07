@@ -108,10 +108,11 @@
             app:srcCompat="@drawable/ic_plus" />
 
 
-        <EditText
+        <TextView
             android:id="@+id/textPostiInseriti"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
+            android:background="?attr/editTextBackground"
             android:layout_alignTop="@+id/btnPlus"
             android:layout_toEndOf="@+id/btnMinus"
             android:layout_marginLeft="2dp"
