@@ -27,17 +27,18 @@
     <string name="Authenticationf">Autenticazione fallita</string>
     <string name="Successful">Login effettuato con successo</string>
     <string name="NotVerified">L\'email non è stata ancora verificata</string>
-    <string name="Name">Nome</string>
-    <string name="Surname">Cognome</string>
-    <string name="Address">Indirizzo di casa</string>
-    <string name="città">Città</string>
-    <string name="cap">C.A.P.</string>
-    <string name="nazione">Nazione</string>
+    <string name ="obbligatorio">* Campo obbligatorio</string>
+    <string name="Name">Nome *</string>
+    <string name="Surname">Cognome *</string>
+    <string name="Address">Indirizzo di casa *</string>
+    <string name="città">Città *</string>
+    <string name="cap">C.A.P. *</string>
+    <string name="nazione">Nazione *</string>
     <array name="Companies">
         <item>Grifo srl</item>
         <item>Exprivia srl</item>
     </array>
-    <string name="Phone">Numero di telefono</string>
+    <string name="Phone">Numero di telefono *</string>
     <string name="Conferma">Conferma account</string>
     <string name="Car">La tua auto</string>
     <string name="EntName">Inserisci il tuo nome</string>

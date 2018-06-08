@@ -33,18 +33,19 @@
 
     <!--Registration form activity-->
     <!--Layout-->
-    <string name="Name">Name</string>
-    <string name="Surname">Surname</string>
-    <string name="Address">Home Address</string>
-    <string name="città">City</string>
-    <string name="cap">PostCode</string>
-    <string name="nazione">Country</string>
+    <string name="obbligatorio">* Required field</string>
+    <string name="Name">Name *</string>
+    <string name="Surname">Surname *</string>
+    <string name="Address">Home Address *</string>
+    <string name="città">City *</string>
+    <string name="cap">PostCode *</string>
+    <string name="nazione">Country *</string>
     <array name="Companies">
         <item>Grifo srl</item>
         <item>Exprivia srl</item>
     </array>
-    <string name="Phone">Phone Number</string>
-    <string name="Car">Your car</string>
+    <string name="Phone">Phone Number *</string>
+    <string name="Car">Your car </string>
     <string name="Conferma">Account Confirmation</string>
     <!--message-->
     <string name="EntName">Enter your name</string>

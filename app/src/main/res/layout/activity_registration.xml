@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="it.uniba.di.sms.carpooling.LoginActivity"
-    android:background="@drawable/sfondo">
+    android:background="@drawable/sfondo"
+    android:theme="@style/ColoredHandleTheme">
 
     <Button
         android:id="@+id/Reg2"
@@ -31,6 +32,7 @@
         android:ems="10"
         android:hint="@string/etUserEmail"
         android:inputType="textEmailAddress"
+        android:textCursorDrawable="@color/colorPrimaryDark"
         android:paddingBottom="25dp"
         android:textColor="#ffff"
         android:textColorHint="#ffff"
@@ -48,6 +50,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:ems="10"
+        android:textCursorDrawable="@color/colorPrimaryDark"
         android:paddingBottom="25dp"
         android:background="@drawable/edittext_shape"
         android:hint="@string/etUserPassword"
