@@ -1,16 +1,28 @@
 <resources>
     <string name="app_name">Carpooling</string>
-
-    <string name="data">Date</string>
-    <string name="casa">Home</string>
-    <string name="partenza">Departure\'s Hour</string>
-    <string name="lavoro">Work</string>
-    <string name="giorno">Day of week</string>
     <string name="immaginesplash">imageSplash</string>
-    <string name="cerca">Search</string>
-    <string name="autista">Name and surname driver</string>
+    <!-- offer ride and search ride-->
+    <string name="Date">Date</string>
+    <string name="Home">Home</string>
+    <string name="Departure">Departure\'s Hour</string>
+    <string name="Work">Work</string>
+    <string name="giorno">Day of week</string>
+    <string name="Search">Search</string>
+    <string name="Driver">Name and surname driver</string>
     <string name="posti">N. available places</string>
-    <string name="offri">Offer</string>
+    <string name="Offer">Offer</string>
+    <array name="day_of_week">
+        <item>Day of week</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </array>
+
+    <!-- login and registration acitivity-->
     <string name="etUsername">Username</string>
     <string name="etName">Username</string>
     <string name="etUserEmail">E-mail</string>
@@ -64,30 +76,21 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="offered">Offered</string>
-    <string name="required">Required</string>
+
 
     <!--Main activity-->
     <string name="title_activity_main">MainActivity</string>
     <string name="profile">Profile</string>
     <string name="myrides">My Rides</string>
-
     <string name="searchride">Search ride</string>
     <string name="mypoints">My Points</string>
-
     <string name="offeraride">Offer ride</string>
     <string name="settings">Settings</string>
     <string name="logout">Log Out</string>
-    <array name="day_of_week">
-        <item>Day of week</item>
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-        <item>Sunday</item>
-    </array>
+
+    <!-- myrides -->
+    <string name="offered">Offered</string>
+    <string name="required">Required</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>

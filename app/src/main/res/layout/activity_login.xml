@@ -8,6 +8,70 @@
     android:background="@drawable/sfondo"
     android:theme="@style/ColoredHandleTheme">
 
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/layout_email"
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:textColor="#fff"
+        android:textColorHint="#fff"
+        app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name_app"
+        >
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="274dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:textColor="#fff"
+            android:textColorHint="#fff"
+            android:background="@drawable/edittext_shape"
+            android:hint="@string/etUserEmail"
+            android:inputType="textEmailAddress"
+            android:textCursorDrawable="@color/colorPrimaryDark"
+            android:paddingLeft="15dp"
+            android:paddingBottom="20dp"
+
+            />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/layout_password"
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout"
+        android:textColor="#fff"
+        android:textColorHint="#fff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_email"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="#fff">
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="274dp"
+            android:layout_height="wrap_content"
+            android:textCursorDrawable="@color/colorPrimaryDark"
+            android:background="@drawable/edittext_shape"
+            android:ems="10"
+            android:hint="@string/etUserPassword"
+            android:inputType="textPassword"
+            android:paddingStart="15dp"
+            android:paddingBottom="20dp"
+            android:textColor="#fff"
+            android:textColorHint="#fff"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+
     <Button
         android:id="@+id/Reg2"
         android:layout_width="274dp"
@@ -19,47 +83,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="274dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
-        android:ems="10"
-        android:hint="@string/etUserEmail"
-        android:inputType="textEmailAddress"
-        android:background="@drawable/edittext_shape"
-        android:textCursorDrawable="@color/colorPrimaryDark"
-        android:paddingLeft="15dp"
-        android:paddingBottom="25dp"
-        android:textColor="#fff"
-        android:textColorHint="#fff"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="274dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:textCursorDrawable="@color/colorPrimaryDark"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/edittext_shape"
-        android:ems="10"
-        android:hint="@string/etUserPassword"
-        android:inputType="textPassword"
-        android:paddingLeft="15dp"
-        android:paddingBottom="25dp"
-        android:textColor="#fff"
-        android:textColorHint="#fff"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
-
-
-
     <Button
         android:id="@+id/Register"
         android:layout_width="274dp"
@@ -73,14 +96,14 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/name_app"
         android:layout_width="341dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="112dp"
         android:gravity="center"
-        android:text="Carpooling"
+        android:text="@string/app_name"
         android:textColor="#fff"
         android:textSize="50sp"
         android:textStyle="normal"

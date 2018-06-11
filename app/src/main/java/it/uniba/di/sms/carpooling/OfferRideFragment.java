@@ -102,13 +102,13 @@ public class OfferRideFragment extends Fragment {
         @Override
         public void onClick(View view) {
 
-            if(mHome.getText().toString().equals(getResources().getString(R.string.casa))){
-                mHome.setText(R.string.lavoro);
-                mWork.setText(R.string.casa);
+            if(mHome.getText().toString().equals(getResources().getString(R.string.Home))){
+                mHome.setText(R.string.Work);
+                mWork.setText(R.string.Home);
             }else
             {
-                mHome.setText(R.string.casa);
-                mWork.setText(R.string.lavoro);
+                mHome.setText(R.string.Home);
+                mWork.setText(R.string.Work);
             }
         }
     };

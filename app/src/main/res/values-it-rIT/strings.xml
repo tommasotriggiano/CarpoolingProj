@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Carpooling</string>
-    <string name="data">Data</string>
-    <string name="casa">Casa </string>
-    <string name="lavoro">Lavoro</string>
-    <string name="partenza">Ora di partenza</string>
-    <string name="giorno">Giorno della settimana</string>
-    <string name="cerca">Cerca</string>
-    <string name="autista">Nome e Cognome autista</string>
-    <string name="posti">N. posti disponibili</string>
     <string name="immaginesplash">ImmagineSplash</string>
+    <!-- offer ride and search ride-->
+    <string name="Date">Data</string>
+    <string name="Home">Casa </string>
+    <string name="Work">Lavoro</string>
+    <string name="Departure">Ora di partenza</string>
+    <string name="giorno">Giorno della settimana</string>
+    <string name="Search">Cerca</string>
+    <string name="Driver">Nome e Cognome autista</string>
+    <string name="posti">N. posti disponibili</string>
+    <string name="Offer">Offri</string>
+    <array name="day_of_week">
+        <item>Giorno della settimana</item>
+        <item>Lunedi</item>
+        <item>Martedi</item>
+        <item>Mercoledi</item>
+        <item>Giovedi</item>
+        <item>Venerdi</item>
+        <item>Sabato</item>
+        <item>Domenica</item>
+    </array>
+    <!-- login and registration acitivity-->
     <string name="etUserEmail">E-mail</string>
     <string name="etUserPassword">Password</string>
     <string name="registrazione">REGISTRAZIONE</string>
@@ -27,6 +40,9 @@
     <string name="Authenticationf">Autenticazione fallita</string>
     <string name="Successful">Login effettuato con successo</string>
     <string name="NotVerified">L\'email non è stata ancora verificata</string>
+
+    <!--Registration form activity-->
+    <!--Layout-->
     <string name ="obbligatorio">* Campo obbligatorio</string>
     <string name="Name">Nome *</string>
     <string name="Surname">Cognome *</string>
@@ -41,6 +57,7 @@
     <string name="Phone">Numero di telefono *</string>
     <string name="Conferma">Conferma account</string>
     <string name="Car">La tua auto</string>
+    <!--message-->
     <string name="EntName">Inserisci il tuo nome</string>
     <string name="EntSurname">Inserisci il tuo cognome</string>
     <string name="EntAddress">Inserisci l\'indirizzo di casa</string>
@@ -49,9 +66,9 @@
     <string name="EntPhone2">inserisci un numero di telefono valido</string>
     <string name="ConfirmUser">Utente aggiunto al database</string>
     <string name="Failure">Operazione fallita</string>
-    <string name="offered">Offerti</string>
-    <string name="required">Richiesti</string>
 
+
+    <!--Main activity-->
     <string name="profile">Profilo</string>
     <string name="myrides">I miei passaggi</string>
     <string name="searchride">Cerca passaggio</string>
@@ -59,15 +76,7 @@
     <string name="offeraride">Offri passaggio</string>
     <string name="settings">Impostazioni</string>
     <string name="logout">Esci</string>
-
-    <array name="day_of_week">
-        <item>Giorno della settimana</item>
-        <item>Lunedi</item>
-        <item>Martedi</item>
-        <item>Mercoledi</item>
-        <item>Giovedi</item>
-        <item>Venerdi</item>
-        <item>Sabato</item>
-        <item>Domenica</item>
-    </array>
+    <!-- myrides -->
+    <string name="offered">Offerti</string>
+    <string name="required">Richiesti</string>
 </resources>
