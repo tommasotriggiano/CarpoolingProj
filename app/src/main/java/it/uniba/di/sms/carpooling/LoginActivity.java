@@ -1,8 +1,10 @@
 package it.uniba.di.sms.carpooling;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -23,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
+    private TextInputLayout layout_email,layout_password;
     private Button btnLogin;
     private Button register;
     private FirebaseAuth mAuth;
@@ -40,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
 
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
+        layout_password= (TextInputLayout) findViewById(R.id.layout_password) ;
+        layout_email=(TextInputLayout) findViewById(R.id.layout_email) ;
         btnLogin = (Button)findViewById(R.id.Reg2);
 
         register = (Button)findViewById(R.id.Register);
@@ -51,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,13 +64,14 @@ public class LoginActivity extends AppCompatActivity {
                 final String password = inputPassword.getText().toString();
 
                 if (email.isEmpty()) {
-                    inputEmail.setError(getResources().getString(R.string.Toast1));
-                    inputEmail.requestFocus();
+                    layout_email.setError(getResources().getString(R.string.Toast1));
+                    layout_email.requestFocus();
                     return;}
 
                 if (password.isEmpty()) {
-                    inputPassword.setError(getResources().getString(R.string.Toast2));
-                    inputPassword.requestFocus();
+                    layout_password.setError(getResources().getString(R.string.Toast2));
+                    layout_password.requestFocus();
+
                     return;}
 
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {

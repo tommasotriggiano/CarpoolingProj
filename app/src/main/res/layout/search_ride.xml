@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
        android:layout_marginStart="55dp"
         android:layout_marginTop="50dp"
-        android:text="@string/casa"
+        android:text="@string/Home"
         android:textColor="#000"
         android:textSize="20sp" />
 
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/casa"
         android:layout_toEndOf="@+id/imageView"
-        android:text="@string/lavoro"
+        android:text="@string/Work"
         android:textColor="#000"
         android:textSize="20sp" />
     <ImageButton
@@ -55,7 +55,7 @@
         android:background="?attr/editTextBackground"
         android:drawableEnd="@drawable/ic_arrow"
         android:gravity="center_vertical"
-        android:hint="@string/partenza"
+        android:hint="@string/Departure"
         android:textColor="?attr/editTextColor"
         android:textSize="20sp"
         tools:layout_editor_absoluteX="92dp"
@@ -70,7 +70,7 @@
         android:background="?attr/editTextBackground"
         android:drawableEnd="@drawable/ic_arrow"
         android:gravity="center_vertical"
-        android:hint="@string/data"
+        android:hint="@string/Date"
         android:textColor="?attr/editTextColor"
         android:textSize="20sp"
         tools:layout_editor_absoluteX="92dp"
@@ -83,13 +83,13 @@
         android:layout_alignStart="@+id/tvTime"
         android:layout_below="@+id/tvTime"
         android:layout_marginTop="32dp"
-        android:hint="@string/autista"
+        android:hint="@string/Driver"
         android:textSize="20sp" />
     <Button
         android:id="@+id/btnSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/cerca"
+        android:text="@string/Search"
         android:background="@drawable/button_shape"
         android:textColor="#fff"
         android:layout_centerHorizontal="true"

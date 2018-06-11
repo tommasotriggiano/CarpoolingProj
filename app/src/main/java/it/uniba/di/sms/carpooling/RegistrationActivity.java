@@ -2,6 +2,7 @@ package it.uniba.di.sms.carpooling;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class RegistrationActivity extends AppCompatActivity {
+    private TextInputLayout layout_email,layout_password;
     private EditText inputEmail,inputPassword;
     private Button SignUp;
     private FirebaseAuth mAuth;
@@ -33,6 +35,8 @@ public class RegistrationActivity extends AppCompatActivity {
         SignUp = (Button)findViewById(R.id.Reg2);
         inputEmail = (EditText)findViewById(R.id.email);
         inputPassword = (EditText)findViewById(R.id.password);
+        layout_password= (TextInputLayout) findViewById(R.id.layout_signup_password) ;
+        layout_email=(TextInputLayout) findViewById(R.id.layout_signup_email) ;
 
         SignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,18 +45,18 @@ public class RegistrationActivity extends AppCompatActivity {
                 String password = inputPassword.getText().toString().trim();
 
                 if (email.isEmpty()) {
-                    inputEmail.setError(getResources().getString(R.string.Toast1));
-                    inputEmail.requestFocus();
+                    layout_email.setError(getResources().getString(R.string.Toast1));
+                    layout_email.requestFocus();
                     return;}
 
                 if (password.isEmpty()) {
-                    inputPassword.setError(getResources().getString(R.string.Toast2));
-                    inputPassword.requestFocus();
-                    return;}
+                    layout_password.setError(getResources().getString(R.string.Toast2));
+                    layout_password.requestFocus();
+                return;}
 
                 if (password.length() < 6) {
-                    inputPassword.setError(getResources().getString(R.string.TstPassShort));
-                    inputPassword.requestFocus();
+                    layout_password.setError(getResources().getString(R.string.TstPassShort));
+                    layout_password.requestFocus();
                     return;}
 
 

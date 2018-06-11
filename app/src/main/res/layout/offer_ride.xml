@@ -13,7 +13,7 @@
             android:layout_marginLeft="70dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="50dp"
-            android:text="@string/casa"
+            android:text="@string/Home"
             android:textColor="#000"
             android:textSize="20sp" />
 
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/casa"
             android:layout_toEndOf="@+id/imageView"
-            android:text="@string/lavoro"
+            android:text="@string/Work"
             android:textColor="#000"
             android:textSize="20sp" />
 
@@ -38,7 +38,7 @@
             android:background="?attr/editTextBackground"
             android:drawableRight="@drawable/ic_arrow"
             android:gravity="center_vertical"
-            android:hint="@string/partenza"
+            android:hint="@string/Departure"
             android:textColor="?attr/editTextColor"
             android:textSize="20sp" />
 
@@ -52,7 +52,7 @@
             android:background="?attr/editTextBackground"
             android:drawableRight="@drawable/ic_arrow"
             android:gravity="center_vertical"
-            android:hint="@string/data"
+            android:hint="@string/Date"
             android:textColor="?attr/editTextColor"
             android:textSize="20sp" />
 
@@ -131,7 +131,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="31dp"
             android:background="@drawable/button_shape"
-            android:text="@string/offri"
+            android:text="@string/Offer"
             android:textSize="20sp"
             android:textColor="#FFF" />
 

@@ -1,12 +1,21 @@
 package it.uniba.di.sms.carpooling;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -30,7 +39,9 @@ public class RegistrationFormActivity extends AppCompatActivity {
      EditText telefono;
      EditText automobile;
      Button confermaAccount;
-
+     ImageButton addPhoto;
+     Integer REQUEST_CAMERA=1, SELECT_FILE=0;
+     ImageView image;
      //creazione del database
     DatabaseReference databaseUsers;
 
@@ -39,7 +50,8 @@ public class RegistrationFormActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_form);
-
+        image= (ImageView)findViewById(R.id.imageView2) ;
+        addPhoto=(ImageButton)findViewById(R.id.addPhoto);
         //istanza del databse
         databaseUsers = FirebaseDatabase.getInstance().getReference("users");
 
@@ -53,20 +65,26 @@ public class RegistrationFormActivity extends AppCompatActivity {
         telefono = (EditText) findViewById(R.id.Telefono);
         automobile = (EditText) findViewById(R.id.Auto);
         confermaAccount = (Button) findViewById(R.id.confirm);
-
-
         confermaAccount.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                addUser();
-                                finish();
-
-                            }
-                        });
-
-
+            @Override
+            public void onClick(View v) {
+                addUser();
+                finish();
 
             }
+        });
+        addPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
+            }
+        });
+
+
+
+    }
+
+
 
 
 
@@ -133,6 +151,45 @@ public class RegistrationFormActivity extends AppCompatActivity {
 
             }
         });
+        }
+
+        public void selectImage(){
+            final CharSequence items []={"Camera","Gallery","Cancel"};
+            AlertDialog.Builder builder= new AlertDialog.Builder(RegistrationFormActivity.this);
+            builder.setTitle("Add a photo ");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if (items[i].equals("Camera")){
+                        Intent intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(intent,REQUEST_CAMERA);
+                    }else if (items[i].equals("Gallery")){
+                        Intent intent= new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        intent.setType("image/*");
+                        startActivityForResult(intent.createChooser(intent,"Select a file"),SELECT_FILE);
+
+                    }else if (items[i].equals("Cancel")) {
+                        dialogInterface.dismiss();
+                    }
+                }
+            });
+            builder.show();
+        }
+
+        @Override
+        public void onActivityResult(int requestCode,int resultCode,Intent data){
+            super.onActivityResult(requestCode,resultCode,data);
+            if (resultCode== Activity.RESULT_OK){
+                if (requestCode== REQUEST_CAMERA){
+                    Bundle bundle = data.getExtras();
+                    final Bitmap bmp= (Bitmap) bundle.get("data");
+                    image.setImageBitmap(bmp);
+
+                }else if (requestCode== SELECT_FILE){
+                        Uri selectImageUri= data.getData();
+                        image.setImageURI(selectImageUri);
+                }
+            }
         }
     }
 

@@ -26,7 +26,7 @@ public class OfferRideActivity extends AppCompatActivity {
     private TextView dateView;
     private int year, month, day,hour,minute,dayOfWeek;
     private TextView tvTime;
-    private EditText posti;
+    private TextView posti;
     private int postiIns;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class OfferRideActivity extends AppCompatActivity {
 
 
 
-        posti=(EditText) findViewById(R.id.textPostiInseriti);
+        posti=(TextView) findViewById(R.id.textPostiInseriti);
         postiIns= Integer.parseInt(posti.getText().toString());
 
         ImageButton btnMinus=(ImageButton) findViewById(R.id.btnMinus);
@@ -101,13 +101,13 @@ public class OfferRideActivity extends AppCompatActivity {
         public void onClick(View view) {
             TextView mHome = (TextView) findViewById(R.id.casa);
             TextView mWork = (TextView) findViewById(R.id.lavoro);
-            if(mHome.getText().toString().equals(getResources().getString(R.string.casa))){
-                mHome.setText(R.string.lavoro);
-                mWork.setText(R.string.casa);
+            if(mHome.getText().toString().equals(getResources().getString(R.string.Home))){
+                mHome.setText(R.string.Work);
+                mWork.setText(R.string.Home);
             }else
             {
-                mHome.setText(R.string.casa);
-                mWork.setText(R.string.lavoro);
+                mHome.setText(R.string.Home);
+                mWork.setText(R.string.Work);
             }
 
 
