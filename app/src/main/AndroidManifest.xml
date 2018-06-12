@@ -36,7 +36,8 @@
         <activity android:name=".OfferRideActivity" />
         <activity android:name=".RegistrationActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".RegistrationFormActivity" />
+        <activity android:name=".RegistrationFormActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"

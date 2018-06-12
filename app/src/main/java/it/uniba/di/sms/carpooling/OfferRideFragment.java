@@ -162,7 +162,6 @@ public class OfferRideFragment extends Fragment {
             if (Locale.getDefault().getLanguage() == "en" ){
                 dateText.setText(String.valueOf(monthOfYear+1) + "-" + String.valueOf(dayOfMonth)
                         + "-" + String.valueOf(year));
-
                 dayOfWeek.setText(sdf.format(pick));
 
 

@@ -7,10 +7,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -41,7 +44,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
 
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
     //dichiarazioni variabili per l'utente
      EditText nome;
@@ -51,8 +54,8 @@ public class RegistrationFormActivity extends AppCompatActivity {
      EditText telefono;
      EditText automobile;
      Button confermaAccount;
-     ImageView addPhoto;
-     Integer REQUEST_CAMERA=1, SELECT_FILE=0;
+     ImageButton addPhoto;
+     Integer REQUEST_CAMERA=2, SELECT_FILE=0;
      ImageView image;
      //creazione del database
     DatabaseReference databaseUsers;
@@ -62,8 +65,15 @@ public class RegistrationFormActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_form);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Registrazione");
+        toolbar.setLogo(R.mipmap.ic_launcher3_round);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        setSupportActionBar(toolbar);
+
         image= (ImageView)findViewById(R.id.imageView2) ;
-        addPhoto=(ImageView)findViewById(R.id.addPhoto);
+        addPhoto=(ImageButton)findViewById(R.id.addPhoto);
         //istanza del databse
         databaseUsers = FirebaseDatabase.getInstance().getReference("users");
 
@@ -233,7 +243,9 @@ public class RegistrationFormActivity extends AppCompatActivity {
                 if (requestCode== REQUEST_CAMERA){
                     Bundle bundle = data.getExtras();
                     final Bitmap bmp= (Bitmap) bundle.get("data");
-                    image.setImageBitmap(bmp);
+                    RoundedBitmapDrawable rBD= RoundedBitmapDrawableFactory.create(getResources(),bmp);
+                    rBD.setCircular(true);
+                    image.setImageDrawable(rBD);
 
                 }else if (requestCode== SELECT_FILE){
                         Uri selectImageUri= data.getData();
