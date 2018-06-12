@@ -3,48 +3,83 @@ package it.uniba.di.sms.carpooling;
 
 public class User {
 
-    private String UserEmail;
-    private String UserName;
-    private String UserSurname;
-    private String UserAddress;
-    private String UserCompany;
-    private String UserPhone;
+    private String userEmail;
+    private String userName;
+    private String userSurname;
+    private String userAddress;
+    private String userCompany;
+    private String userPhone;
 
     //la macchina non è obbligatoria ma si può inserire
 
     private String UserCar;
 
-    public User(String UserEmail, String UserName, String UserSurname, String UserAddress, String UserCompany, String UserPhone){
-        this.UserEmail = UserEmail;
-        this.UserName = UserName;
-        this.UserSurname = UserSurname;
-        this.UserAddress = UserAddress;
-        this.UserCompany = UserCompany;
-        this.UserPhone = UserPhone;
+    public User(String useremail, String username, String usersurname, String useraddress, String usercompany, String userphone){
+        this.userEmail = useremail;
+        this.userName = username;
+        this.userSurname = usersurname;
+        this.userAddress = useraddress;
+        this.userCompany = usercompany;
+        this.userPhone = userphone;
+    }
+
+    public User(){
+        //costruttore vuoto che servirà per il metodo OnDataChange(
     }
 
 
 
     //metodi di get
-
-    public String getUserEmail(){
-        return UserEmail;
+    public String getUseremail() {
+        return userEmail;
     }
-    public String getUserName() {
-        return UserName;}
-    public String getUserSurname() {
-        return UserSurname;}
 
-    public String getUserAddress() {
-        return UserAddress;}
+    public String getUsername() {
+        return userName;
+    }
 
-    public String getUserCompany() {
-        return UserCompany;}
+    public String getUsersurname() {
+        return userSurname;
+    }
 
-    public String getUserPhone() {
-        return UserPhone;}
+    public String getUseraddress() {
+        return userAddress;
+    }
 
-    public String getUserCar() {
-        return UserCar;}
+    public String getUsercompany() {
+        return userCompany;
+    }
+
+    public String getUserphone() {
+        return userPhone;
+    }
+
+
+    //metodi di set
+    public void setUseremail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public void setUsername(String userName) {
+        this.userName = userName;
+    }
+
+    public void setUsersurname(String userSurname) {
+        this.userSurname = userSurname;
+    }
+
+    public void setUseraddress(String userAddress) {
+        this.userAddress = userAddress;
+    }
+
+    public void setUsercompany(String userCompany) {
+        this.userCompany = userCompany;
+    }
+
+    public void setUserphone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+
+
 
 }

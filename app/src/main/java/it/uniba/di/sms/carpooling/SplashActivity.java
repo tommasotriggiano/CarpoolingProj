@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -16,6 +17,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import static android.content.ContentValues.TAG;
 
 public class SplashActivity extends Activity {
     int SPLASH_TIME_OUT = 2000;
@@ -39,30 +42,35 @@ public class SplashActivity extends Activity {
         splash.setAnimation(up_to_down);
         downtoup= AnimationUtils.loadAnimation(this,R.anim.downtoup);
         text.setAnimation(downtoup);
+
+        final ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    //se l'istanza del database esiste, quindi l'utente ha già inserito le sue informazioni, si passa all'activity principale
+                    startActivity(new Intent(SplashActivity.this,MainActivity.class));
+                    finish();
+                }
+                else{
+                    startActivity(new Intent(SplashActivity.this,LoginActivity.class));
+                    finish();}
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG,"Chiamata On cancelled"+databaseError.getDetails());}
+
+        };
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
                 if(user != null && user.isEmailVerified()){
-
-                    ref.child(user.getUid()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.exists()){
-                                //se l'istanza del database esiste, quindi l'utente ha già inserito le sue informazioni, si passa all'activity principale
-                                startActivity(new Intent(SplashActivity.this,MainActivity.class));
-                                finish();
-                            }
-                            else{
-                                startActivity(new Intent(SplashActivity.this,LoginActivity.class));
-                                finish();}
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {}
-                    });}
+                    ref.child(user.getUid()).addValueEventListener(listener);}
                     else{
                         Intent i = new Intent(SplashActivity.this,LoginActivity.class);
                         startActivity(i);
+                        finish();
                         }
                         }
         }, SPLASH_TIME_OUT);

@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -155,11 +156,11 @@ public class OfferRideFragment extends Fragment {
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
             if (Locale.getDefault().getLanguage() == "en" ){
-                dateText.setText(String.valueOf(monthOfYear+1) + "/" + String.valueOf(dayOfMonth)
-                        + "/" + String.valueOf(year));
+                dateText.setText(String.valueOf(monthOfYear+1) + "-" + String.valueOf(dayOfMonth)
+                        + "-" + String.valueOf(year));
             }else{
-                  dateText.setText(String.valueOf(dayOfMonth) + "/" + String.valueOf(monthOfYear+1)
-                    + "/" + String.valueOf(year));}
+                  dateText.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear+1)
+                    + "-" + String.valueOf(year));}
         }
     };
     private void showTimePicker() {
@@ -213,36 +214,17 @@ public class OfferRideFragment extends Fragment {
             tvTime.requestFocus();
             return;
         }
+        //ricavo l'user id per collegare il passaggio all'utente che lo ha offerto
+        FirebaseUser profile = FirebaseAuth.getInstance().getCurrentUser();
 
-        //ricavo l'user id per collegare l'istanza del passaggio all'utente
-        final FirebaseUser profile = FirebaseAuth.getInstance().getCurrentUser();
-        //leggo il database degli utenti per inserire l'oggetto user nel database dei passaggi
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(profile.getUid());
+        /*inserisco nel database passaggi il passaggio creato.
+        Il passaggio avrà una chiave composta costituita da id utente,data e ora,
+        in questo modo l'utente può offrire due passaggi nello stesso giorno ma ad orari diversi
+         */
 
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                User user = dataSnapshot.child(profile.getUid()).getValue(User.class);
-
-                Passaggio passaggio = new Passaggio(user,dataPassaggio,ora,postiDisponibili);
-                databasePassaggi.child(profile.getUid()).setValue(passaggio);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-
-
-
-
-
-
-}}
+        Passaggio passaggio = new Passaggio(postiDisponibili);
+        databasePassaggi.child(profile.getUid()).child(dataPassaggio).child(ora).setValue(passaggio);
+    }
+}
 
 

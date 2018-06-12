@@ -115,12 +115,12 @@ public class SearchRideActivity extends AppCompatActivity {
 
     private void showDate(int year, int month, int day) {
         if (Locale.getDefault().getLanguage() == "en" ){
-            dateView.setText(new StringBuilder().append(month).append("/")
-                    .append(day).append("/").append(year));
+            dateView.setText(new StringBuilder().append(month).append("-")
+                    .append(day).append("-").append(year));
         }
         else {
-            dateView.setText(new StringBuilder().append(day).append("/")
-                    .append(month).append("/").append(year));
+            dateView.setText(new StringBuilder().append(day).append("-")
+                    .append(month).append("-").append(year));
 
         }
     }
