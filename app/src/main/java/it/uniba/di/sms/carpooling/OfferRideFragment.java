@@ -92,6 +92,8 @@ public class OfferRideFragment extends Fragment {
         btnInvert.setOnClickListener(btnInvertListener);
         btnMinus.setOnClickListener(btnMinusListener);
         btnPlus.setOnClickListener(btnPlusListener);
+
+
         offer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +104,7 @@ public class OfferRideFragment extends Fragment {
 
         );
     }
+
     public View.OnClickListener btnInvertListener= new View.OnClickListener(){
         @Override
         public void onClick(View view) {
@@ -209,9 +212,12 @@ public class OfferRideFragment extends Fragment {
 
     public void addPassaggio(){
 
-        final String dataPassaggio = dateText.getText().toString().trim();
-        final String ora = tvTime.getText().toString().trim();
-        final int postiDisponibili = postiIns;
+        String dataPassaggio = dateText.getText().toString().trim();
+        String ora = tvTime.getText().toString().trim();
+        int postiDisponibili = postiIns;
+        String giorno = dayOfWeek.getText().toString().trim();
+        String campo1 = mHome.getText().toString().trim();
+        String campo2 = mWork.getText().toString().trim();
 
         if(dataPassaggio.isEmpty()){
             dateText.setError(getResources().getString(R.string.EntName));
@@ -225,25 +231,19 @@ public class OfferRideFragment extends Fragment {
         }
 
         //ricavo l'user id per collegare l'istanza del passaggio all'utente
-        final FirebaseUser profile = FirebaseAuth.getInstance().getCurrentUser();
-        //leggo il database degli utenti per inserire l'oggetto user nel database dei passaggi
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(profile.getUid());
+        FirebaseUser profile = FirebaseAuth.getInstance().getCurrentUser();
+        String tipo;
+        if(campo1.equals(getResources().getString(R.string.Home))){
+            tipo = "Casa-Lavoro";}
+        else {
+            tipo = "Lavoro-Casa";}
+            
+        Passaggio passaggio = new Passaggio(tipo,giorno,postiDisponibili);
+        databasePassaggi.child(profile.getUid()).child(dataPassaggio).child(ora).setValue(passaggio);
 
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                User user = dataSnapshot.child(profile.getUid()).getValue(User.class);
-
-                Passaggio passaggio = new Passaggio(user,dataPassaggio,ora,postiDisponibili);
-                databasePassaggi.child(profile.getUid()).setValue(passaggio);
             }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
 
 
@@ -253,6 +253,7 @@ public class OfferRideFragment extends Fragment {
 
 
 
-}}
+
+}
 
 
