@@ -22,10 +22,17 @@ public class SplashActivity extends Activity {
     Animation up_to_down,downtoup;
     ImageView splash;
     TextView text;
+    FirebaseUser user;
+    DatabaseReference ref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        ref = FirebaseDatabase.getInstance().getReference("users");
+
         splash=(ImageView)findViewById(R.id.image) ;
         text=(TextView) findViewById(R.id.textView3);
         up_to_down= AnimationUtils.loadAnimation(this,R.anim.up_to_down);
@@ -35,10 +42,9 @@ public class SplashActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
                 if(user != null && user.isEmailVerified()){
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
-                    //leggo l'instanza del database creato nella regsitration form
+
                     ref.child(user.getUid()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -46,15 +52,19 @@ public class SplashActivity extends Activity {
                                 //se l'istanza del database esiste, quindi l'utente ha già inserito le sue informazioni, si passa all'activity principale
                                 startActivity(new Intent(SplashActivity.this,MainActivity.class));
                                 finish();
-                            }}
+                            }
+                            else{
+                                startActivity(new Intent(SplashActivity.this,LoginActivity.class));
+                                finish();}
+                        }
                         @Override
                         public void onCancelled(DatabaseError databaseError) {}
                     });}
-                    else{*/
+                    else{
                         Intent i = new Intent(SplashActivity.this,LoginActivity.class);
                         startActivity(i);
-                        finish();}
-
+                        }
+                        }
         }, SPLASH_TIME_OUT);
     }
 }
