@@ -35,7 +35,7 @@ public class SplashActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user != null && user.isEmailVerified()){
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
                     //leggo l'instanza del database creato nella regsitration form
@@ -50,11 +50,11 @@ public class SplashActivity extends Activity {
                         @Override
                         public void onCancelled(DatabaseError databaseError) {}
                     });}
-                    else{
+                    else{*/
                         Intent i = new Intent(SplashActivity.this,LoginActivity.class);
                         startActivity(i);
                         finish();}
-                        }
+
         }, SPLASH_TIME_OUT);
     }
 }

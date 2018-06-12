@@ -4,76 +4,101 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="it.uniba.di.sms.carpooling.OfferRideActivity">
-
+        tools:context="it.uniba.di.sms.carpooling.OfferRideActivity"
+        android:theme="@style/ColoredHandleTheme">
+    <LinearLayout
+        android:id="@+id/layout_casaLavoro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="70dp">
         <TextView
             android:id="@+id/casa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="50dp"
             android:text="@string/Home"
             android:textColor="#000"
             android:textSize="20sp" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_arrow_forward" />
 
         <TextView
             android:id="@+id/lavoro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/casa"
-            android:layout_toEndOf="@+id/imageView"
             android:text="@string/Work"
             android:textColor="#000"
             android:textSize="20sp" />
 
-
-        <TextView
-            android:id="@+id/tvTime"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_alignStart="@+id/textData"
-            android:layout_below="@+id/textData"
-            android:layout_marginTop="37dp"
-            android:background="?attr/editTextBackground"
-            android:drawableRight="@drawable/ic_arrow"
-            android:gravity="center_vertical"
-            android:hint="@string/Departure"
-            android:textColor="?attr/editTextColor"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/textData"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_alignStart="@+id/casa"
-            android:layout_below="@+id/Invert"
-            android:layout_marginTop="35dp"
-            android:background="?attr/editTextBackground"
-            android:drawableRight="@drawable/ic_arrow"
-            android:gravity="center_vertical"
-            android:hint="@string/Date"
-            android:textColor="?attr/editTextColor"
-            android:textSize="20sp" />
-
         <ImageButton
             android:id="@+id/Invert"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_alignBottom="@+id/imageView"
-            android:layout_toEndOf="@+id/lavoro"
-            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:background="@android:color/transparent"
             android:elevation="2dp"
             app:srcCompat="@drawable/ic_action_name" />
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
+    </LinearLayout>
+   <android.support.design.widget.TextInputLayout
+       android:id="@+id/layout_data"
+       android:layout_width="205dp"
+       android:layout_height="wrap_content"
+       android:layout_alignStart="@+id/layout_casaLavoro"
+       android:layout_below="@+id/layout_casaLavoro"
+       android:layout_marginTop="25dp"
+       >
+       <EditText
+           android:id="@+id/textData"
+           android:layout_width="200dp"
+           android:layout_height="50dp"
+           android:hint="@string/Date"
+           android:drawableRight="@drawable/ic_arrow"
+           android:gravity="center_vertical"
+           android:textColor="?attr/editTextColor"
+           android:textSize="20sp" />
+
+   </android.support.design.widget.TextInputLayout>
+
+
+   <android.support.design.widget.TextInputLayout
+       android:id="@+id/layout_ora"
+       android:layout_width="205dp"
+       android:layout_height="wrap_content"
+       android:layout_alignStart="@+id/layout_data"
+       android:layout_below="@+id/layout_data"
+       android:layout_marginTop="25dp">
+       <EditText
+           android:id="@+id/tvTime"
+           android:layout_width="200dp"
+           android:layout_height="50dp"
+           android:drawableRight="@drawable/ic_arrow"
+           android:gravity="center_vertical"
+           android:hint="@string/Departure"
+           android:textColor="?attr/editTextColor"
+           android:textSize="20sp" />
+
+   </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/layout_giorno"
+        android:layout_width="205dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/layout_ora"
+        android:layout_below="@+id/layout_ora"
+        android:layout_marginTop="37dp">
+        <EditText
+            android:id="@+id/day"
+            android:textSize="20sp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/casa"
-            android:layout_toEndOf="@+id/casa"
-            app:srcCompat="@drawable/ic_arrow_forward" />
+            android:hint="@string/dayOfWeek"
+            android:textColor="#000"/>
+    </android.support.design.widget.TextInputLayout>
 
 
 
@@ -81,8 +106,8 @@
             android:id="@+id/textPosti"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/spinner"
-            android:layout_below="@+id/spinner"
+            android:layout_alignStart="@+id/layout_giorno"
+            android:layout_below="@+id/layout_giorno"
             android:layout_marginTop="45dp"
             android:text="@string/posti"
             android:textSize="20sp"
@@ -119,9 +144,10 @@
             android:layout_marginRight="2dp"
             android:ems="10"
             android:gravity="center"
-            android:inputType="number"
             android:text="1"
+            android:textColor="#000"
             android:textSize="20sp" />
+
 
         <Button
             android:id="@+id/btnOffri"
@@ -135,14 +161,7 @@
             android:textSize="20sp"
             android:textColor="#FFF" />
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tvTime"
-        android:layout_below="@+id/tvTime"
-        android:layout_marginTop="37dp"
-        android:entries="@array/day_of_week"/>
+
 
 
 </RelativeLayout>

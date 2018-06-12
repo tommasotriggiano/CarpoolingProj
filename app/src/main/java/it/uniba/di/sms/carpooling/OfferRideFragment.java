@@ -24,12 +24,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 
 public class OfferRideFragment extends Fragment {
-    TextView dateText,tvTime;
+    EditText dateText,tvTime;
     ImageButton btnInvert;
     TextView mWork;
     TextView mHome;
@@ -38,6 +41,7 @@ public class OfferRideFragment extends Fragment {
     ImageButton btnMinus;
     ImageButton btnPlus;
     Button offer;
+    EditText dayOfWeek;
 
     //creazione del database
     DatabaseReference databasePassaggi;
@@ -46,15 +50,15 @@ public class OfferRideFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.offer_ride, container,false);
-        dateText=(TextView)view.findViewById(R.id.textData);
-        tvTime = (TextView) view.findViewById(R.id.tvTime);
+        dateText=(EditText)view.findViewById(R.id.textData);
+        tvTime = (EditText) view.findViewById(R.id.tvTime);
         btnInvert = (ImageButton) view.findViewById(R.id.Invert);
         mHome = (TextView) view.findViewById(R.id.casa);
         mWork = (TextView) view.findViewById(R.id.lavoro);
         posti=(TextView) view.findViewById(R.id.textPostiInseriti);
         postiIns= Integer.parseInt(posti.getText().toString());
         offer = (Button)view.findViewById(R.id.btnOffri);
-
+        dayOfWeek=(EditText) view.findViewById(R.id.day) ;
         //istanza del database riguardanti i passaggi
         databasePassaggi = FirebaseDatabase.getInstance().getReference("passaggi");
 
@@ -149,17 +153,24 @@ public class OfferRideFragment extends Fragment {
         date.show(getFragmentManager(), "Date Picker");
     }
 
-
+    SimpleDateFormat sdf= new SimpleDateFormat("EEEE");
     DatePickerDialog.OnDateSetListener ondate = new DatePickerDialog.OnDateSetListener() {
 
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
+            Date pick= new Date(year,monthOfYear,dayOfMonth-1);
             if (Locale.getDefault().getLanguage() == "en" ){
-                dateText.setText(String.valueOf(monthOfYear+1) + "/" + String.valueOf(dayOfMonth)
-                        + "/" + String.valueOf(year));
+                dateText.setText(String.valueOf(monthOfYear+1) + "-" + String.valueOf(dayOfMonth)
+                        + "-" + String.valueOf(year));
+
+                dayOfWeek.setText(sdf.format(pick));
+
+
             }else{
-                  dateText.setText(String.valueOf(dayOfMonth) + "/" + String.valueOf(monthOfYear+1)
-                    + "/" + String.valueOf(year));}
+                  dateText.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear+1)
+                    + "-" + String.valueOf(year));
+                dayOfWeek.setText(sdf.format(pick));
+            }
         }
     };
     private void showTimePicker() {

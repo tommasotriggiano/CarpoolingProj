@@ -39,7 +39,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
      EditText telefono;
      EditText automobile;
      Button confermaAccount;
-     ImageButton addPhoto;
+     ImageView addPhoto;
      Integer REQUEST_CAMERA=1, SELECT_FILE=0;
      ImageView image;
      //creazione del database
@@ -51,7 +51,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_form);
         image= (ImageView)findViewById(R.id.imageView2) ;
-        addPhoto=(ImageButton)findViewById(R.id.addPhoto);
+        addPhoto=(ImageView)findViewById(R.id.addPhoto);
         //istanza del databse
         databaseUsers = FirebaseDatabase.getInstance().getReference("users");
 
