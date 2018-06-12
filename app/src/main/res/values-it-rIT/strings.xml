@@ -6,6 +6,8 @@
     <string name="Date">Data</string>
     <string name="Home">Casa </string>
     <string name="Work">Lavoro</string>
+    <string name="WorkHome">Lavoro-Casa</string>
+    <string name="HomeWork">Casa-Lavoro</string>
     <string name="Departure">Ora di partenza</string>
     <string name="giorno">Giorno della settimana</string>
     <string name="Search">Cerca</string>
@@ -32,7 +34,11 @@
     <string name="Authenticationf">Autenticazione fallita</string>
     <string name="Successful">Login effettuato con successo</string>
     <string name="NotVerified">L\'email non è stata ancora verificata</string>
-
+    <string name="ForgotPassword">Password dimenticata?</string>
+    <string name="ResetPassword">Reset Password</string>
+    <string name="Description">Inserisci l\'email con la quale ti sei registrato e ti invieremo un link per rempoistare la tua password </string>
+    <string name="Emailsent">Email inviata</string>
+    <string name="EmailNotRegistered">Questa email non è registrata</string>
     <!--Registration form activity-->
     <!--Layout-->
     <string name ="obbligatorio">* Campo obbligatorio</string>

@@ -6,6 +6,8 @@
     <string name="Home">Home</string>
     <string name="Departure">Departure\'s Hour</string>
     <string name="Work">Work</string>
+    <string name="WorkHome">Work-Home</string>
+    <string name="HomeWork">Home-Work</string>
     <string name="giorno">Day of week</string>
     <string name="Search">Search</string>
     <string name="Driver">Name and surname driver</string>
@@ -14,7 +16,7 @@
     <string name="dayOfWeek">Day of week</string>
 
 
-    <!-- login and registration acitivity-->
+    <!-- login and registration activity-->
     <string name="etUsername">Username</string>
     <string name="etName">Username</string>
     <string name="etUserEmail">E-mail</string>
@@ -34,6 +36,11 @@
     <string name="Authenticationf">Authentication failed</string>
     <string name="Successful">Login successful</string>
     <string name="NotVerified">Email is not verified yet</string>
+    <string name="ForgotPassword">Forgot password?</string>
+    <string name="ResetPassword">Reset Password</string>
+    <string name="Description">Enter your registration email and we will send you a link in order to reset your password</string>
+    <string name="Emailsent">Email sent</string>
+    <string name="EmailNotRegistered">This email is not registered</string>
 
     <!--Registration form activity-->
     <!--Layout-->

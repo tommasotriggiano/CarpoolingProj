@@ -234,10 +234,10 @@ public class OfferRideFragment extends Fragment {
         FirebaseUser profile = FirebaseAuth.getInstance().getCurrentUser();
         String tipo;
         if(campo1.equals(getResources().getString(R.string.Home))){
-            tipo = "Casa-Lavoro";}
+            tipo = getResources().getString(R.string.HomeWork);}
         else {
-            tipo = "Lavoro-Casa";}
-            
+            tipo = getResources().getString(R.string.WorkHome);;}
+
         Passaggio passaggio = new Passaggio(tipo,giorno,postiDisponibili);
         databasePassaggi.child(profile.getUid()).child(dataPassaggio).child(ora).setValue(passaggio);
 
