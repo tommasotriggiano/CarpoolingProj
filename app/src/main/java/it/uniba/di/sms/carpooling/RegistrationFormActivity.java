@@ -110,8 +110,10 @@ public class RegistrationFormActivity extends AppCompatActivity {
         confermaAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addUser();
-                finish();
+
+                sendMail();
+                //addUser();
+                //finish();
 
             }
         });
@@ -124,6 +126,18 @@ public class RegistrationFormActivity extends AppCompatActivity {
 
 
 
+    }
+
+
+    public void sendMail() {
+        try
+        {
+            LongOperation l=new LongOperation();
+            l.execute();  //sends the email in background
+            Toast.makeText(RegistrationFormActivity.this, l.get(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("SendMail", e.getMessage(), e);
+        }
     }
 
 
