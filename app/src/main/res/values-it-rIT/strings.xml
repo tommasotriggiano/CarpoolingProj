@@ -12,16 +12,8 @@
     <string name="Driver">Nome e Cognome autista</string>
     <string name="posti">N. posti disponibili</string>
     <string name="Offer">Offri</string>
-    <array name="day_of_week">
-        <item>Giorno della settimana</item>
-        <item>Lunedi</item>
-        <item>Martedi</item>
-        <item>Mercoledi</item>
-        <item>Giovedi</item>
-        <item>Venerdi</item>
-        <item>Sabato</item>
-        <item>Domenica</item>
-    </array>
+    <string name="dayOfWeek">Giorno</string>
+
     <!-- login and registration acitivity-->
     <string name="etUserEmail">E-mail</string>
     <string name="etUserPassword">Password</string>

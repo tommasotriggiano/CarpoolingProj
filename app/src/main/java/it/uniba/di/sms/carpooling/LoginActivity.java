@@ -24,8 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 public class LoginActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
     private TextInputLayout layout_email,layout_password;
-    private Button btnLogin;
-    private Button register;
+    private Button btnLogin,register;
     private FirebaseAuth mAuth;
 
     @Override
