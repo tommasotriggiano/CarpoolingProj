@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -66,6 +67,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String email = inputEmail.getText().toString();
+
+                String emailMobiltyManager = "mobilitymanagercarpooling@gmail.com";
+                if(email.compareTo(emailMobiltyManager)==0){
+                    //TODO Start intent for mobilityManagerActivity
+                }
+
                 final String password = inputPassword.getText().toString();
 
                 if (email.isEmpty()) {

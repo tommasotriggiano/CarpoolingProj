@@ -90,6 +90,7 @@
     <!-- myrides -->
     <string name="offered">Offered</string>
     <string name="required">Required</string>
+    <string name="body_mail">You have a new request. Please open the app Carpooling</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
