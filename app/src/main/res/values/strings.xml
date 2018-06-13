@@ -44,13 +44,13 @@
 
     <!--Registration form activity-->
     <!--Layout-->
-    <string name="obbligatorio">* Required field</string>
+    <string name="Registration">Registration</string>
+    <string name="Camera">Camera</string>
+    <string name="Gallery">Gallery</string>
+    <string name="Cancel">Cancel</string>
     <string name="Name">Name *</string>
     <string name="Surname">Surname *</string>
     <string name="Address">Home Address *</string>
-    <string name="città">City *</string>
-    <string name="cap">PostCode *</string>
-    <string name="nazione">Country *</string>
     <array name="Companies">
         <item>Grifo srl</item>
         <item>Exprivia srl</item>
@@ -78,12 +78,14 @@
 
 
     <!--Main activity-->
+    <string name="HomePage">Home</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="profile">Profile</string>
     <string name="myrides">My Rides</string>
     <string name="searchride">Search ride</string>
-    <string name="mypoints">My Points</string>
+    <string name="Rank">Rank</string>
     <string name="offeraride">Offer ride</string>
+    <string name="approved">Affiliation requests</string>
     <string name="settings">Settings</string>
     <string name="logout">Log Out</string>
 

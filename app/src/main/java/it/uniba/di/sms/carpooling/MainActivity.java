@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+       // navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
         /*getSupportFragmentManager().beginTransaction().replace(R.id.content_frame,new OfferRideFragment()).commit();
         navigationView.setCheckedItem(R.id.nav_offeraride);*/
     }
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
         Fragment fragment = null;
 
         if (id == R.id.nav_profile) {

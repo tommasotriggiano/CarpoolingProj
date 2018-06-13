@@ -40,6 +40,8 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class RegistrationFormActivity extends AppCompatActivity {
 
 
@@ -56,7 +58,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
      Button confermaAccount;
      ImageButton addPhoto;
      Integer REQUEST_CAMERA=2, SELECT_FILE=0;
-     ImageView image;
+     CircleImageView image;
      //creazione del database
     DatabaseReference databaseUsers;
 
@@ -67,12 +69,12 @@ public class RegistrationFormActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration_form);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Registrazione");
+        toolbar.setTitle(R.string.Registration);
         toolbar.setLogo(R.mipmap.ic_launcher3_round);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
 
-        image= (ImageView)findViewById(R.id.imageView2) ;
+        image= (CircleImageView) findViewById(R.id.imageView2) ;
         addPhoto=(ImageButton)findViewById(R.id.addPhoto);
         //istanza del databse
         databaseUsers = FirebaseDatabase.getInstance().getReference("users");
@@ -210,7 +212,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
         }
 
         public void selectImage(){
-            final CharSequence items []={"Camera","Gallery","Cancel"};
+            final CharSequence items []={getResources().getString(R.string.Camera),getResources().getString(R.string.Gallery),"Cancel"};
             AlertDialog.Builder builder= new AlertDialog.Builder(RegistrationFormActivity.this);
             builder.setTitle("Add a photo ");
             builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -257,9 +259,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
                 if (requestCode== REQUEST_CAMERA){
                     Bundle bundle = data.getExtras();
                     final Bitmap bmp= (Bitmap) bundle.get("data");
-                    RoundedBitmapDrawable rBD= RoundedBitmapDrawableFactory.create(getResources(),bmp);
-                    rBD.setCircular(true);
-                    image.setImageDrawable(rBD);
+                    image.setImageBitmap(bmp);
 
                 }else if (requestCode== SELECT_FILE){
                         Uri selectImageUri= data.getData();
