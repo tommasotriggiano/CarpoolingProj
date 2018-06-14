@@ -111,12 +111,13 @@ public class RegistrationFormActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                addUser();
                 sendMail();
-                //addUser();
-                //finish();
+                finish();
 
             }
         });
+
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

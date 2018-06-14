@@ -12,10 +12,16 @@ public class Passaggio {
     private ArrayList<User> passeggeri;
 
 
-    public Passaggio(String tipo,String giorno,int postiDisponibili) {
+    public Passaggio(String data,String ora,String tipo,String giorno,int postiDisponibili) {
+        this.dataPassaggio = data;
+        this.ora = ora;
         this.tipoViaggio = tipo;
         this.giorno = giorno;
         this.postiDisponibili = postiDisponibili;
+    }
+
+    public Passaggio(){
+        //costruttore che servirà per l'on datachange()
     }
 
     public String getTipoViaggio() {
@@ -44,6 +50,7 @@ public class Passaggio {
     public String getOra() {
         return ora;
     }
+
     public int getPostiDisponibili() {
         return postiDisponibili;
     }
@@ -62,6 +69,11 @@ public class Passaggio {
 
     public void setPostiDisponibili(int postiDisponibili) {
         this.postiDisponibili = postiDisponibili;
+    }
+
+    public String toString(){
+        return "Ora: "+this.ora;
+
     }
 }
 

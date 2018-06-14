@@ -16,7 +16,6 @@
         android:layout_marginTop="50dp"
         android:textColor="#fff"
         android:textColorHint="#fff"
-        android:textCursorDrawable="@color/colorPrimaryDark"
         app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +33,6 @@
             android:paddingLeft="15dp"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:textCursorDrawable="@color/colorPrimaryDark"
 
             />
     </android.support.design.widget.TextInputLayout>
@@ -49,7 +47,6 @@
         android:layout_marginTop="15dp"
         android:textColor="#fff"
         android:textColorHint="#fff"
-        android:textCursorDrawable="@color/colorPrimaryDark"
         app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,7 +66,7 @@
             android:paddingStart="15dp"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:textCursorDrawable="@color/colorPrimaryDark" />
+           />
 
     </android.support.design.widget.TextInputLayout>
 

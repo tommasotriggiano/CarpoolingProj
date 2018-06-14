@@ -238,7 +238,7 @@ public class OfferRideFragment extends Fragment {
         else {
             tipo = getResources().getString(R.string.WorkHome);;}
 
-        Passaggio passaggio = new Passaggio(tipo,giorno,postiDisponibili);
+        Passaggio passaggio = new Passaggio(dataPassaggio,ora,tipo,giorno,postiDisponibili);
         databasePassaggi.child(profile.getUid()).child(dataPassaggio).child(ora).setValue(passaggio);
 
 
