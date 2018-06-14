@@ -41,6 +41,7 @@
     <string name="Description">Enter your registration email and we will send you a link in order to reset your password</string>
     <string name="Emailsent">Email sent</string>
     <string name="EmailNotRegistered">This email is not registered</string>
+    <string name="NotifyApproved">Your account has been approved</string>
 
     <!--Registration form activity-->
     <!--Layout-->
