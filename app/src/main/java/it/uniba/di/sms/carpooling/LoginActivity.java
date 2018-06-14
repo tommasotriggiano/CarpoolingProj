@@ -1,9 +1,17 @@
 package it.uniba.di.sms.carpooling;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +43,34 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        boolean isApproved=false;
+        if( isApproved ){
+
+            /*CREATION PENDENT INTENT FOR NOTIFY*/
+            Intent intentNoti=new Intent(this,MainActivity.class);
+            PendingIntent pendingIntentNoti=PendingIntent.getActivity(this, 0, intentNoti, 0);
+            /*CREATION NOTIFY*/
+            Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                    //.setSmallIcon(R.drawable.notification_icon)
+                    .setContentTitle("")
+                    .setContentText("")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+            NotificationCompat.Builder n  = new NotificationCompat.Builder(this)
+                    .setContentTitle(getResources().getString(R.string.NotifyApproved))
+                    .setContentText("Autore: Mobility Manager")
+                    .setSmallIcon(android.R.drawable.ic_dialog_email)
+                    .setContentIntent(pendingIntentNoti)
+                    .setSound(sound)
+                    .setAutoCancel(true);
+            /*SEND NOTIFY*/
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(0, n.build());
+
+        }
+
+        //Intent intent=new Intent(this,MapsActivity.class);
+        //startActivity(intent);
 
         mAuth = FirebaseAuth.getInstance();
 

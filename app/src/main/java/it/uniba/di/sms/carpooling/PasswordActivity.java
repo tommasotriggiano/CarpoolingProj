@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +27,8 @@ public class PasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password);
+        getSupportActionBar().setTitle(R.string.ResetPassword);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         description = (TextView)findViewById(R.id.tvDescription);
         emailReset = (EditText)findViewById(R.id.etPassEmail);

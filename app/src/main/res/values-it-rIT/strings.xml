@@ -36,19 +36,19 @@
     <string name="Successful">Login effettuato con successo</string>
     <string name="NotVerified">L\'email non è stata ancora verificata</string>
     <string name="ForgotPassword">Password dimenticata?</string>
-    <string name="ResetPassword">Reset Password</string>
+    <string name="ResetPassword">Recupera Password</string>
     <string name="Description">Inserisci l\'email con la quale ti sei registrato e ti invieremo un link per rempoistare la tua password </string>
     <string name="Emailsent">Email inviata</string>
     <string name="EmailNotRegistered">Questa email non è registrata</string>
     <!--Registration form activity-->
     <!--Layout-->
-    <string name ="obbligatorio">* Campo obbligatorio</string>
+    <string name="Registration">Registrazione</string>
+    <string name="Camera">Camera</string>
+    <string name="Gallery">Galleria</string>
+    <string name="Cancel">Annulla</string>
     <string name="Name">Nome *</string>
     <string name="Surname">Cognome *</string>
     <string name="Address">Indirizzo di casa *</string>
-    <string name="città">Città *</string>
-    <string name="cap">C.A.P. *</string>
-    <string name="nazione">Nazione *</string>
     <array name="Companies">
         <item>Grifo srl</item>
         <item>Exprivia srl</item>
@@ -68,11 +68,13 @@
 
 
     <!--Main activity-->
+    <string name="HomePage">Home</string>
     <string name="profile">Profilo</string>
     <string name="myrides">I miei passaggi</string>
     <string name="searchride">Cerca passaggio</string>
-    <string name="mypoints">I miei punti</string>
+    <string name="Rank">Classifica</string>
     <string name="offeraride">Offri passaggio</string>
+    <string name="approved">Richieste affiliazioni</string>
     <string name="settings">Impostazioni</string>
     <string name="logout">Esci</string>
     <!-- myrides -->
