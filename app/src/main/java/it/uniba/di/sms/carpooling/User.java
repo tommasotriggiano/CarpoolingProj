@@ -6,7 +6,7 @@ public class User {
     private String userEmail;
     private String userName;
     private String userSurname;
-    private String userAddress;
+    private Address userAddress;
     private String userCompany;
     private String userPhone;
 
@@ -14,7 +14,7 @@ public class User {
 
     private String UserCar;
 
-    public User(String useremail, String username, String usersurname, String useraddress, String usercompany, String userphone){
+    public User(String useremail, String username, String usersurname, Address useraddress, String usercompany, String userphone){
 
         this.userEmail = useremail;
         this.userName = username;
@@ -43,7 +43,7 @@ public class User {
         return userSurname;
     }
 
-    public String getUseraddress() {
+    public Address getUseraddress() {
         return userAddress;
     }
 
@@ -68,7 +68,7 @@ public class User {
         this.userSurname = userSurname;
     }
 
-    public void setUseraddress(String userAddress) {
+    public void setUseraddress(Address userAddress) {
         this.userAddress = userAddress;
     }
 

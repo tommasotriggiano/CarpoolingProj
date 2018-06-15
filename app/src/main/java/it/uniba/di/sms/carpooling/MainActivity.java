@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if(dataSnapshot.exists()){
                     Map<String,Object> map = (Map<String,Object>) dataSnapshot.getValue();
                     //se l'url è null significa che al momento della registrazione l'utente non ha aricato nessuna immagine
-                    if(map.get("urlImmagine")!= null){
-                        urlImageProfile = map.get("urlImmagine").toString();
+                    if(map.get("urlProfileImage")!= null){
+                        urlImageProfile = map.get("urlProfileImage").toString();
                         //attraverso la libreria picasso carico l'immagine nella ImageView preimpostata
                         Picasso.with(MainActivity.this).load(urlImageProfile).into(profile);
                     }

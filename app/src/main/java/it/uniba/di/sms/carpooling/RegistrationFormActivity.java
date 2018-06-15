@@ -83,6 +83,8 @@ public class RegistrationFormActivity extends AppCompatActivity {
 
     Uri resultUri;
 
+    LatLng position;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +142,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
             public void onClick(View v) {
                 addUser();
                 addProfileImage();
-                sendMail();
+                //sendMail();
                 finish();
 
             }
@@ -209,9 +211,10 @@ public class RegistrationFormActivity extends AppCompatActivity {
 
         //ricavo l'email dall'autenticazione
         String email = profile.getEmail();
+        Address userAddress = new Address(address,position.latitude,position.longitude);
 
         //creo un'instanza dell'oggetto User
-        User user = new User(email,name,surname,address,company,phone);
+        User user = new User(email,name,surname,userAddress,company,phone);
 
         //aggiungo l'instanza al database mettendo come chiave primaria l'UID creato al momento dell'autenticazione
         databaseUsers.child(profile.getUid()).setValue(user)
@@ -244,7 +247,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     Map newImage = new HashMap();
-                    newImage.put("urlImmagine",downloadUrl.toString());
+                    newImage.put("urlProfileImage",downloadUrl.toString());
                     /*se l'utente ha inserito un'immagine di profilo allora nel database degli utenti verrà inserito un campo
                     in cui ci sarà l'url dell'immagine caricata*/
                     databaseUsers.child(profile.getUid()).updateChildren(newImage);
@@ -333,7 +336,8 @@ public class RegistrationFormActivity extends AppCompatActivity {
                     Place place = PlaceAutocomplete.getPlace(this, data);
                     Log.i(TAG, "Place: " + place.getName());
                     //posizione gps
-                    LatLng position = place.getLatLng();
+                    position = place.getLatLng();
+
                     indirizzoCasa.setTextColor(getResources().getColor(R.color.black));
                     indirizzoCasa.setText(place.getAddress().toString());
                     text.setTextColor(getResources().getColor(R.color.black_overlay));
@@ -369,4 +373,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
 
 
 
-}
+    }
+
+
+

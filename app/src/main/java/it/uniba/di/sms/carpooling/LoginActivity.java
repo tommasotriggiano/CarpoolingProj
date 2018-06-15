@@ -115,11 +115,13 @@ public class LoginActivity extends AppCompatActivity {
                 final String password = inputPassword.getText().toString();
 
                 if (email.isEmpty()) {
+                    progressBar.setVisibility(View.INVISIBLE);
                     layout_email.setError(getResources().getString(R.string.Toast1));
                     layout_email.requestFocus();
                     return;}
 
                 if (password.isEmpty()) {
+                    progressBar.setVisibility(View.INVISIBLE);
                     layout_password.setError(getResources().getString(R.string.Toast2));
                     layout_password.requestFocus();
 
@@ -129,6 +131,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
+                            progressBar.setVisibility(View.INVISIBLE);
                             // there was an error
                             if (password.length() < 6) {
                                 Toast.makeText(getApplicationContext(), R.string.TstPassShort, Toast.LENGTH_SHORT).show();
@@ -176,6 +179,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         //se l'email non è stata verificata
         else{
+            progressBar.setVisibility(View.INVISIBLE);
             Toast.makeText(LoginActivity.this, R.string.NotVerified, Toast.LENGTH_SHORT).show();
         }
 }}
