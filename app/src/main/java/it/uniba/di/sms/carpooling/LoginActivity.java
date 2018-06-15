@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button register;
     private TextView resetPassword;
     private FirebaseAuth mAuth;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +83,8 @@ public class LoginActivity extends AppCompatActivity {
         layout_email=(TextInputLayout) findViewById(R.id.layout_email) ;
         resetPassword=(TextView)findViewById(R.id.tvForgotPassword);
         btnLogin = (Button)findViewById(R.id.Reg2);
-
+        progressBar=(ProgressBar)findViewById(R.id.progressBar2);
+        progressBar.setVisibility(View.INVISIBLE);
         register = (Button)findViewById(R.id.Register);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String email = inputEmail.getText().toString();
-
+                progressBar.setVisibility(View.VISIBLE);
                 String emailMobiltyManager = "mobilitymanagercarpooling@gmail.com";
                 if(email.compareTo(emailMobiltyManager)==0){
                     //TODO Start intent for mobilityManagerActivity

@@ -1,100 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="it.uniba.di.sms.carpooling.SearchRideActivity">
 
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="it.uniba.di.sms.carpooling.MainActivity"
+android:theme="@style/ColoredHandleTheme">
+
+<LinearLayout
+    android:id="@+id/layout_casaLavoro"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="50dp"
+    android:layout_marginLeft="30dp">
     <TextView
         android:id="@+id/casa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="70dp"
-        android:layout_alignParentTop="true"
-       android:layout_marginStart="55dp"
-        android:layout_marginTop="50dp"
         android:text="@string/Home"
         android:textColor="#000"
         android:textSize="20sp" />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_arrow_forward" />
 
     <TextView
         android:id="@+id/lavoro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/casa"
-        android:layout_toEndOf="@+id/imageView"
         android:text="@string/Work"
         android:textColor="#000"
         android:textSize="20sp" />
+
     <ImageButton
         android:id="@+id/Invert"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_alignBottom="@+id/imageView"
-        android:layout_toEndOf="@+id/lavoro"
-        android:layout_marginLeft="10dp"
-        android:background="@android:color/transparent"
-        android:elevation="2dp"
-        app:srcCompat="@drawable/ic_action_name" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/casa"
-        android:layout_toEndOf="@+id/casa"
-        app:srcCompat="@drawable/ic_arrow_forward" />
-    <TextView
-        android:id="@+id/tvTime"
-        android:layout_width="255dp"
-        android:layout_height="50dp"
-        android:layout_alignStart="@+id/textData"
-        android:layout_below="@+id/textData"
-        android:layout_marginTop="30dp"
-        android:background="?attr/editTextBackground"
-        android:drawableEnd="@drawable/ic_arrow"
-        android:gravity="center_vertical"
-        android:hint="@string/Departure"
-        android:textColor="?attr/editTextColor"
-        android:textSize="20sp"
-        tools:layout_editor_absoluteX="92dp"
-        tools:layout_editor_absoluteY="175dp" />
-
-    <TextView
-        android:id="@+id/textData"
-        android:layout_width="255dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="100dp"
-        android:layout_centerHorizontal="true"
-        android:background="?attr/editTextBackground"
-        android:drawableEnd="@drawable/ic_arrow"
-        android:gravity="center_vertical"
-        android:hint="@string/Date"
-        android:textColor="?attr/editTextColor"
-        android:textSize="20sp"
-        tools:layout_editor_absoluteX="92dp"
-        tools:layout_editor_absoluteY="77dp" />
-
-    <EditText
-        android:id="@+id/autista"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tvTime"
-        android:layout_below="@+id/tvTime"
-        android:layout_marginTop="32dp"
-        android:hint="@string/Driver"
-        android:textSize="20sp" />
-    <Button
-        android:id="@+id/btnSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Search"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="18dp"
         android:background="@drawable/button_shape"
-        android:textColor="#fff"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/autista"
-        android:layout_marginTop="70dp"
-        />
+        android:elevation="2dp"
+        android:src="@drawable/ic_invert"/>
+
+</LinearLayout>
+
+<TextView
+    android:id="@+id/textData"
+    android:layout_width="293dp"
+    android:layout_height="50dp"
+    android:hint="@string/Date"
+    android:layout_alignStart="@+id/layout_casaLavoro"
+    android:layout_below="@+id/layout_casaLavoro"
+    android:layout_marginTop="25dp"
+    android:drawableRight="@drawable/ic_arrow"
+    android:background="?attr/editTextBackground"
+    android:gravity="center_vertical"
+    android:textColor="?attr/editTextColor"
+    android:textSize="20sp" />
+
+
+
+
+
+<TextView
+    android:id="@+id/tvTime"
+    android:layout_width="293dp"
+    android:layout_height="50dp"
+    android:layout_alignStart="@+id/textData"
+    android:layout_below="@+id/textData"
+    android:layout_marginTop="25dp"
+    android:drawableRight="@drawable/ic_arrow"
+    android:background="?attr/editTextBackground"
+    android:gravity="center_vertical"
+    android:hint="@string/Departure"
+    android:textColor="?attr/editTextColor"
+    android:textSize="20sp" />
+
+
+<EditText
+    android:id="@+id/autista"
+    android:layout_width="293dp"
+    android:layout_height="wrap_content"
+    android:layout_alignStart="@+id/tvTime"
+    android:layout_below="@+id/tvTime"
+    android:layout_marginTop="32dp"
+    android:hint="@string/Driver"
+    android:textSize="20sp" />
+<Button
+    android:id="@+id/btnSearch"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/Search"
+    android:background="@drawable/button_shape"
+    android:textColor="#fff"
+    android:layout_centerHorizontal="true"
+    android:layout_below="@id/autista"
+    android:layout_marginTop="70dp"
+    />
 
 </RelativeLayout>

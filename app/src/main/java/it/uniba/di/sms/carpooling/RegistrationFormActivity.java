@@ -1,12 +1,16 @@
 package it.uniba.di.sms.carpooling;
 
+import android.*;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.ActionBar;
@@ -21,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -49,15 +54,16 @@ public class RegistrationFormActivity extends AppCompatActivity {
     private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
     //dichiarazioni variabili per l'utente
+    TextView indirizzoCasa,text;
      EditText nome;
      EditText cognome;
-     EditText indirizzoCasa;
      Spinner azienda;
      EditText telefono;
      EditText automobile;
      Button confermaAccount;
      ImageButton addPhoto;
      Integer REQUEST_CAMERA=2, SELECT_FILE=0;
+     Integer CAMERA_PERMISSION_REQUEST_ID=3;
      CircleImageView image;
      //creazione del database
     DatabaseReference databaseUsers;
@@ -85,15 +91,18 @@ public class RegistrationFormActivity extends AppCompatActivity {
         nome = (EditText) findViewById(R.id.Nome);
         cognome = (EditText) findViewById(R.id.Cognome);
         /** Inserimento posto con autocompletamento **/
-        indirizzoCasa = (EditText) findViewById(R.id.Indirizzo);
+        indirizzoCasa = (TextView) findViewById(R.id.Indirizzo);
+        text=(TextView) findViewById(R.id.ind);
         //Listener sul editText indirizzo
         indirizzoCasa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                indirizzoCasa.setText("");
+                text.setVisibility(View.VISIBLE);
                 int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
                 try {
                     Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
                                     .build(RegistrationFormActivity.this);
                     startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
                 } catch (GooglePlayServicesRepairableException e) {
@@ -213,21 +222,23 @@ public class RegistrationFormActivity extends AppCompatActivity {
         }
 
         public void selectImage(){
-            final CharSequence items []={getResources().getString(R.string.Camera),getResources().getString(R.string.Gallery),"Cancel"};
+            final CharSequence items []={getResources().getString(R.string.Camera),getResources().getString(R.string.Gallery),getResources().getString(R.string.Cancel)};
             AlertDialog.Builder builder= new AlertDialog.Builder(RegistrationFormActivity.this);
-            builder.setTitle("Add a photo ");
+            builder.setTitle(R.string.addphoto);
             builder.setItems(items, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    if (items[i].equals("Camera")){
-                        Intent intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(intent,REQUEST_CAMERA);
-                    }else if (items[i].equals("Gallery")){
+                    if (items[i].equals(getResources().getString(R.string.Camera))){
+                        // inserire verifica permesso
+                        startPickImageCamera();
+                        //Intent intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        //startActivityForResult(intent,REQUEST_CAMERA);
+                    }else if (items[i].equals(getResources().getString(R.string.Gallery))){
                         Intent intent= new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         intent.setType("image/*");
-                        startActivityForResult(intent.createChooser(intent,"Select a file"),SELECT_FILE);
+                        startActivityForResult(intent.createChooser(intent,getResources().getString(R.string.selectfile)),SELECT_FILE);
 
-                    }else if (items[i].equals("Cancel")) {
+                    }else if (items[i].equals(getResources().getString(R.string.Cancel))) {
                         dialogInterface.dismiss();
                     }
                 }
@@ -235,6 +246,37 @@ public class RegistrationFormActivity extends AppCompatActivity {
             builder.show();
         }
 
+    private void startPickImageCamera(){
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
+            Intent intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent,REQUEST_CAMERA);
+        }else if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CAMERA)){
+            new AlertDialog.Builder(this).setTitle("Permesso Camera").setMessage("E' necessario questo permesso per" +
+                    " impostare la foto profilo").setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    ActivityCompat.requestPermissions(RegistrationFormActivity.this,new String[]{android.Manifest.permission.CAMERA}
+                            ,CAMERA_PERMISSION_REQUEST_ID);
+                }
+            })
+                    .create()
+                    .show();
+        }else{
+            ActivityCompat.requestPermissions(RegistrationFormActivity.this,new String[]{android.Manifest.permission.CAMERA}
+                    ,CAMERA_PERMISSION_REQUEST_ID);
+        }
+    }
+
+
+
+    public void onRequestPermissionResult(int requestCode,String[] permission,int[] grantResults){
+        if ( requestCode == CAMERA_PERMISSION_REQUEST_ID){
+            if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                startPickImageCamera();
+            }
+        }
+
+    }
         @Override
         public void onActivityResult(int requestCode,int resultCode,Intent data){
             super.onActivityResult(requestCode,resultCode,data);
@@ -245,7 +287,9 @@ public class RegistrationFormActivity extends AppCompatActivity {
                     Log.i(TAG, "Place: " + place.getName());
                     //posizione gps
                     LatLng position = place.getLatLng();
+                    indirizzoCasa.setTextColor(getResources().getColor(R.color.black));
                     indirizzoCasa.setText(place.getAddress().toString());
+                    text.setTextColor(getResources().getColor(R.color.black_overlay));
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                     Status status = PlaceAutocomplete.getStatus(this, data);
                     // TODO: Handle the error.

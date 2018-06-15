@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -32,16 +33,14 @@ import java.util.Locale;
 
 
 public class OfferRideFragment extends Fragment {
-    EditText dateText,tvTime;
+    TextView dateText,tvTime,dayOfWeek;
     ImageButton btnInvert;
     TextView mWork;
     TextView mHome;
     TextView posti;
     int postiIns;
-    ImageButton btnMinus;
-    ImageButton btnPlus;
+    ImageView btnPlus,btnMinus;
     Button offer;
-    EditText dayOfWeek;
 
     //creazione del database
     DatabaseReference databasePassaggi;
@@ -50,21 +49,21 @@ public class OfferRideFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.offer_ride, container,false);
-        dateText=(EditText)view.findViewById(R.id.textData);
-        tvTime = (EditText) view.findViewById(R.id.tvTime);
+        dateText=(TextView)view.findViewById(R.id.textData);
+        tvTime = (TextView) view.findViewById(R.id.tvTime);
         btnInvert = (ImageButton) view.findViewById(R.id.Invert);
         mHome = (TextView) view.findViewById(R.id.casa);
         mWork = (TextView) view.findViewById(R.id.lavoro);
         posti=(TextView) view.findViewById(R.id.textPostiInseriti);
         postiIns= Integer.parseInt(posti.getText().toString());
         offer = (Button)view.findViewById(R.id.btnOffri);
-        dayOfWeek=(EditText) view.findViewById(R.id.day) ;
+        dayOfWeek=(TextView) view.findViewById(R.id.day) ;
         //istanza del database riguardanti i passaggi
         databasePassaggi = FirebaseDatabase.getInstance().getReference("passaggi");
 
-        btnMinus=(ImageButton) view.findViewById(R.id.btnMinus);
+        btnMinus=(ImageView) view.findViewById(R.id.btnMinus);
 
-        btnPlus=(ImageButton) view.findViewById(R.id.btnPlus);
+        btnPlus=(ImageView) view.findViewById(R.id.btnPlus);
         return view;
 
     }
@@ -125,7 +124,10 @@ public class OfferRideFragment extends Fragment {
             if(postiIns>1){
                 posti.setText((Integer.parseInt(posti.getText().toString())-1)+"");
                 postiIns= Integer.parseInt(posti.getText().toString());
-            }
+               btnPlus.setVisibility(View.VISIBLE);
+            }else if (postiIns<=1 ) {
+                btnMinus.setVisibility(View.INVISIBLE);
+             }
 
         }
     };
@@ -135,6 +137,9 @@ public class OfferRideFragment extends Fragment {
             if(postiIns<8) {
                 posti.setText((Integer.parseInt(posti.getText().toString()) + 1) + "");
                 postiIns = Integer.parseInt(posti.getText().toString());
+                btnMinus.setVisibility(View.VISIBLE);
+            } else if(postiIns>=8){
+                btnPlus.setVisibility(View.INVISIBLE);
             }
         }
     };
@@ -162,7 +167,7 @@ public class OfferRideFragment extends Fragment {
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
             Date pick= new Date(year,monthOfYear,dayOfMonth-1);
-            if (Locale.getDefault().getLanguage() == "en" ){
+            if (Locale.getDefault().getLanguage().equals("en") ){
                 dateText.setText(String.valueOf(monthOfYear+1) + "-" + String.valueOf(dayOfMonth)
                         + "-" + String.valueOf(year));
                 dayOfWeek.setText(sdf.format(pick));
@@ -178,7 +183,7 @@ public class OfferRideFragment extends Fragment {
     private void showTimePicker() {
         TimePickerFragment time = new TimePickerFragment();
         /**
-         * Set Up Current Date Into dialog
+         * Set Up Current Time Into dialog
          */
         Calendar calender = Calendar.getInstance();
         Bundle args = new Bundle();
@@ -186,7 +191,7 @@ public class OfferRideFragment extends Fragment {
         args.putInt("minute", calender.get(Calendar.MINUTE));
         time.setArguments(args);
         /**
-         * Set Call back to capture selected date
+         * Set Call back to capture selected time
          */
         time.setCallBack(ontime);
         time.show(getFragmentManager(), "Time Picker");
@@ -220,12 +225,12 @@ public class OfferRideFragment extends Fragment {
         String campo2 = mWork.getText().toString().trim();
 
         if(dataPassaggio.isEmpty()){
-            dateText.setError(getResources().getString(R.string.EntName));
+            dateText.setError(getResources().getString(R.string.EntDate));
             dateText.requestFocus();
             return;
         }
         if(ora.isEmpty()){
-            tvTime.setError(getResources().getString(R.string.EntSurname));
+            tvTime.setError(getResources().getString(R.string.EntTime));
             tvTime.requestFocus();
             return;
         }

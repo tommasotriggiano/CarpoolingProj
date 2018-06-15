@@ -2,9 +2,9 @@
     <string name="app_name">Carpooling</string>
     <string name="immaginesplash">imageSplash</string>
     <!-- offer ride and search ride-->
-    <string name="Date">Date</string>
+    <string name="Date">Date *</string>
     <string name="Home">Home</string>
-    <string name="Departure">Departure\'s Hour</string>
+    <string name="Departure">Departure\'s Hour *</string>
     <string name="Work">Work</string>
     <string name="WorkHome">Work-Home</string>
     <string name="HomeWork">Home-Work</string>
@@ -14,6 +14,8 @@
     <string name="posti">N. available places</string>
     <string name="Offer">Offer</string>
     <string name="dayOfWeek">Day of week</string>
+    <string name="EntDate">Enter date</string>
+    <string name="EntTime">Enter departure\'s hour </string>
     <string name="Occupied">Occupied Places</string>
 
 
@@ -50,6 +52,8 @@
     <string name="Camera">Camera</string>
     <string name="Gallery">Gallery</string>
     <string name="Cancel">Cancel</string>
+    <string name="addphoto">Add a photo</string>
+    <string name="selectfile">Select a file</string>
     <string name="Name">Name *</string>
     <string name="Surname">Surname *</string>
     <string name="Address">Home Address *</string>

@@ -3,18 +3,20 @@
     <string name="app_name">Carpooling</string>
     <string name="immaginesplash">ImmagineSplash</string>
     <!-- offer ride and search ride-->
-    <string name="Date">Data</string>
+    <string name="Date">Data *</string>
     <string name="Home">Casa </string>
     <string name="Work">Lavoro</string>
     <string name="WorkHome">Lavoro-Casa</string>
     <string name="HomeWork">Casa-Lavoro</string>
-    <string name="Departure">Ora di partenza</string>
+    <string name="Departure">Ora di partenza *</string>
     <string name="giorno">Giorno della settimana</string>
     <string name="Search">Cerca</string>
     <string name="Driver">Nome e Cognome autista</string>
     <string name="posti">N. posti disponibili</string>
     <string name="Offer">Offri</string>
     <string name="dayOfWeek">Giorno</string>
+    <string name="EntDate">Inserire la data</string>
+    <string name="EntTime">Inserire l\' ora di partenza</string>
     <string name="Occupied">Posti occupati</string>
 
     <!-- login and registration acitivity-->
@@ -29,8 +31,8 @@
     <string name="Login">Sei già registrato?</string>
     <string name="Register2">Crea nuovo account</string>
     <string name="Messaggio">Cliccando su Crea nuovo account le verrà inviata un\'email di verifica</string>
-    <string name="Toast1">Inserisci email!</string>
-    <string name="Toast2">Inserisci password!</string>
+    <string name="Toast1">Inserire email!</string>
+    <string name="Toast2">Inserire password!</string>
     <string name="TstPassShort">La passwrod è troppo corta(almeno 6 caratteri)</string>
     <string name="Authenticationf">Autenticazione fallita</string>
     <string name="Successful">Login effettuato con successo</string>
@@ -46,6 +48,8 @@
     <string name="Camera">Camera</string>
     <string name="Gallery">Galleria</string>
     <string name="Cancel">Annulla</string>
+    <string name="addphoto">Selezionare una foto</string>
+    <string name="selectfile">Selezionare file</string>
     <string name="Name">Nome *</string>
     <string name="Surname">Cognome *</string>
     <string name="Address">Indirizzo di casa *</string>
@@ -57,12 +61,12 @@
     <string name="Conferma">Conferma account</string>
     <string name="Car">La tua auto</string>
     <!--message-->
-    <string name="EntName">Inserisci il tuo nome</string>
-    <string name="EntSurname">Inserisci il tuo cognome</string>
-    <string name="EntAddress">Inserisci l\'indirizzo di casa</string>
-    <string name="EntCompany">Inserisci il nome della tua azienda</string>
-    <string name="EntPhone">Inserisci numero di telefono</string>
-    <string name="EntPhone2">inserisci un numero di telefono valido</string>
+    <string name="EntName">Inserire il nome</string>
+    <string name="EntSurname">Inserire il cognome</string>
+    <string name="EntAddress">Inserire l\'indirizzo di casa</string>
+    <string name="EntCompany">Inserire il nome dell\' azienda</string>
+    <string name="EntPhone">Inserire numero di telefono</string>
+    <string name="EntPhone2">inserire un numero di telefono valido</string>
     <string name="ConfirmUser">Utente aggiunto al database</string>
     <string name="Failure">Operazione fallita</string>
 

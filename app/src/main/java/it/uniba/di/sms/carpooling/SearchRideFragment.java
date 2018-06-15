@@ -106,18 +106,18 @@ public class SearchRideFragment extends Fragment {
 
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
-            if (Locale.getDefault().getLanguage() == "en" ){
-                dateText.setText(String.valueOf(monthOfYear+1) + "/" + String.valueOf(dayOfMonth)
-                        + "/" + String.valueOf(year));
+            if (Locale.getDefault().getLanguage().equals("en") ){
+                dateText.setText(String.valueOf(monthOfYear+1) + "-" + String.valueOf(dayOfMonth)
+                        + "-" + String.valueOf(year));
             }else{
-                dateText.setText(String.valueOf(dayOfMonth) + "/" + String.valueOf(monthOfYear+1)
-                        + "/" + String.valueOf(year));}
+                dateText.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear+1)
+                        + "-" + String.valueOf(year));}
         }
     };
     private void showTimePicker() {
         TimePickerFragment time = new TimePickerFragment();
         /**
-         * Set Up Current Date Into dialog
+         * Set Up Current Time Into dialog
          */
         Calendar calender = Calendar.getInstance();
         Bundle args = new Bundle();
@@ -125,7 +125,7 @@ public class SearchRideFragment extends Fragment {
         args.putInt("minute", calender.get(Calendar.MINUTE));
         time.setArguments(args);
         /**
-         * Set Call back to capture selected date
+         * Set Call back to capture selected time
          */
         time.setCallBack(ontime);
         time.show(getFragmentManager(), "Time Picker");

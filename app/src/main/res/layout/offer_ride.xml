@@ -1,159 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="it.uniba.di.sms.carpooling.OfferRideActivity"
+        tools:context="it.uniba.di.sms.carpooling.MainActivity"
         android:theme="@style/ColoredHandleTheme">
-    <LinearLayout
-        android:id="@+id/layout_casaLavoro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="70dp">
+        <LinearLayout
+            android:id="@+id/layout_casaLavoro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp">
+            <TextView
+                android:id="@+id/casa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Home"
+                android:textColor="#000"
+                android:textSize="20sp" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_arrow_forward" />
+
+            <TextView
+                android:id="@+id/lavoro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Work"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <ImageButton
+                android:id="@+id/Invert"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="18dp"
+                android:background="@drawable/button_shape"
+                android:elevation="2dp"
+                android:src="@drawable/ic_invert"/>
+
+        </LinearLayout>
+
         <TextView
-            android:id="@+id/casa"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/Home"
-            android:textColor="#000"
+            android:id="@+id/textData"
+            android:layout_width="293dp"
+            android:layout_height="50dp"
+            android:hint="@string/Date"
+            android:layout_alignStart="@+id/layout_casaLavoro"
+            android:layout_below="@+id/layout_casaLavoro"
+            android:layout_marginTop="25dp"
+            android:drawableRight="@drawable/ic_arrow"
+            android:background="?attr/editTextBackground"
+            android:gravity="center_vertical"
+            android:textColor="?attr/editTextColor"
             android:textSize="20sp" />
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_arrow_forward" />
+
+
+
+
 
         <TextView
-            android:id="@+id/lavoro"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/Work"
-            android:textColor="#000"
+            android:id="@+id/tvTime"
+            android:layout_width="293dp"
+            android:layout_height="50dp"
+            android:layout_alignStart="@+id/textData"
+            android:layout_below="@+id/textData"
+            android:layout_marginTop="25dp"
+            android:drawableRight="@drawable/ic_arrow"
+            android:background="?attr/editTextBackground"
+            android:gravity="center_vertical"
+            android:hint="@string/Departure"
+            android:textColor="?attr/editTextColor"
             android:textSize="20sp" />
 
-        <ImageButton
-            android:id="@+id/Invert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:background="@android:color/transparent"
-            android:elevation="2dp"
-            app:srcCompat="@drawable/ic_action_name" />
-
-    </LinearLayout>
-   <android.support.design.widget.TextInputLayout
-       android:id="@+id/layout_data"
-       android:layout_width="205dp"
-       android:layout_height="wrap_content"
-       android:layout_alignStart="@+id/layout_casaLavoro"
-       android:layout_below="@+id/layout_casaLavoro"
-       android:layout_marginTop="25dp"
-       >
-       <EditText
-           android:id="@+id/textData"
-           android:layout_width="200dp"
-           android:layout_height="50dp"
-           android:hint="@string/Date"
-           android:drawableRight="@drawable/ic_arrow"
-           android:gravity="center_vertical"
-           android:textColor="?attr/editTextColor"
-           android:textSize="20sp" />
-
-   </android.support.design.widget.TextInputLayout>
 
 
-   <android.support.design.widget.TextInputLayout
-       android:id="@+id/layout_ora"
-       android:layout_width="205dp"
-       android:layout_height="wrap_content"
-       android:layout_alignStart="@+id/layout_data"
-       android:layout_below="@+id/layout_data"
-       android:layout_marginTop="25dp">
-       <EditText
-           android:id="@+id/tvTime"
-           android:layout_width="200dp"
-           android:layout_height="50dp"
-           android:drawableRight="@drawable/ic_arrow"
-           android:gravity="center_vertical"
-           android:hint="@string/Departure"
-           android:textColor="?attr/editTextColor"
-           android:textSize="20sp" />
 
-   </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/layout_giorno"
-        android:layout_width="205dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/layout_ora"
-        android:layout_below="@+id/layout_ora"
-        android:layout_marginTop="37dp">
-        <EditText
+        <TextView
             android:id="@+id/day"
-            android:textSize="20sp"
-            android:layout_width="200dp"
+            android:layout_width="293dp"
             android:layout_height="wrap_content"
             android:hint="@string/dayOfWeek"
-            android:textColor="#000"/>
-    </android.support.design.widget.TextInputLayout>
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:background="?attr/editTextBackground"
+            android:layout_alignStart="@+id/tvTime"
+            android:layout_below="@+id/tvTime"
+            android:layout_marginTop="25dp"/>
 
 
-
-        <TextView
-            android:id="@+id/textPosti"
+        <LinearLayout
+            android:id="@+id/layout_posti"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/layout_giorno"
-            android:layout_below="@+id/layout_giorno"
-            android:layout_marginTop="45dp"
-            android:text="@string/posti"
-            android:textSize="20sp"
-            android:textColor="#000"/>
+            android:layout_alignStart="@+id/day"
+            android:layout_below="@+id/day"
+            android:orientation="horizontal"
+            android:layout_marginTop="35dp">
+            <TextView
+                android:id="@+id/textPosti"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/posti"
+                android:textSize="20sp"
+                android:textColor="#000"/>
 
-        <ImageButton
-            android:id="@+id/btnMinus"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_above="@+id/btnOffri"
-            android:layout_toEndOf="@+id/textPosti"
-            android:layout_marginLeft="5dp"
-            android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_minus" />
-
-        <ImageButton
-            android:id="@+id/btnPlus"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_alignTop="@+id/btnMinus"
-            android:layout_toEndOf="@+id/textPostiInseriti"
-            android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_plus" />
+            <ImageView
+                android:id="@+id/btnMinus"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="7dp"
+                android:src="@drawable/ic_minus" />
 
 
-        <TextView
-            android:id="@+id/textPostiInseriti"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:background="?attr/editTextBackground"
-            android:layout_alignTop="@+id/btnPlus"
-            android:layout_toEndOf="@+id/btnMinus"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
-            android:ems="10"
-            android:gravity="center"
-            android:text="1"
-            android:textColor="#000"
-            android:textSize="20sp" />
+            <TextView
+                android:id="@+id/textPostiInseriti"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:background="?attr/editTextBackground"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:ems="10"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/btnPlus"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_plus" />
+
+        </LinearLayout>
 
 
         <Button
             android:id="@+id/btnOffri"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textPosti"
+            android:layout_below="@+id/layout_posti"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="31dp"
             android:background="@drawable/button_shape"
@@ -164,4 +155,7 @@
 
 
 
-</RelativeLayout>
+    </RelativeLayout>
+
+
+
