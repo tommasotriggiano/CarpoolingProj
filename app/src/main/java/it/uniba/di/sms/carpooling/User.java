@@ -15,6 +15,7 @@ public class User {
     private String UserCar;
 
     public User(String useremail, String username, String usersurname, String useraddress, String usercompany, String userphone){
+
         this.userEmail = useremail;
         this.userName = username;
         this.userSurname = usersurname;
@@ -53,7 +54,6 @@ public class User {
     public String getUserphone() {
         return userPhone;
     }
-
 
     //metodi di set
     public void setUseremail(String userEmail) {

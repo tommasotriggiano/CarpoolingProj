@@ -10,30 +10,85 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+    private ImageView profile;
+    private String urlImageProfile;
+    private FirebaseUser user;
+    private DatabaseReference refUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //instanzio l'oggetto per l'header della navigation view
+        View header = navigationView.getHeaderView(0);
+
+        profile = (CircleImageView) header.findViewById(R.id.imageProfile);
+        //creo il riferimento per l'utente autenticato
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        //creo il riferimento al database passaggi
+        refUser = FirebaseDatabase.getInstance().getReference("users");
+
+        //cerco nelle informazioni dell'utente autenticato l'url dell'immagine di profilo.
+        refUser.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    Map<String,Object> map = (Map<String,Object>) dataSnapshot.getValue();
+                    //se l'url è null significa che al momento della registrazione l'utente non ha aricato nessuna immagine
+                    if(map.get("urlImmagine")!= null){
+                        urlImageProfile = map.get("urlImmagine").toString();
+                        //attraverso la libreria picasso carico l'immagine nella ImageView preimpostata
+                        Picasso.with(MainActivity.this).load(urlImageProfile).into(profile);
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
         setSupportActionBar(toolbar);
 
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
        // navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
         /*getSupportFragmentManager().beginTransaction().replace(R.id.content_frame,new OfferRideFragment()).commit();

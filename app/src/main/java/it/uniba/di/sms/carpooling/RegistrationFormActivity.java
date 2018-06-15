@@ -32,6 +32,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,6 +45,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -67,6 +76,12 @@ public class RegistrationFormActivity extends AppCompatActivity {
      CircleImageView image;
      //creazione del database
     DatabaseReference databaseUsers;
+    //creazione dello storage per la foto utente
+    private StorageReference mStorage;
+    //database per l'autenticazione
+    FirebaseUser profile;
+
+    Uri resultUri;
 
 
     @Override
@@ -86,7 +101,9 @@ public class RegistrationFormActivity extends AppCompatActivity {
         databaseUsers = FirebaseDatabase.getInstance().getReference("users");
 
         //istanza del profilo autenticato all'applicazione
-        final FirebaseUser profile = FirebaseAuth.getInstance().getCurrentUser();
+        profile = FirebaseAuth.getInstance().getCurrentUser();
+        //reference allo storage
+        mStorage = FirebaseStorage.getInstance().getReference();
 
         nome = (EditText) findViewById(R.id.Nome);
         cognome = (EditText) findViewById(R.id.Cognome);
@@ -121,8 +138,8 @@ public class RegistrationFormActivity extends AppCompatActivity {
         confermaAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 addUser();
+                addProfileImage();
                 sendMail();
                 finish();
 
@@ -191,11 +208,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
         }
 
         //ricavo l'email dall'autenticazione
-        FirebaseUser profile = FirebaseAuth.getInstance().getCurrentUser();
         String email = profile.getEmail();
-
-
-
 
         //creo un'instanza dell'oggetto User
         User user = new User(email,name,surname,address,company,phone);
@@ -221,6 +234,41 @@ public class RegistrationFormActivity extends AppCompatActivity {
         });
         }
 
+        public void addProfileImage() {
+        if (resultUri != null){
+            StorageReference filePath = mStorage.child("Foto profilo").child(profile.getUid());
+            UploadTask uploadTask = filePath.putFile(resultUri);
+
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    Map newImage = new HashMap();
+                    newImage.put("urlImmagine",downloadUrl.toString());
+                    /*se l'utente ha inserito un'immagine di profilo allora nel database degli utenti verrà inserito un campo
+                    in cui ci sarà l'url dell'immagine caricata*/
+                    databaseUsers.child(profile.getUid()).updateChildren(newImage);
+                    finish();
+
+
+                }
+            });
+        }
+        else{
+            finish();
+        }
+
+
+
+
+
+
+
+
+
+
+
+        }
         public void selectImage(){
             final CharSequence items []={getResources().getString(R.string.Camera),getResources().getString(R.string.Gallery),getResources().getString(R.string.Cancel)};
             AlertDialog.Builder builder= new AlertDialog.Builder(RegistrationFormActivity.this);
@@ -280,7 +328,6 @@ public class RegistrationFormActivity extends AppCompatActivity {
         @Override
         public void onActivityResult(int requestCode,int resultCode,Intent data){
             super.onActivityResult(requestCode,resultCode,data);
-
             if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
                 if (resultCode == RESULT_OK) {
                     Place place = PlaceAutocomplete.getPlace(this, data);
@@ -304,11 +351,17 @@ public class RegistrationFormActivity extends AppCompatActivity {
                 if (requestCode== REQUEST_CAMERA){
                     Bundle bundle = data.getExtras();
                     final Bitmap bmp= (Bitmap) bundle.get("data");
+                    resultUri = data.getData();
+                    //ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    //bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    //byte[] data1 = baos.toByteArray();
+                    //filePath.putBytes(data1);
                     image.setImageBitmap(bmp);
 
                 }else if (requestCode== SELECT_FILE){
-                        Uri selectImageUri= data.getData();
-                        image.setImageURI(selectImageUri);
+                        resultUri = data.getData();
+                        //filePath.putFile(imageUri);
+                        image.setImageURI(resultUri);
                 }
             }
         }
