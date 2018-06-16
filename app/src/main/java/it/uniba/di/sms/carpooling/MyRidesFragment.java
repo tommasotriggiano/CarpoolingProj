@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,14 +34,17 @@ import static android.content.ContentValues.TAG;
  * A simple {@link Fragment} subclass.
  */
 public class MyRidesFragment extends Fragment {
-    Switch tipo;
+    private RadioGroup radioGroup;
+    private RadioButton offered,required;
+    private TextView messageNotFound;
+    private View view;
     //definisco la recyclerView
-    private RecyclerView passaggiOfferti;
+    private RecyclerView passaggiRecycler;
     //definisco l'adapter
     private RecyclerView.Adapter passaggiAdapter;
     //definisco il layout manager
     private RecyclerView.LayoutManager passaggiLayoutManager;
-
+    private int  sizeResult=0;
     //definisco le variabili per il riferimento al database passaggi e al profilo che si è autenticato
     DatabaseReference ref;
     FirebaseUser user;
@@ -55,24 +60,35 @@ public class MyRidesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view= inflater.inflate(R.layout.my_rides,container,false);
-        tipo=(Switch) view.findViewById(R.id.switch1);
-
-        passaggiOfferti = (RecyclerView) view.findViewById(R.id.rvPassaggiOfferti);
-        passaggiOfferti.setNestedScrollingEnabled(false);
-        passaggiOfferti.setHasFixedSize(true);
-
+        view= inflater.inflate(R.layout.my_rides,container,false);
+        getActivity().setTitle(R.string.myrides);
+        radioGroup= (RadioGroup) view.findViewById(R.id.radioGroup) ;
+        offered=(RadioButton)view.findViewById(R.id.offered) ;
+        required=(RadioButton)view.findViewById(R.id.required) ;
+        messageNotFound=(TextView) view.findViewById(R.id.message) ;
+        passaggiRecycler = (RecyclerView) view.findViewById(R.id.rvPassaggiOfferti);
+        passaggiRecycler.setNestedScrollingEnabled(false);
+        passaggiRecycler.setHasFixedSize(true);
         user = FirebaseAuth.getInstance().getCurrentUser();
-
         //invoco il metodo per aggiungere i dati presi dal database nell'arraylist resultpassaggi
         initializeData();
 
         passaggiLayoutManager = new LinearLayoutManager(getActivity());
-        passaggiOfferti.setLayoutManager(passaggiLayoutManager);
-        resultPassaggi = new ArrayList<Passaggio>();
+        passaggiRecycler.setLayoutManager(passaggiLayoutManager);
+        passaggiAdapter = new PassaggiAdapter(resultPassaggi, getActivity());
+        passaggiRecycler.setAdapter(passaggiAdapter);
+        if (radioGroup.getCheckedRadioButtonId()==R.id.offered) {
+            //if (passaggiAdapter.getItemCount()>0){
+                messageNotFound.setVisibility(View.GONE);
+                passaggiRecycler.setVisibility(View.VISIBLE);
 
-        passaggiAdapter = new PassaggiAdapter(resultPassaggi,getActivity());
-        passaggiOfferti.setAdapter(passaggiAdapter);
+           /* }else {
+                messageNotFound.setVisibility(View.VISIBLE);
+                passaggiRecycler.setVisibility(View.GONE);
+                messageNotFound.setText("Non ci sono passaggi offerti");
+            }*/
+
+        }
 
         return view;
     }
@@ -91,7 +107,7 @@ public class MyRidesFragment extends Fragment {
                     //aggiungo all'arraylist un oggetto di tipo passaggio ogni volta che l'utente lo aggiunge al database
                     resultPassaggi.add(data.getValue(Passaggio.class));
                 }
-                passaggiOfferti.scrollToPosition(resultPassaggi.size() - 1);
+                passaggiRecycler.scrollToPosition(resultPassaggi.size() - 1);
                 passaggiAdapter.notifyItemInserted(resultPassaggi.size() - 1);
 
 
@@ -117,7 +133,6 @@ public class MyRidesFragment extends Fragment {
 
             }
         });
-
 
     }
 
