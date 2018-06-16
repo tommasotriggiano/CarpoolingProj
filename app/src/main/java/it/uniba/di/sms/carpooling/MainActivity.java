@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -35,11 +37,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String urlImageProfile;
     private FirebaseUser user;
     private DatabaseReference refUser;
+    private String adminUid;
+    private DatabaseReference adminRef;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        adminRef = FirebaseDatabase.getInstance().getReference("admin");
+
+        adminRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+               if(dataSnapshot.exists()){
+                   /*se nel database degli admin esiste l'uid dell'utente che si è autenticato allora
+                   quell'utente è un admin e,oltre a vedere tutte le opzioni visibili ad utenti normali,
+                    potrà vedere la voce del menu Affiliazioni
+                    */
+                   navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(true);
+               }
+               else{
+                   /*se nel database degli admin non esiste l'uid dell'utente autenticato
+                   allora vorrà dire che l'utente non è un admin
+                    */
+                   navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
+
+               }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -61,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     Map<String,Object> map = (Map<String,Object>) dataSnapshot.getValue();
-                    //se l'url è null significa che al momento della registrazione l'utente non ha aricato nessuna immagine
+                    //se l'url è null significa che al momento della registrazione l'utente non ha caricato nessuna immagine
                     if(map.get("urlProfileImage")!= null){
                         urlImageProfile = map.get("urlProfileImage").toString();
                         //attraverso la libreria picasso carico l'immagine nella ImageView preimpostata
@@ -90,6 +125,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
+
+        //if(adminUid.equals(user.getUid())){
+            //navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(true);
+        //}
+       // else{
+        //    navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
+        //}
        // navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
         /*getSupportFragmentManager().beginTransaction().replace(R.id.content_frame,new OfferRideFragment()).commit();
         navigationView.setCheckedItem(R.id.nav_offeraride);*/
