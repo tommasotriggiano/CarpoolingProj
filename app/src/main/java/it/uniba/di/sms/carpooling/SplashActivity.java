@@ -88,13 +88,13 @@ public class SplashActivity extends Activity {
             @Override
             public void run() {
                 if(user != null && user.isEmailVerified()) {
-                    adminRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                    /*adminRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
+                            if (dataSnapshot.exists()) {*/
                                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
                                 finish();
-                            } else {
+                            }/* else {
                                 ref.child(user.getUid()).addValueEventListener(listener);
                             }
 
@@ -112,7 +112,7 @@ public class SplashActivity extends Activity {
                     else{
 
                     ref.child(user.getUid()).addValueEventListener(listener);}}*/
-                }
+                //}
                     else{
                         Intent i = new Intent(SplashActivity.this,LoginActivity.class);
                         startActivity(i);
