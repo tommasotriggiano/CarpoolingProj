@@ -177,15 +177,16 @@ public class LoginActivity extends AppCompatActivity {
         if(user.isEmailVerified()){
             Toast.makeText(LoginActivity.this, R.string.Successful, Toast.LENGTH_SHORT).show();
 
-            adminRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            /*adminRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     //se l'utente è un admin
-                    if (dataSnapshot.exists()){
+                    if (dataSnapshot.exists()){*/
                         startActivity(new Intent(LoginActivity.this,MainActivity.class));
                         finish();
                     }
                     //se l'utente non è un admin
+                    /*
                     else{
                         ref.child(user.getUid()).addValueEventListener(new ValueEventListener() {
                             @Override

@@ -10,13 +10,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,7 +21,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -59,12 +55,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     potrà vedere la voce del menu Affiliazioni
                     */
                    navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(true);
+                   navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
                }
                else{
                    /*se nel database degli admin non esiste l'uid dell'utente autenticato
                    allora vorrà dire che l'utente non è un admin
                     */
                    navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
+                   refUser = FirebaseDatabase.getInstance().getReference("users");
+                   refUser.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                       @Override
+                       public void onDataChange(DataSnapshot dataSnapshot) {
+                           if (dataSnapshot.exists()){
+                               navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
+                               //è possibile visionare solo l'opzione per modificare il profilo ma non viene più
+                               // mandata la richiesta al mobility manager
+                               //navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
+                           }
+                           else{
+                               //se l'utente non ha registrato i suoi dati non può fare nient'altro se non
+                               //fare il logout.
+                               navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
+                               navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(false);
+                               navigationView.getMenu().findItem(R.id.nav_searchride).setVisible(false);
+                               navigationView.getMenu().findItem(R.id.nav_offeraride).setVisible(false);
+                               navigationView.getMenu().findItem(R.id.nav_points).setVisible(false);
+                               navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
+
+
+
+                           }
+
+
+                       }
+
+                       @Override
+                       public void onCancelled(DatabaseError databaseError) {
+
+                       }
+                   });
+
+
+
+
+
+
 
                }
             }
@@ -178,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment fragment = null;
 
         if (id == R.id.nav_profile) {
-            // Handle the camera action
+            fragment = new RegistrationForm();
         } else if (id == R.id.nav_myrides) {
             fragment= new MyRidesFragment();
         } else if (id == R.id.nav_searchride) {
