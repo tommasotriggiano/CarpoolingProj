@@ -27,14 +27,16 @@ public class SplashActivity extends Activity {
     TextView text;
     FirebaseUser user;
     DatabaseReference ref;
+    DatabaseReference adminRef;
+    String adminUid = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-
         ref = FirebaseDatabase.getInstance().getReference("users");
+        adminRef = FirebaseDatabase.getInstance().getReference("admin");
 
         splash=(ImageView)findViewById(R.id.image) ;
         text=(TextView) findViewById(R.id.textView3);
@@ -56,6 +58,26 @@ public class SplashActivity extends Activity {
                     finish();}
             }
 
+            final ValueEventListener adminListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()){
+                        startActivity(new Intent(SplashActivity.this,MainActivity.class));
+                        finish();
+                    }
+                    else{
+
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.d(TAG,"Chiamata On cancelled"+databaseError.getDetails());}
@@ -65,8 +87,32 @@ public class SplashActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(user != null && user.isEmailVerified()){
-                    ref.child(user.getUid()).addValueEventListener(listener);}
+                if(user != null && user.isEmailVerified()) {
+                    adminRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                                finish();
+                            } else {
+                                ref.child(user.getUid()).addValueEventListener(listener);
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    /*
+                    if(adminUid.equals(user.getUid())){
+                        startActivity(new Intent(SplashActivity.this,MainActivity.class));
+                    }
+                    else{
+
+                    ref.child(user.getUid()).addValueEventListener(listener);}}*/
+                }
                     else{
                         Intent i = new Intent(SplashActivity.this,LoginActivity.class);
                         startActivity(i);

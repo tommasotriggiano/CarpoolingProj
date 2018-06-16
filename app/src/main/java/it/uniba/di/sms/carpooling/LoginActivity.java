@@ -1,13 +1,11 @@
 package it.uniba.di.sms.carpooling;
 
-import android.app.Notification;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -39,6 +37,9 @@ public class LoginActivity extends AppCompatActivity {
     private TextView resetPassword;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
+
+    private String adminUid;
+    private DatabaseReference adminRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,8 @@ public class LoginActivity extends AppCompatActivity {
         //startActivity(intent);
 
         mAuth = FirebaseAuth.getInstance();
+        //reference al database che contiene le chiavi di tutti gli admin
+        //da migliorare
 
 
         inputEmail = (EditText) findViewById(R.id.email);
@@ -107,11 +110,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = inputEmail.getText().toString();
                 progressBar.setVisibility(View.VISIBLE);
-                String emailMobiltyManager = "mobilitymanagercarpooling@gmail.com";
-                if(email.compareTo(emailMobiltyManager)==0){
-                    //TODO Start intent for mobilityManagerActivity
-                }
-
                 final String password = inputPassword.getText().toString();
 
                 if (email.isEmpty()) {
@@ -138,25 +136,88 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 Toast.makeText(getApplicationContext(), R.string.Authenticationf, Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            checkIfEmailVerified();
+                        }
+                            else{
+                                checkIfEmailVerified();}
 
                         }
-                    }
-                });
-            }
-        });
-    }
+                    });
+                }
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+
 
     //metodo per controllare se l'email è stata verificata
     private void checkIfEmailVerified(){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
+        adminRef = FirebaseDatabase.getInstance().getReference("admin");
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user.isEmailVerified()){
             Toast.makeText(LoginActivity.this, R.string.Successful, Toast.LENGTH_SHORT).show();
+
+            adminRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    //se l'utente è un admin
+                    if (dataSnapshot.exists()){
+                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                        finish();
+                    }
+                    //se l'utente non è un admin
+                    else{
+                        ref.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.exists()){
+                                    //se l'istanza del database esiste, quindi l'utente ha già inserito le sue informazioni, si passa all'activity principale
+                                    startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                                    finish();
+                                }
+                                else{
+                                    startActivity(new Intent(LoginActivity.this,RegistrationFormActivity.class));
+                                    finish();
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                    }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });}
+
             //leggo l'instanza del database creato nella regsitration form
-            ref.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            /*ref.child(user.getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()){
@@ -176,7 +237,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 }
             });
-        }
+        }*/
         //se l'email non è stata verificata
         else{
             progressBar.setVisibility(View.INVISIBLE);
