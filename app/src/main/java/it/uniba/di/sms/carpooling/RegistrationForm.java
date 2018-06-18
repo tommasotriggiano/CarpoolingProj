@@ -1,5 +1,7 @@
 package it.uniba.di.sms.carpooling;
 
+import android.*;
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,9 +21,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +47,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -54,8 +60,10 @@ import static android.app.Activity.RESULT_OK;
 
 public class RegistrationForm extends Fragment {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-
+    private final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private final int REQUEST_CAMERA=2, SELECT_FILE=0;
+    private final int CAMERA_PERMISSION_REQUEST_ID=3;
+    final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
     //dichiarazioni variabili per l'utente
     private TextView indirizzoCasa,text;
     private EditText nome;
@@ -65,8 +73,7 @@ public class RegistrationForm extends Fragment {
     private EditText automobile;
     private Button confermaAccount;
     private ImageButton addPhoto;
-    private Integer REQUEST_CAMERA=2, SELECT_FILE=0;
-    private Integer CAMERA_PERMISSION_REQUEST_ID=3;
+
     private CircleImageView image;
     //creazione del database
     private DatabaseReference databaseUsers;
@@ -118,7 +125,6 @@ public class RegistrationForm extends Fragment {
             public void onClick(View view) {
                 indirizzoCasa.setText("");
                 text.setVisibility(View.VISIBLE);
-                int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
                 try {
                     Intent intent =
                             new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
@@ -147,12 +153,12 @@ public class RegistrationForm extends Fragment {
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectImage();
+                verifiedPermission();
             }
         });
 
     }
-
+    // metodo per inviare l'email al mobility manager
     public void sendMail() {
         try
         {
@@ -230,7 +236,7 @@ public class RegistrationForm extends Fragment {
 
 
 
-
+    // salvataggio dell'immagine profilo sullo storage
     public void addProfileImage() {
         if (resultUri != null){
             StorageReference filePath = mStorage.child("Foto profilo").child(profile.getUid());
@@ -246,8 +252,6 @@ public class RegistrationForm extends Fragment {
                     in cui ci sarà l'url dell'immagine caricata*/
                     databaseUsers.child(profile.getUid()).updateChildren(newImage);
 
-
-
                 }
             });
         }
@@ -256,24 +260,62 @@ public class RegistrationForm extends Fragment {
 
         }}
 
+    // classe per definire l'elenco da visualizzare nell'Alert Dialog per inserire l'immagine profilo
+    public static class Item{
+        public final String text;
+        public final int icon;
+        public Item(String text, Integer icon) {
+            this.text = text;
+            this.icon = icon;
+        }
+        @Override
+        public String toString() {
+            return text;
+        }
+    }
+
+
+
+    //metodo per selezionare l'immagine
     public void selectImage(){
-        final CharSequence items []={getResources().getString(R.string.Camera),getResources().getString(R.string.Gallery),getResources().getString(R.string.Cancel)};
+        final Item[] items = {
+                new Item(getResources().getString(R.string.Camera), android.R.drawable.ic_menu_camera),
+                new Item(getResources().getString(R.string.Gallery), android.R.drawable.ic_menu_gallery),
+                new Item(getResources().getString(R.string.Cancel),android.R.drawable.ic_menu_close_clear_cancel)
+        };
+
+        ListAdapter adapter = new ArrayAdapter<Item>(getContext(), android.R.layout.select_dialog_item, android.R.id.text1, items){
+            public View getView(int position, View convertView, ViewGroup parent) {
+                //Use super class to create the View
+                View v = super.getView(position, convertView, parent);
+                TextView tv = (TextView)v.findViewById(android.R.id.text1);
+
+                //Put the image on the TextView
+                tv.setCompoundDrawablesWithIntrinsicBounds(items[position].icon, 0, 0, 0);
+
+                //Add margin between image and text (support various screen densities)
+                int dp5 = (int) (5 * getResources().getDisplayMetrics().density + 0.5f);
+                tv.setCompoundDrawablePadding(dp5);
+
+                return v;
+            }
+        };
+
         AlertDialog.Builder builder= new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.addphoto);
-        builder.setItems(items, new DialogInterface.OnClickListener() {
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (items[i].equals(getResources().getString(R.string.Camera))){
-                    // inserire verifica permesso
-                    startPickImageCamera();
-                    //Intent intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    //startActivityForResult(intent,REQUEST_CAMERA);
-                }else if (items[i].equals(getResources().getString(R.string.Gallery))){
+                if ((items[i].text).equals(getResources().getString(R.string.Camera))){
+                    //startPickImageCamera();
+                    Intent intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent,REQUEST_CAMERA);
+                }else if ((items[i].text).equals(getResources().getString(R.string.Gallery))){
                     Intent intent= new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
                     startActivityForResult(intent.createChooser(intent,getResources().getString(R.string.selectfile)),SELECT_FILE);
 
-                }else if (items[i].equals(getResources().getString(R.string.Cancel))) {
+                }else if ((items[i].text).equals(getResources().getString(R.string.Cancel))) {
                     dialogInterface.dismiss();
                 }
             }
@@ -281,7 +323,94 @@ public class RegistrationForm extends Fragment {
         builder.show();
     }
 
-    private void startPickImageCamera(){
+
+    private void verifiedPermission() {
+        List<String> permissionsNeeded = new ArrayList<String>();
+
+        final List<String> permissionsList = new ArrayList<String>();
+        if (!addPermission(permissionsList,android.Manifest.permission.CAMERA))
+            permissionsNeeded.add("Camera");
+        if (!addPermission(permissionsList,android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            permissionsNeeded.add("Write external storage");
+        if (!addPermission(permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE))
+            permissionsNeeded.add("Read external storage");
+
+        if (permissionsList.size() > 0) {
+            if (permissionsNeeded.size() > 0) {
+                // Need Rationale
+                String message = "You need to grant access to " + permissionsNeeded.get(0);
+                for (int i = 1; i < permissionsNeeded.size(); i++)
+                    message = message + ", " + permissionsNeeded.get(i);
+                showMessageOKCancel(message,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
+                                        REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+                            }
+                        });
+                return;
+            }
+            requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
+                    REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+            return;
+        }
+        selectImage();
+
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(getContext())
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+    private boolean addPermission(List<String> permissionsList, String permission) {
+        if (ContextCompat.checkSelfPermission(getContext(),permission) != PackageManager.PERMISSION_GRANTED) {
+            permissionsList.add(permission);
+            // Check for Rationale Option
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),permission))
+                return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS:
+            {
+                Map<String, Integer> perms = new HashMap<String, Integer>();
+                // Initial
+                perms.put(Manifest.permission.CAMERA, PackageManager.PERMISSION_GRANTED);
+                perms.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+                perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+                // Fill with results
+                for (int i = 0; i < permissions.length; i++)
+                    perms.put(permissions[i], grantResults[i]);
+                // Check for ACCESS_FINE_LOCATION
+                if (perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                        && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                        && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    // All Permissions Granted
+                    selectImage();
+                } else {
+                    // Permission Denied
+                    Toast.makeText(getContext(), "Some Permission is Denied", Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+            break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+
+   /* private void startPickImageCamera(){
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
             Intent intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(intent,REQUEST_CAMERA);
@@ -310,48 +439,54 @@ public class RegistrationForm extends Fragment {
             }
         }
 
-    }
+    }*/
 
     @Override
     public void onActivityResult(int requestCode,int resultCode,Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(getContext(), data);
-                Log.i(TAG, "Place: " + place.getName());
-                //posizione gps
-                position = place.getLatLng();
+        switch(requestCode){
+            case PLACE_AUTOCOMPLETE_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    Place place = PlaceAutocomplete.getPlace(getContext(), data);
+                    Log.i(TAG, "Place: " + place.getName());
+                    //posizione gps
+                    position = place.getLatLng();
+                    indirizzoCasa.setTextColor(getResources().getColor(R.color.black));
+                    indirizzoCasa.setText(place.getAddress().toString());
+                    text.setTextColor(getResources().getColor(R.color.black_overlay));
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(getContext(), data);
+                    // TODO: Handle the error.
+                    Log.i(TAG, status.getStatusMessage());
 
-                indirizzoCasa.setTextColor(getResources().getColor(R.color.black));
-                indirizzoCasa.setText(place.getAddress().toString());
-                text.setTextColor(getResources().getColor(R.color.black_overlay));
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(getContext(), data);
-                // TODO: Handle the error.
-                Log.i(TAG, status.getStatusMessage());
-
-            } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
-            }
+                } else if (resultCode == RESULT_CANCELED) {
+                    // The user canceled the operation.
+                }
+                break;
+            case REQUEST_CAMERA:
+                if (resultCode==RESULT_OK){
+                    Bundle bundle = data.getExtras();
+                    final Bitmap bmp= (Bitmap) bundle.get("data");
+                    resultUri = data.getData();
+                    //ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    //bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    //byte[] data1 = baos.toByteArray();
+                    //filePath.putBytes(data1);
+                    image.setImageBitmap(bmp);
+                }
+                break;
+            case SELECT_FILE:
+                if (resultCode==RESULT_OK) {
+                    resultUri = data.getData();
+                    //filePath.putFile(imageUri);
+                    image.setImageURI(resultUri);
+                }
+                break;
+            default:
+                break;
         }
 
-        if (resultCode== RESULT_OK){
-            if (requestCode== REQUEST_CAMERA){
-                Bundle bundle = data.getExtras();
-                final Bitmap bmp= (Bitmap) bundle.get("data");
-                resultUri = data.getData();
-                //ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                //bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                //byte[] data1 = baos.toByteArray();
-                //filePath.putBytes(data1);
-                image.setImageBitmap(bmp);
 
-            }else if (requestCode== SELECT_FILE){
-                resultUri = data.getData();
-                //filePath.putFile(imageUri);
-                image.setImageURI(resultUri);
-            }
-        }
     }
 
 

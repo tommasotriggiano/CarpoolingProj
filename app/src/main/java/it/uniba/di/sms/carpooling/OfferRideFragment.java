@@ -1,7 +1,9 @@
 package it.uniba.di.sms.carpooling;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -33,6 +35,13 @@ import java.util.Locale;
 
 
 public class OfferRideFragment extends Fragment {
+
+    OnShowRideOfferedListener onShowRideOfferedListener;
+    public interface OnShowRideOfferedListener{
+       void onShowRideOffered();
+    }
+
+
     TextView dateText,tvTime,dayOfWeek;
     ImageButton btnInvert;
     TextView mWork;
@@ -69,6 +78,19 @@ public class OfferRideFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Activity activity=(Activity)context;
+        try{
+            onShowRideOfferedListener= (OnShowRideOfferedListener) activity;
+        }
+        catch(ClassCastException e){
+            throw new ClassCastException(activity.toString()+"must implement onShowRideOfferedListener");
+        }
+
+    }
+
+    @Override
     public void onViewCreated(View view,Bundle savedInstanceState){
         super.onViewCreated(view,savedInstanceState);
 
@@ -97,7 +119,7 @@ public class OfferRideFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 addPassaggio();
-
+                onShowRideOfferedListener.onShowRideOffered();
 
             }}
 

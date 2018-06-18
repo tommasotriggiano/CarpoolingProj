@@ -98,32 +98,8 @@
             android:textColor="#000"
             android:textSize="20sp"
             android:drawableLeft="@drawable/ic_access_time_black"/>
-        <TextView
-            android:id="@+id/Auto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_directions_car"
-            android:text="Auto"
-            android:textColor="#000"
-            android:textSize="20sp" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/textpostiOcc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#000"
-                android:text="@string/Occupied"
-                android:textSize="20sp"
-                android:drawableStart="@drawable/ic_people"/>
-            <TextView
-                android:id="@+id/postiOcc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#000"
-                android:textSize="20sp" />
-        </LinearLayout>
+
+
         <TextView
             android:id="@+id/numberPhone"
             android:layout_width="wrap_content"
@@ -135,4 +111,5 @@
             />
 
     </LinearLayout>
+
 </android.support.v7.widget.CardView>

@@ -69,8 +69,8 @@
     <string name="EntPhone2">inserire un numero di telefono valido</string>
     <string name="ConfirmUser">Utente aggiunto al database</string>
     <string name="Failure">Operazione fallita</string>
-
-    <string name="body_mail">C\'è una nuova richiesta. Per piacere apra l\'app Carpooling</string>
+    <string name="emailSend">Attendi\.\.\. richiesta inviata</string>
+    <string name="body_mail">"Un nuovo utente ha richiesto la conferma del profilo. Accedi a carpooling app cliccando su questo link https://carpooling.page.link/app"</string>
 
 
 

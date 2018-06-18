@@ -28,7 +28,8 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        OfferRideFragment.OnShowRideOfferedListener, MyRidesFragment.OnAddRideOfferedListener{
     private ImageView profile;
     private String urlImageProfile;
     private FirebaseUser user;
@@ -82,8 +83,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                navigationView.getMenu().findItem(R.id.nav_points).setVisible(false);
                                navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
 
-
-
                            }
 
 
@@ -94,13 +93,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                        }
                    });
-
-
-
-
-
-
-
                }
             }
 
@@ -112,10 +104,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
         //instanzio l'oggetto per l'header della navigation view
         View header = navigationView.getHeaderView(0);
 
@@ -138,8 +129,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Picasso.with(MainActivity.this).load(urlImageProfile).into(profile);
                     }
                 }
-
-
             }
 
             @Override
@@ -150,10 +139,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         setSupportActionBar(toolbar);
-
-
-
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -242,5 +227,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onShowRideOffered() {
+        MyRidesFragment myRidesFragment= new MyRidesFragment();
+        FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+        ft2.replace(R.id.content_frame,myRidesFragment);
+        ft2.commit();
+    }
+
+    @Override
+    public void onAddRideOffered() {
+        OfferRideFragment offerRideFragment= new OfferRideFragment();
+        FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
+        ft3.replace(R.id.content_frame,offerRideFragment,null);
+        ft3.addToBackStack(null);
+        ft3.commit();
     }
 }

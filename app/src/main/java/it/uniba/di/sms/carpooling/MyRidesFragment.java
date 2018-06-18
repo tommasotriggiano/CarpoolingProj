@@ -1,7 +1,10 @@
 package it.uniba.di.sms.carpooling;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,9 +37,16 @@ import static android.content.ContentValues.TAG;
  * A simple {@link Fragment} subclass.
  */
 public class MyRidesFragment extends Fragment {
+    OnAddRideOfferedListener onAddRideOfferedListener;
+    public interface OnAddRideOfferedListener{
+        void onAddRideOffered();
+    }
+
+
     private RadioGroup radioGroup;
     private RadioButton offered,required;
     private TextView messageNotFound;
+    private FloatingActionButton fab;
     private View view;
     //definisco la recyclerView
     private RecyclerView passaggiRecycler;
@@ -62,6 +72,7 @@ public class MyRidesFragment extends Fragment {
 
         view= inflater.inflate(R.layout.my_rides,container,false);
         getActivity().setTitle(R.string.myrides);
+
         radioGroup= (RadioGroup) view.findViewById(R.id.radioGroup) ;
         offered=(RadioButton)view.findViewById(R.id.offered) ;
         required=(RadioButton)view.findViewById(R.id.required) ;
@@ -69,6 +80,8 @@ public class MyRidesFragment extends Fragment {
         passaggiRecycler = (RecyclerView) view.findViewById(R.id.rvPassaggiOfferti);
         passaggiRecycler.setNestedScrollingEnabled(false);
         passaggiRecycler.setHasFixedSize(true);
+        fab=(FloatingActionButton)view.findViewById(R.id.fabPlus);
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         //invoco il metodo per aggiungere i dati presi dal database nell'arraylist resultpassaggi
         initializeData();
@@ -91,6 +104,18 @@ public class MyRidesFragment extends Fragment {
         }
 
         return view;
+    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Activity activity=(Activity)context;
+        try{
+            onAddRideOfferedListener= (MyRidesFragment.OnAddRideOfferedListener) activity;
+        }
+        catch(ClassCastException e){
+            throw new ClassCastException(activity.toString()+"must implement onAddRideOfferedListener");
+        }
+
     }
 
 
@@ -139,6 +164,11 @@ public class MyRidesFragment extends Fragment {
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onAddRideOfferedListener.onAddRideOffered();
+            }
+        });
     }
 }
