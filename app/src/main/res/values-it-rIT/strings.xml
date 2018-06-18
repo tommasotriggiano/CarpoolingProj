@@ -87,6 +87,7 @@
     <!-- myrides -->
     <string name="offered">OFFERTI</string>
     <string name="required">RICHIESTI</string>
+    <string name="delete">Cancella</string>
     <!-- approved affiliation-->
     <string name="approve">Accetta</string>
     <string name="reject">Rifiuta</string>

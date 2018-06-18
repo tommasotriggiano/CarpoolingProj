@@ -99,6 +99,7 @@
     <!-- myrides -->
     <string name="offered">OFFERED</string>
     <string name="required">REQUIRED</string>
+    <string name="delete">Delete</string>
 
     <!-- approved affiliation-->
     <string name="approve">Approve</string>

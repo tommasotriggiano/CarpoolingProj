@@ -42,6 +42,15 @@ public class PassaggiAdapter extends RecyclerView.Adapter<PassaggiViewHolder> {
         // inserire il numero dei posti occupati
 
     }
+    public void removeItem(int position){
+        itemPassaggi.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(Passaggio item,int position){
+        itemPassaggi.add(position,item);
+        notifyItemInserted(position);
+    }
 
     @Override
     public int getItemCount() {

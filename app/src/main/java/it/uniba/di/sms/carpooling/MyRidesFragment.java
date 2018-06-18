@@ -3,15 +3,19 @@ package it.uniba.di.sms.carpooling;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -36,13 +40,16 @@ import static android.content.ContentValues.TAG;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyRidesFragment extends Fragment {
+public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelperListener {
     OnAddRideOfferedListener onAddRideOfferedListener;
+
+
+
     public interface OnAddRideOfferedListener{
         void onAddRideOffered();
     }
 
-
+    LinearLayout rootLayout;
     private RadioGroup radioGroup;
     private RadioButton offered,required;
     private TextView messageNotFound;
@@ -51,7 +58,7 @@ public class MyRidesFragment extends Fragment {
     //definisco la recyclerView
     private RecyclerView passaggiRecycler;
     //definisco l'adapter
-    private RecyclerView.Adapter passaggiAdapter;
+    private PassaggiAdapter passaggiAdapter;
     //definisco il layout manager
     private RecyclerView.LayoutManager passaggiLayoutManager;
     private int  sizeResult=0;
@@ -72,7 +79,7 @@ public class MyRidesFragment extends Fragment {
 
         view= inflater.inflate(R.layout.my_rides,container,false);
         getActivity().setTitle(R.string.myrides);
-
+        rootLayout= (LinearLayout) view.findViewById(R.id.container);
         radioGroup= (RadioGroup) view.findViewById(R.id.radioGroup) ;
         offered=(RadioButton)view.findViewById(R.id.offered) ;
         required=(RadioButton)view.findViewById(R.id.required) ;
@@ -90,12 +97,16 @@ public class MyRidesFragment extends Fragment {
         passaggiRecycler.setLayoutManager(passaggiLayoutManager);
         passaggiAdapter = new PassaggiAdapter(resultPassaggi, getActivity());
         passaggiRecycler.setAdapter(passaggiAdapter);
+        ItemTouchHelper.SimpleCallback itemTouchHelper= new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT,this);
+
+        new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(passaggiRecycler);
+
         if (radioGroup.getCheckedRadioButtonId()==R.id.offered) {
             //if (passaggiAdapter.getItemCount()>0){
                 messageNotFound.setVisibility(View.GONE);
                 passaggiRecycler.setVisibility(View.VISIBLE);
 
-           /* }else {
+            /*}else {
                 messageNotFound.setVisibility(View.VISIBLE);
                 passaggiRecycler.setVisibility(View.GONE);
                 messageNotFound.setText("Non ci sono passaggi offerti");
@@ -118,7 +129,27 @@ public class MyRidesFragment extends Fragment {
 
     }
 
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if( viewHolder instanceof PassaggiViewHolder){
+            final Passaggio deletePassaggio= (Passaggio) resultPassaggi.get(viewHolder.getAdapterPosition());
+            final int deleteIndex= viewHolder.getAdapterPosition();
+            passaggiAdapter.removeItem(deleteIndex);
+            String message= "è stato rimosso";
+            Snackbar snackbar= Snackbar.make(rootLayout,message,Snackbar.LENGTH_LONG);
+            snackbar.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    passaggiAdapter.restoreItem(deletePassaggio,deleteIndex);
+                }
+            });
+            snackbar.setActionTextColor(Color.BLUE);
+            snackbar.show();
+        }
 
+
+
+    }
 
 
     private void initializeData() {
