@@ -70,6 +70,9 @@
     <string name="ConfirmUser">Utente aggiunto al database</string>
     <string name="Failure">Operazione fallita</string>
 
+    <string name="body_mail">C\'è una nuova richiesta. Per piacere apra l\'app Carpooling</string>
+
+
 
     <!--Main activity-->
     <string name="HomePage">Home</string>
@@ -82,6 +85,9 @@
     <string name="settings">Impostazioni</string>
     <string name="logout">Esci</string>
     <!-- myrides -->
-    <string name="offered">Offerti</string>
-    <string name="required">Richiesti</string>
+    <string name="offered">OFFERTI</string>
+    <string name="required">RICHIESTI</string>
+    <!-- approved affiliation-->
+    <string name="approve">Accetta</string>
+    <string name="reject">Rifiuta</string>
 </resources>
