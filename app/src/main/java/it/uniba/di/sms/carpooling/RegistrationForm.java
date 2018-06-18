@@ -138,7 +138,7 @@ public class RegistrationForm extends Fragment {
             public void onClick(View v) {
                 addUser();
                 addProfileImage();
-                //sendMail();
+                sendMail();
 
 
             }

@@ -10,9 +10,9 @@ public class LongOperation extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
         try {
             GMailSender sender = new GMailSender("mobilitymanagercarpooling@gmail.com", "sms18carpooling");
-            sender.sendMail("This is a testing mail",
-                    "This is Body of testing mail","devilsparks1171@gmail.com",
-                    "devilsparks1171@gmail.com,mobilitymanagercarpooling@gmail.com");
+            sender.sendMail("Richiesta affiliazione Carpooling",
+                    "Un nuovo utente ha richiesto la conferma del profilo. Accedi a carpooling app cliccando su questo link https://carpooling.page.link/app","tommaso.triggiano@gmail.com",
+                    "mobmanager.grifo@gmail.com");
 
         } catch (Exception e) {
             Log.e("error", e.getMessage(), e);
