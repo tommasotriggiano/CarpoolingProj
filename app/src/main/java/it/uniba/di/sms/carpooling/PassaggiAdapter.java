@@ -28,7 +28,7 @@ public class PassaggiAdapter extends RecyclerView.Adapter<PassaggiViewHolder> {
         View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_offered, parent,false);
         //RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         //layoutView.setLayoutParams(lp);
-        PassaggiViewHolder psg = new PassaggiViewHolder(layoutView);
+        PassaggiViewHolder psg = new PassaggiViewHolder(layoutView,context,itemPassaggi);
         return psg;
     }
 

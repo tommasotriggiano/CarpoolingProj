@@ -100,6 +100,8 @@
     <string name="offered">OFFERED</string>
     <string name="required">REQUIRED</string>
     <string name="delete">Delete</string>
+    <string name="Removed">It is removed</string>
+    <string name="UNDO">UNDO</string>
 
     <!-- approved affiliation-->
     <string name="approve">Approve</string>

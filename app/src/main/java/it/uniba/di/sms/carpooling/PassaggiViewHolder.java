@@ -1,17 +1,21 @@
 package it.uniba.di.sms.carpooling;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * Created by tommaso on 13/06/2018.
  */
 
-public class PassaggiViewHolder extends RecyclerView.ViewHolder  {
+public class PassaggiViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     public RelativeLayout viewBackground;
     public LinearLayout viewForeground;
     public CardView cardView;
@@ -19,11 +23,16 @@ public class PassaggiViewHolder extends RecyclerView.ViewHolder  {
     public TextView giorno;
     public TextView ora;
     public TextView casa;
-    public TextView lavoro;
     public TextView postiOccupati;
+    public ArrayList<Passaggio> passaggi;
+    public  Context ctx;
 
-    public PassaggiViewHolder(View itemView) {
+    String data1;
+    public PassaggiViewHolder(View itemView, Context ctx, ArrayList<Passaggio> passaggi) {
         super(itemView);
+        this.passaggi=passaggi;
+        this.ctx=ctx;
+        itemView.setOnClickListener(this);
         viewForeground=(LinearLayout)itemView.findViewById(R.id.viewForeground);
         viewBackground=(RelativeLayout) itemView.findViewById(R.id.viewBackground) ;
         cardView= (CardView) itemView.findViewById(R.id.cardview);
@@ -34,5 +43,10 @@ public class PassaggiViewHolder extends RecyclerView.ViewHolder  {
         postiOccupati = (TextView) itemView.findViewById(R.id.postiOcc);
     }
 
-
+    @Override
+    public void onClick(View view) {
+        int position = getAdapterPosition();
+        Passaggio psg= this.passaggi.get(position);
+       
+    }
 }

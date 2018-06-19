@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -49,7 +50,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
         void onAddRideOffered();
     }
 
-    LinearLayout rootLayout;
+    CoordinatorLayout rootLayout;
     private RadioGroup radioGroup;
     private RadioButton offered,required;
     private TextView messageNotFound;
@@ -79,7 +80,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
 
         view= inflater.inflate(R.layout.my_rides,container,false);
         getActivity().setTitle(R.string.myrides);
-        rootLayout= (LinearLayout) view.findViewById(R.id.container);
+        rootLayout= (CoordinatorLayout) view.findViewById(R.id.coordinator);
         radioGroup= (RadioGroup) view.findViewById(R.id.radioGroup) ;
         offered=(RadioButton)view.findViewById(R.id.offered) ;
         required=(RadioButton)view.findViewById(R.id.required) ;
@@ -135,15 +136,15 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
             final Passaggio deletePassaggio= (Passaggio) resultPassaggi.get(viewHolder.getAdapterPosition());
             final int deleteIndex= viewHolder.getAdapterPosition();
             passaggiAdapter.removeItem(deleteIndex);
-            String message= "è stato rimosso";
+            String message= getResources().getString(R.string.Removed);
             Snackbar snackbar= Snackbar.make(rootLayout,message,Snackbar.LENGTH_LONG);
-            snackbar.setAction("UNDO", new View.OnClickListener() {
+            snackbar.setAction(getString(R.string.UNDO), new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     passaggiAdapter.restoreItem(deletePassaggio,deleteIndex);
                 }
             });
-            snackbar.setActionTextColor(Color.BLUE);
+            snackbar.setActionTextColor(Color.CYAN);
             snackbar.show();
         }
 

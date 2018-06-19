@@ -88,6 +88,8 @@
     <string name="offered">OFFERTI</string>
     <string name="required">RICHIESTI</string>
     <string name="delete">Cancella</string>
+    <string name="Removed">E\' stato rimosso</string>
+    <string name="UNDO">ANNULLA</string>
     <!-- approved affiliation-->
     <string name="approve">Accetta</string>
     <string name="reject">Rifiuta</string>

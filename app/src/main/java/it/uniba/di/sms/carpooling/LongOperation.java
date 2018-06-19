@@ -9,16 +9,17 @@ public class LongOperation extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
         try {
+
             GMailSender sender = new GMailSender("mobilitymanagercarpooling@gmail.com", "sms18carpooling");
             sender.sendMail("Richiesta affiliazione Carpooling",
-                    "@string/body_mail","tommaso.triggiano@gmail.com",
+                  "@string/body_Mail" ,"tommaso.triggiano@gmail.com",
                     "mobmanager.grifo@gmail.com");
 
         } catch (Exception e) {
             Log.e("error", e.getMessage(), e);
             return "Email Not Sent";
         }
-        return "@string/emailSend";
+        return "Richiesta inviata";
     }
 
     @Override
