@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         rfUser = FirebaseFirestore.getInstance().document("Users"+"/"+user.getUid());
 
         adminrf = FirebaseFirestore.getInstance().document("Admin"+"/"+user.getUid());
-
         adminrf.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {

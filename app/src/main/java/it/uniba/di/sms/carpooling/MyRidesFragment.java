@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,6 +25,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -31,10 +36,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.net.DatagramSocketImpl;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
@@ -64,11 +80,12 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
     private RecyclerView.LayoutManager passaggiLayoutManager;
     private int  sizeResult=0;
     //definisco le variabili per il riferimento al database passaggi e al profilo che si è autenticato
-    DatabaseReference ref;
+    //DatabaseReference ref;
     FirebaseUser user;
+    CollectionReference passaggi;
 
     private ArrayList resultPassaggi;
-
+    int flag = 0;
     public MyRidesFragment() {
         // Required empty public constructor
     }
@@ -133,31 +150,85 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if( viewHolder instanceof PassaggiViewHolder){
-            final Passaggio deletePassaggio= (Passaggio) resultPassaggi.get(viewHolder.getAdapterPosition());
+            final Map<String,Object> deletePassaggio= (Map<String,Object>) resultPassaggi.get(viewHolder.getAdapterPosition());
             final int deleteIndex= viewHolder.getAdapterPosition();
             passaggiAdapter.removeItem(deleteIndex);
+
             String message= getResources().getString(R.string.Removed);
             Snackbar snackbar= Snackbar.make(rootLayout,message,Snackbar.LENGTH_LONG);
+
             snackbar.setAction(getString(R.string.UNDO), new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    flag = 1;
                     passaggiAdapter.restoreItem(deletePassaggio,deleteIndex);
                 }
             });
             snackbar.setActionTextColor(Color.CYAN);
             snackbar.show();
+
+
+            snackbar.addCallback(new Snackbar.Callback(){
+                @Override
+                /*se la snackbar scompare vuol dire che il passaggio non può più essere ripristinato
+                * quindi posso cancellarlo dal database
+                */
+                public void onDismissed(Snackbar snackbar1,int event){
+                    if(event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT){
+                    Query findRideToDelete = passaggi
+                            .whereEqualTo("autista.id",user.getUid())
+                            .whereEqualTo("dataPassaggio",deletePassaggio.get("dataPassaggio"))
+                            .whereEqualTo("ora",deletePassaggio.get("ora"));
+
+                    findRideToDelete.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            for (DocumentSnapshot d : task.getResult()) {
+                                passaggi.document(d.getId()).delete();
+                            }
+                        }
+                    });
+                    }
+                }
+            });
         }
-
-
-
     }
 
 
+
+
+
+
+
+
     private void initializeData() {
-        resultPassaggi = new ArrayList<Passaggio>();
-        ref = FirebaseDatabase.getInstance().getReference("passaggi");
+        resultPassaggi = new ArrayList<Map<String,Object>>();
+        //resultPassaggi = new ArrayList<Passaggio>();
+        //ref = FirebaseDatabase.getInstance().getReference("passaggi");
+        passaggi = FirebaseFirestore.getInstance().collection("Rides");
         //prendo solamente i passaggi che ha offerto l'utente autenticato
-        ref.child(user.getUid()).addChildEventListener(new ChildEventListener() {
+        Query offered = passaggi.whereEqualTo("autista.id",user.getUid());
+        offered.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                for(DocumentSnapshot document : task.getResult()){
+                    Map<String,Object> passaggiOff = document.getData();
+                    resultPassaggi.add(passaggiOff);
+                }
+                passaggiRecycler.scrollToPosition(resultPassaggi.size() - 1);
+                passaggiAdapter.notifyItemInserted(resultPassaggi.size() - 1);
+
+            }
+        });
+
+
+
+
+
+
+
+
+        /*ref.child(user.getUid()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 for(DataSnapshot data: dataSnapshot.getChildren()){
@@ -189,9 +260,10 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
     }
+
 
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState) {

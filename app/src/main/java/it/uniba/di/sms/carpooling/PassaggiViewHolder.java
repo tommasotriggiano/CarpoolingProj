@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by tommaso on 13/06/2018.
@@ -24,11 +25,11 @@ public class PassaggiViewHolder extends RecyclerView.ViewHolder implements View.
     public TextView ora;
     public TextView casa;
     public TextView postiOccupati;
-    public ArrayList<Passaggio> passaggi;
+    public ArrayList<Map<String,Object>> passaggi;
     public  Context ctx;
 
     String data1;
-    public PassaggiViewHolder(View itemView, Context ctx, ArrayList<Passaggio> passaggi) {
+    public PassaggiViewHolder(View itemView, Context ctx, ArrayList<Map<String,Object>> passaggi) {
         super(itemView);
         this.passaggi=passaggi;
         this.ctx=ctx;
@@ -46,7 +47,7 @@ public class PassaggiViewHolder extends RecyclerView.ViewHolder implements View.
     @Override
     public void onClick(View view) {
         int position = getAdapterPosition();
-        Passaggio psg= this.passaggi.get(position);
+        Map<String,Object> psg= this.passaggi.get(position);
        
     }
 }
