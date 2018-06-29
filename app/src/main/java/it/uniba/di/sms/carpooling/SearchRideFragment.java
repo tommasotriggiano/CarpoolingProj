@@ -3,18 +3,39 @@ package it.uniba.di.sms.carpooling;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,9 +43,11 @@ import java.util.Locale;
 public class SearchRideFragment extends Fragment {
     private TextView dateText;
     private TextView tvTime;
-    ImageButton btnInvert;
-    TextView mWork;
-    TextView mHome;
+    private ImageButton btnInvert;
+    private TextView mWork;
+    private TextView mHome;
+    private EditText driver;
+    private Button search;
 
 
 
@@ -38,6 +61,8 @@ public class SearchRideFragment extends Fragment {
         btnInvert = (ImageButton) view.findViewById(R.id.Invert);
         mHome = (TextView) view.findViewById(R.id.casa);
         mWork = (TextView) view.findViewById(R.id.lavoro);
+        driver = (EditText)  view.findViewById(R.id.autista);
+        search = (Button) view.findViewById(R.id.btnSearch);
 
 
         return view;
@@ -63,6 +88,44 @@ public class SearchRideFragment extends Fragment {
                 showTimePicker();
             }
         });
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchRide();
+            }
+        });
+    }
+
+    private void searchRide() {
+
+        String tipo;
+        String campo1 = mHome.getText().toString().trim();
+        String data = dateText.getText().toString().trim();
+        String ora = tvTime.getText().toString().trim();
+        String nome = driver.getText().toString().trim();
+
+        if(campo1.equals(getResources().getString(R.string.Home))){
+            tipo = getResources().getString(R.string.HomeWork);}
+        else {
+            tipo = getResources().getString(R.string.WorkHome);;}
+
+        if(data.isEmpty()){
+            dateText.setError(getResources().getString(R.string.EntDate));
+            dateText.requestFocus();
+            return;
+        }
+        if(ora.isEmpty()){
+            tvTime.setError(getResources().getString(R.string.EntTime));
+            tvTime.requestFocus();
+        }
+        Intent map = new Intent(getActivity(),MapsActivity.class);
+        map.putExtra("tipoViaggio",tipo);
+        map.putExtra("data",data);
+        map.putExtra("ora",ora);
+        map.putExtra("nome",nome);
+        startActivity(map);
+
     }
 
 

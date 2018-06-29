@@ -55,6 +55,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
         passaggi = FirebaseFirestore.getInstance().collection("Rides");
+
+        //riferimento al documento dell'user loggato
         user = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
 
 
@@ -86,7 +88,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Query findRides;
                 String userNameCompany = (String) userCompany.get("name");
                 final LatLng lavoro = new LatLng((Double)userCompany.get("latitude"),(Double)userCompany.get("longitude"));
-                final SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
+
+                /*final SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
                 Date date= null;
                 try{date = dateFormat.parse(ora);
                 }
@@ -96,19 +99,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 final Date oraMin= date;
                 oraMin.setMinutes(date.getMinutes()-10);
                 final Date oraMax= date;
-                oraMax.setMinutes(date.getMinutes()+10);
+                oraMax.setMinutes(date.getMinutes()+10);*/
 
                 if((nome.isEmpty())){
-                    findRides = passaggi.whereEqualTo("dataPassaggio",data).whereEqualTo("tipoViaggio",tipoViaggio).whereEqualTo("autista.userCompany.name",userNameCompany);
+                    findRides = passaggi
+                            .whereEqualTo("dataPassaggio",data)
+                            .whereEqualTo("ora",ora)
+                            .whereEqualTo("tipoViaggio",tipoViaggio)
+                            .whereEqualTo("autista.userCompany.name",userNameCompany);
                 }
                 else{
-                    findRides = passaggi.whereEqualTo("dataPassaggio",data).whereEqualTo("tipoViaggio",tipoViaggio).whereEqualTo("autista.surname",nome).whereEqualTo("autista.userCompany.name",userNameCompany);}
+                    findRides = passaggi
+                            .whereEqualTo("dataPassaggio",data)
+                            .whereEqualTo("tipoViaggio",tipoViaggio)
+                            .whereEqualTo("ora",ora)
+                            .whereEqualTo("autista.surname",nome)
+                            .whereEqualTo("autista.userCompany.name",userNameCompany);}
 
-                Toast.makeText(MapsActivity.this,userNameCompany,Toast.LENGTH_LONG).show();
+
                 findRides.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
+                        //marker del luogo di lavoro
                         mMap.addMarker(new MarkerOptions().position(lavoro).title("Marker in ..."));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(lavoro));
                         mMap.animateCamera(CameraUpdateFactory.zoomIn());
@@ -119,19 +132,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Map<String,Object> address = (Map<String,Object>) autista.get("userAddress");
                             Double latitude = (Double) address.get("latitude");
                             Double longitude = (Double) address.get("longitude");
-                            String oraPartenza =(String) passaggio.get("ora");
-                            Date oraP = null;
+
+                            //String oraPartenza =(String) passaggio.get("ora");
+
+                            /*Date oraP = null;
                             try {
                                 oraP = dateFormat.parse(oraPartenza);
                                 Toast.makeText(MapsActivity.this,oraP.toString(),Toast.LENGTH_LONG).show();;
                             } catch (ParseException e) {
                                 e.printStackTrace();
-                            }
+                            }*/
 
-                            if(!(userAuth.getUid().equals(autista.get("id")))&&(oraP.after(oraMin))&&(oraP.before(oraMax))){
-
+                            //non mostra sulla mappa il passaggio offerto dall'utente loggato
+                            if(!(userAuth.getUid().equals(autista.get("id")))){
                                 LatLng indirizzo = new LatLng(latitude,longitude);
 
+                                //marker delle case degli utenti selezionati dalla query
                                 mMap.addMarker(new MarkerOptions().position(indirizzo).title("Marker in ..."));
                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(indirizzo));}
 
@@ -148,6 +164,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
 
+        //metodo per leggere all'esterno dell'On Succes Listener
         private void readData(final FirestoreCallback callback){
 
             user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

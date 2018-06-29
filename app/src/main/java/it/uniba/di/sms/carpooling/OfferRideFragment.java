@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,12 +27,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+
+import static android.content.ContentValues.TAG;
 
 
 public class OfferRideFragment extends Fragment {
@@ -53,6 +62,7 @@ public class OfferRideFragment extends Fragment {
 
     //creazione del database
     DatabaseReference databasePassaggi;
+    CollectionReference passaggio;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,8 +77,11 @@ public class OfferRideFragment extends Fragment {
         postiIns= Integer.parseInt(posti.getText().toString());
         offer = (Button)view.findViewById(R.id.btnOffri);
         dayOfWeek=(TextView) view.findViewById(R.id.day) ;
+
         //istanza del database riguardanti i passaggi
         databasePassaggi = FirebaseDatabase.getInstance().getReference("passaggi");
+        //creo la collezione dei passaggi
+        passaggio = FirebaseFirestore.getInstance().collection("Rides");
 
         btnMinus=(ImageView) view.findViewById(R.id.btnMinus);
 
@@ -119,7 +132,6 @@ public class OfferRideFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 addPassaggio();
-                onShowRideOfferedListener.onShowRideOffered();
 
             }}
 
@@ -239,10 +251,10 @@ public class OfferRideFragment extends Fragment {
 
     public void addPassaggio(){
 
-        String dataPassaggio = dateText.getText().toString().trim();
-        String ora = tvTime.getText().toString().trim();
-        int postiDisponibili = postiIns;
-        String giorno = dayOfWeek.getText().toString().trim();
+        final String dataPassaggio = dateText.getText().toString().trim();
+        final String ora = tvTime.getText().toString().trim();
+        final int postiDisponibili = postiIns;
+        final String giorno = dayOfWeek.getText().toString().trim();
         String campo1 = mHome.getText().toString().trim();
         String campo2 = mWork.getText().toString().trim();
 
@@ -258,15 +270,37 @@ public class OfferRideFragment extends Fragment {
         }
 
         //ricavo l'user id per collegare l'istanza del passaggio all'utente
-        FirebaseUser profile = FirebaseAuth.getInstance().getCurrentUser();
-        String tipo;
+        final FirebaseUser profile = FirebaseAuth.getInstance().getCurrentUser();
+        //creo il documento per il passaggio
+        final DocumentReference pass = passaggio.document(profile.getUid()+"_"+dataPassaggio+"_"+ora);
+
+        final String tipo;
         if(campo1.equals(getResources().getString(R.string.Home))){
             tipo = getResources().getString(R.string.HomeWork);}
         else {
             tipo = getResources().getString(R.string.WorkHome);;}
 
-        Passaggio passaggio = new Passaggio(dataPassaggio,ora,tipo,giorno,postiDisponibili);
-        databasePassaggi.child(profile.getUid()).child(dataPassaggio).child(ora).setValue(passaggio);
+        DocumentReference userrf = FirebaseFirestore.getInstance().collection("Users").document(profile.getUid());
+
+
+        userrf.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Map<String,Object> autista = documentSnapshot.getData();
+                Map<String,Object> passaggio = new HashMap<>();
+                passaggio.put("autista",autista);
+                passaggio.put("tipoViaggio",tipo);
+                passaggio.put("dataPassaggio",dataPassaggio);
+                passaggio.put("ora",ora);
+                passaggio.put("postiDisponibili",postiDisponibili);
+                passaggio.put("giorno",giorno);
+                pass.set(passaggio);
+
+            }
+        });
+
+
+        onShowRideOfferedListener.onShowRideOffered();
 
 
             }
