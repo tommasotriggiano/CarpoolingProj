@@ -47,6 +47,6 @@ public class PassaggiViewHolder extends RecyclerView.ViewHolder implements View.
     public void onClick(View view) {
         int position = getAdapterPosition();
         Passaggio psg= this.passaggi.get(position);
-       
+
     }
 }
