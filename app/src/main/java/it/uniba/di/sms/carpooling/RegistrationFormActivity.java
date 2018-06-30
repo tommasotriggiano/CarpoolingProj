@@ -56,10 +56,10 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class RegistrationFormActivity extends AppCompatActivity {
+/*public class RegistrationFormActivity extends AppCompatActivity {
 
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+   /* private static final String TAG = MainActivity.class.getSimpleName();
     private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
     //dichiarazioni variabili per l'utente
@@ -109,7 +109,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
 
         nome = (EditText) findViewById(R.id.Nome);
         cognome = (EditText) findViewById(R.id.Cognome);
-        /** Inserimento posto con autocompletamento **/
+        // Inserimento posto con autocompletamento
         indirizzoCasa = (TextView) findViewById(R.id.Indirizzo);
         text=(TextView) findViewById(R.id.ind);
         //Listener sul editText indirizzo
@@ -214,7 +214,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
         Address userAddress = new Address(address,position.latitude,position.longitude);
 
         //creo un'instanza dell'oggetto User
-        User user = new User(email,name,surname,userAddress,company,phone);
+        //User user = new User(email,name,surname,userAddress,company,phone);
 
         //aggiungo l'instanza al database mettendo come chiave primaria l'UID creato al momento dell'autenticazione
         databaseUsers.child(profile.getUid()).setValue(user)
@@ -248,13 +248,13 @@ public class RegistrationFormActivity extends AppCompatActivity {
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     Map newImage = new HashMap();
                     newImage.put("urlProfileImage",downloadUrl.toString());
-                    /*se l'utente ha inserito un'immagine di profilo allora nel database degli utenti verrà inserito un campo
-                    in cui ci sarà l'url dell'immagine caricata*/
+                    se l'utente ha inserito un'immagine di profilo allora nel database degli utenti verrà inserito un campo
+                    in cui ci sarà l'url dell'immagine caricata
                     databaseUsers.child(profile.getUid()).updateChildren(newImage);
-                    finish();
+                    finish();*/
 
 
-                }
+                /*}
             });
         }
         else{
@@ -361,7 +361,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
 
 
 
-    }
+    }*/
 
 
 

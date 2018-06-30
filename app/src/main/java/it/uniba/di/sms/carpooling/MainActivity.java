@@ -1,6 +1,7 @@
 package it.uniba.di.sms.carpooling;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,20 +26,26 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import it.uniba.di.sms.carpooling.userApproved.ApproveFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         OfferRideFragment.OnShowRideOfferedListener, MyRidesFragment.OnAddRideOfferedListener{
     private ImageView profile;
     private String urlImageProfile;
     private FirebaseUser user;
-    private DatabaseReference refUser;
-    private String adminUid;
-    private DatabaseReference adminRef;
+    private DocumentReference adminrf;
+    private DocumentReference rfUser;
     private NavigationView navigationView;
 
     @Override
@@ -45,23 +55,79 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         user = FirebaseAuth.getInstance().getCurrentUser();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        adminRef = FirebaseDatabase.getInstance().getReference("admin");
+        rfUser = FirebaseFirestore.getInstance().collection("Users").document(user.getUid());
+        adminrf = FirebaseFirestore.getInstance().collection("Admin").document(user.getUid());
+        adminrf.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()){
+                    navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(true);
+                    navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
+                }
+                else{
+                    rfUser.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if(!(documentSnapshot.exists())){
+                                navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
+                                navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(false);
+                                navigationView.getMenu().findItem(R.id.nav_searchride).setVisible(false);
+                                navigationView.getMenu().findItem(R.id.nav_offeraride).setVisible(false);
+                                navigationView.getMenu().findItem(R.id.nav_points).setVisible(false);
+                                navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
+                            }
+                            else{
+                                Map<String,Object> approved = documentSnapshot.getData();
+                                boolean ap = (boolean) approved.get("approved");
+                                if(!ap){
+                                    navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
+                                    navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(false);
+                                    navigationView.getMenu().findItem(R.id.nav_searchride).setVisible(false);
+                                    navigationView.getMenu().findItem(R.id.nav_offeraride).setVisible(false);
+                                    navigationView.getMenu().findItem(R.id.nav_points).setVisible(false);
+                                    navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);}
+                                else if(ap){
+                                    navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
+                                    navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
+                            }
+                        }
+                    }});
 
-        adminRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+
+
+
+
+
+
+
+                }
+
+            }
+        });
+
+
+
+
+
+
+
+
+        /*adminRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                if(dataSnapshot.exists()){
-                   /*se nel database degli admin esiste l'uid dell'utente che si è autenticato allora
+
+                   se nel database degli admin esiste l'uid dell'utente che si è autenticato allora
                    quell'utente è un admin e,oltre a vedere tutte le opzioni visibili ad utenti normali,
                     potrà vedere la voce del menu Affiliazioni
-                    */
+
                    navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(true);
                    navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
                }
                else{
-                   /*se nel database degli admin non esiste l'uid dell'utente autenticato
+                   //se nel database degli admin non esiste l'uid dell'utente autenticato
                    allora vorrà dire che l'utente non è un admin
-                    */
+
                    navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
                    refUser = FirebaseDatabase.getInstance().getReference("users");
                    refUser.child(user.getUid()).addValueEventListener(new ValueEventListener() {
@@ -100,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -114,29 +180,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //creo il riferimento per l'utente autenticato
         user = FirebaseAuth.getInstance().getCurrentUser();
         //creo il riferimento al database passaggi
-        refUser = FirebaseDatabase.getInstance().getReference("users");
+
 
         //cerco nelle informazioni dell'utente autenticato l'url dell'immagine di profilo.
-        refUser.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+        rfUser.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    Map<String,Object> map = (Map<String,Object>) dataSnapshot.getValue();
-                    //se l'url è null significa che al momento della registrazione l'utente non ha caricato nessuna immagine
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    Map<String,Object> map = documentSnapshot.getData();
                     if(map.get("urlProfileImage")!= null){
                         urlImageProfile = map.get("urlProfileImage").toString();
                         //attraverso la libreria picasso carico l'immagine nella ImageView preimpostata
                         Picasso.with(MainActivity.this).load(urlImageProfile).into(profile);
                     }
+
+
+
                 }
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
         });
-
 
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -146,15 +208,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        //if(adminUid.equals(user.getUid())){
-            //navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(true);
-        //}
-       // else{
-        //    navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
-        //}
-       // navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
-        /*getSupportFragmentManager().beginTransaction().replace(R.id.content_frame,new OfferRideFragment()).commit();
-        navigationView.setCheckedItem(R.id.nav_offeraride);*/
     }
 
     @Override
@@ -208,6 +261,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_offeraride) {
           fragment= new OfferRideFragment();
 
+        }else if(id == R.id.nav_approvazione){
+            fragment= new ApproveFragment();
+
         } else if (id == R.id.nav_settings) {
 
         }else if (id == R.id.nav_logout) {
@@ -215,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(MainActivity.this,LoginActivity.class));
             finish();
         }
+
 
         //replacing the fragment
         if(fragment != null){

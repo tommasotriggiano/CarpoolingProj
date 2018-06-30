@@ -43,10 +43,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,6 +86,10 @@ public class RegistrationForm extends Fragment {
     //database per l'autenticazione
     private FirebaseUser profile;
 
+    private DocumentReference rf;
+
+    private DocumentReference companyRef;
+
     Uri resultUri;
 
     LatLng position;
@@ -95,9 +103,13 @@ public class RegistrationForm extends Fragment {
         addPhoto=(ImageButton)view.findViewById(R.id.addPhoto);
         //istanza del databse
         databaseUsers = FirebaseDatabase.getInstance().getReference("users");
-
         //istanza del profilo autenticato all'applicazione
         profile = FirebaseAuth.getInstance().getCurrentUser();
+
+        rf = FirebaseFirestore.getInstance().document("Users"+"/"+profile.getUid());
+
+        //istanza del profilo autenticato all'applicazione
+
         //reference allo storage
         mStorage = FirebaseStorage.getInstance().getReference();
 
@@ -173,11 +185,11 @@ public class RegistrationForm extends Fragment {
 
     //metodo per aggiungere un utente confermato
     public void addUser(){
-        String name = nome.getText().toString().trim();
-        String surname = cognome.getText().toString().trim();
+        final String name = nome.getText().toString().trim();
+        final String surname = cognome.getText().toString().trim();
         String address = indirizzoCasa.getText().toString().trim();
         String company = azienda.getSelectedItem().toString().trim();
-        String phone = telefono.getText().toString().trim();
+        final String phone = telefono.getText().toString().trim();
 
         if(name.isEmpty()){
             nome.setError(getResources().getString(R.string.EntName));
@@ -206,37 +218,53 @@ public class RegistrationForm extends Fragment {
         }
 
         //ricavo l'email dall'autenticazione
-        String email = profile.getEmail();
-        Address userAddress = new Address(address,position.latitude,position.longitude);
+        final String email = profile.getEmail();
 
-        //creo un'instanza dell'oggetto User
-        User user = new User(email,name,surname,userAddress,company,phone);
+        final HashMap<String,Object> userAddress = new HashMap<>();
+        userAddress.put("address",address);
+        userAddress.put("latitude",position.latitude);
+        userAddress.put("longitude",position.longitude);
 
-        //aggiungo l'instanza al database mettendo come chiave primaria l'UID creato al momento dell'autenticazione
-        databaseUsers.child(profile.getUid()).setValue(user)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+        companyRef = FirebaseFirestore.getInstance().collection("Companies").document(company);
+
+        companyRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                HashMap<String,Object> com = (HashMap<String,Object>) documentSnapshot.getData();
+
+                //creo un'instanza dell'oggetto User
+                Map<String,Object> user = new HashMap<>();
+                user.put("id",profile.getUid());
+                user.put("email",email);
+                user.put("name",name);
+                user.put("surname",surname);
+                user.put("userAddress",userAddress);
+                user.put("userCompany",com);
+                user.put("phone",phone);
+                user.put("approved",false);
+
+                rf.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            //visualizza messaggio di successo e proseguo con l'altra activity
-                            //devo passare alla home page
                             startActivity(new Intent(getActivity(), MainActivity.class));
                             getActivity().finish();
+
                         }
                         else{
                             //visualizza messaggio di errore
                             Toast.makeText(getContext(), R.string.Failure, Toast.LENGTH_SHORT).show();
-
-
                         }
+
 
                     }
                 });
-    }
+            }
+        });}
 
 
 
-    // salvataggio dell'immagine profilo sullo storage
+        // salvataggio dell'immagine profilo sullo storage
     public void addProfileImage() {
         if (resultUri != null){
             StorageReference filePath = mStorage.child("Foto profilo").child(profile.getUid());
@@ -250,7 +278,8 @@ public class RegistrationForm extends Fragment {
                     newImage.put("urlProfileImage",downloadUrl.toString());
                     /*se l'utente ha inserito un'immagine di profilo allora nel database degli utenti verrà inserito un campo
                     in cui ci sarà l'url dell'immagine caricata*/
-                    databaseUsers.child(profile.getUid()).updateChildren(newImage);
+                    rf.update(newImage);
+
 
                 }
             });
@@ -468,10 +497,8 @@ public class RegistrationForm extends Fragment {
                     Bundle bundle = data.getExtras();
                     final Bitmap bmp= (Bitmap) bundle.get("data");
                     resultUri = data.getData();
-                    //ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    //bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                    //byte[] data1 = baos.toByteArray();
-                    //filePath.putBytes(data1);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                     image.setImageBitmap(bmp);
                 }
                 break;
