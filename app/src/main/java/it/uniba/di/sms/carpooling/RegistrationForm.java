@@ -50,6 +50,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -240,6 +241,7 @@ public class RegistrationForm extends Fragment {
                 user.put("userAddress",userAddress);
                 user.put("userCompany",com);
                 user.put("phone",phone);
+                user.put("approved",false);
 
                 rf.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -276,7 +278,6 @@ public class RegistrationForm extends Fragment {
                     newImage.put("urlProfileImage",downloadUrl.toString());
                     /*se l'utente ha inserito un'immagine di profilo allora nel database degli utenti verrà inserito un campo
                     in cui ci sarà l'url dell'immagine caricata*/
-                    databaseUsers.child(profile.getUid()).updateChildren(newImage);
                     rf.update(newImage);
 
 
@@ -496,10 +497,8 @@ public class RegistrationForm extends Fragment {
                     Bundle bundle = data.getExtras();
                     final Bitmap bmp= (Bitmap) bundle.get("data");
                     resultUri = data.getData();
-                    //ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    //bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                    //byte[] data1 = baos.toByteArray();
-                    //filePath.putBytes(data1);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                     image.setImageBitmap(bmp);
                 }
                 break;

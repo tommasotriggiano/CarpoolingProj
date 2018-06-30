@@ -85,7 +85,6 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
     CollectionReference passaggi;
 
     private ArrayList resultPassaggi;
-    int flag = 0;
     public MyRidesFragment() {
         // Required empty public constructor
     }
@@ -160,7 +159,6 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
             snackbar.setAction(getString(R.string.UNDO), new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    flag = 1;
                     passaggiAdapter.restoreItem(deletePassaggio,deleteIndex);
                 }
             });
