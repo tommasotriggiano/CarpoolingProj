@@ -16,9 +16,12 @@
     <string name="dayOfWeek">Day of week</string>
     <string name="EntDate">Enter date</string>
     <string name="EntTime">Enter departure\'s hour </string>
-    <string name="Occupied">Occupied Places</string>
-
-
+    <string name="Occupied">Occupied Places \: </string>
+    <string name="Available">Available Places \: </string>
+    <string name="requiredRide">Request Ride</string>
+    <string name="Direction">"Direction \: "</string>
+    <string name="dateTime">"Date and time \: "</string>
+    <string name="driver">"Driver : "</string>
     <!-- login and registration activity-->
     <string name="etUsername">Username</string>
     <string name="etName">Username</string>

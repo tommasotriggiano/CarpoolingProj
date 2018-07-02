@@ -303,7 +303,7 @@ public class OfferRideFragment extends Fragment {
         onShowRideOfferedListener.onShowRideOffered();
 
 
-            }
+    }
 
 
 

@@ -75,19 +75,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 navigationView.getMenu().findItem(R.id.nav_offeraride).setVisible(false);
                                 navigationView.getMenu().findItem(R.id.nav_points).setVisible(false);
                                 navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
-                            }
-                            else{
+                            } else{
                                 Map<String,Object> approved = documentSnapshot.getData();
                                 boolean ap = (boolean) approved.get("approved");
                                 if(!ap){
-                                    navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
+                                    navigationView.getMenu().findItem(R.id.nav_profile).setTitle(R.string.profile);
                                     navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(false);
                                     navigationView.getMenu().findItem(R.id.nav_searchride).setVisible(false);
                                     navigationView.getMenu().findItem(R.id.nav_offeraride).setVisible(false);
                                     navigationView.getMenu().findItem(R.id.nav_points).setVisible(false);
                                     navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);}
                                 else if(ap){
-                                    navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
+                                    navigationView.getMenu().findItem(R.id.nav_profile).setTitle(R.string.profile);
                                     navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
                             }
                         }
