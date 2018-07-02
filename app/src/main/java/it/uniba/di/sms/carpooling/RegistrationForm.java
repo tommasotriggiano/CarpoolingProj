@@ -79,8 +79,6 @@ public class RegistrationForm extends Fragment {
     private ImageButton addPhoto;
 
     private CircleImageView image;
-    //creazione del database
-    private DatabaseReference databaseUsers;
     //creazione dello storage per la foto utente
     private StorageReference mStorage;
     //database per l'autenticazione
@@ -101,14 +99,11 @@ public class RegistrationForm extends Fragment {
 
         image= (CircleImageView) view.findViewById(R.id.imageView2) ;
         addPhoto=(ImageButton)view.findViewById(R.id.addPhoto);
-        //istanza del databse
-        databaseUsers = FirebaseDatabase.getInstance().getReference("users");
         //istanza del profilo autenticato all'applicazione
         profile = FirebaseAuth.getInstance().getCurrentUser();
 
-        rf = FirebaseFirestore.getInstance().document("Users"+"/"+profile.getUid());
+        rf = FirebaseFirestore.getInstance().collection("Users").document(profile.getUid());
 
-        //istanza del profilo autenticato all'applicazione
 
         //reference allo storage
         mStorage = FirebaseStorage.getInstance().getReference();
@@ -185,6 +180,7 @@ public class RegistrationForm extends Fragment {
 
     //metodo per aggiungere un utente confermato
     public void addUser(){
+
         final String name = nome.getText().toString().trim();
         final String surname = cognome.getText().toString().trim();
         String address = indirizzoCasa.getText().toString().trim();
@@ -264,7 +260,7 @@ public class RegistrationForm extends Fragment {
 
 
 
-        // salvataggio dell'immagine profilo sullo storage
+    // salvataggio dell'immagine profilo sullo storage
     public void addProfileImage() {
         if (resultUri != null){
             StorageReference filePath = mStorage.child("Foto profilo").child(profile.getUid());
@@ -285,7 +281,7 @@ public class RegistrationForm extends Fragment {
             });
         }
         else{
-            //go to home page
+            Log.e(TAG,"nessuna immagine trovata");
 
         }}
 
@@ -505,7 +501,6 @@ public class RegistrationForm extends Fragment {
             case SELECT_FILE:
                 if (resultCode==RESULT_OK) {
                     resultUri = data.getData();
-                    //filePath.putFile(imageUri);
                     image.setImageURI(resultUri);
                 }
                 break;

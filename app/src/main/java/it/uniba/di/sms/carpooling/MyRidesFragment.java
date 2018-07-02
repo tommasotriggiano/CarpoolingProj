@@ -52,6 +52,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import it.uniba.di.sms.carpooling.rideRequired.RequiredAdapter;
+
 import static android.content.ContentValues.TAG;
 
 /**
@@ -74,17 +76,22 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
     private View view;
     //definisco la recyclerView
     private RecyclerView passaggiRecycler;
+    private RecyclerView requiredRecycler;
     //definisco l'adapter
     private PassaggiAdapter passaggiAdapter;
+    private RequiredAdapter requiredAdapter;
     //definisco il layout manager
     private RecyclerView.LayoutManager passaggiLayoutManager;
+    private RecyclerView.LayoutManager requiredLayoutManager;
     private int  sizeResult=0;
     //definisco le variabili per il riferimento al database passaggi e al profilo che si è autenticato
     //DatabaseReference ref;
     FirebaseUser user;
     CollectionReference passaggi;
-
+    CollectionReference passaggiRichiesti;
     private ArrayList resultPassaggi;
+    private ArrayList resultRequired;
+
     public MyRidesFragment() {
         // Required empty public constructor
     }
@@ -101,38 +108,93 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
         offered=(RadioButton)view.findViewById(R.id.offered) ;
         required=(RadioButton)view.findViewById(R.id.required) ;
         messageNotFound=(TextView) view.findViewById(R.id.message) ;
+
         passaggiRecycler = (RecyclerView) view.findViewById(R.id.rvPassaggiOfferti);
         passaggiRecycler.setNestedScrollingEnabled(false);
         passaggiRecycler.setHasFixedSize(true);
+
+        requiredRecycler = (RecyclerView) view.findViewById(R.id.rvPassaggiRichiesti);
+        requiredRecycler.setNestedScrollingEnabled(false);
+        requiredRecycler.setHasFixedSize(true);
+
         fab=(FloatingActionButton)view.findViewById(R.id.fabPlus);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         //invoco il metodo per aggiungere i dati presi dal database nell'arraylist resultpassaggi
-        initializeData();
+        initializeDataPassaggi();
+        initializeDataRequired();
 
-        passaggiLayoutManager = new LinearLayoutManager(getActivity());
-        passaggiRecycler.setLayoutManager(passaggiLayoutManager);
+        passaggiRecycler.setVisibility(View.VISIBLE);
+        fab.setVisibility(View.VISIBLE);
+        requiredRecycler.setVisibility(View.GONE);
+
+
         passaggiAdapter = new PassaggiAdapter(resultPassaggi, getActivity());
-        passaggiRecycler.setAdapter(passaggiAdapter);
-        ItemTouchHelper.SimpleCallback itemTouchHelper= new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT,this);
+        requiredAdapter = new RequiredAdapter(resultRequired,getActivity());
 
+        passaggiRecycler.setAdapter(passaggiAdapter);
+        requiredRecycler.setAdapter(requiredAdapter);
+
+        ItemTouchHelper.SimpleCallback itemTouchHelper= new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT,this);
         new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(passaggiRecycler);
 
-        if (radioGroup.getCheckedRadioButtonId()==R.id.offered) {
-            //if (passaggiAdapter.getItemCount()>0){
-                messageNotFound.setVisibility(View.GONE);
-                passaggiRecycler.setVisibility(View.VISIBLE);
+        passaggiLayoutManager = new LinearLayoutManager(getActivity());
+        requiredLayoutManager = new LinearLayoutManager(getActivity());
 
-            /*}else {
-                messageNotFound.setVisibility(View.VISIBLE);
-                passaggiRecycler.setVisibility(View.GONE);
-                messageNotFound.setText("Non ci sono passaggi offerti");
-            }*/
+        passaggiRecycler.setLayoutManager(passaggiLayoutManager);
+        requiredRecycler.setLayoutManager(requiredLayoutManager);
 
-        }
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId == R.id.required){
+                    passaggiRecycler.setVisibility(View.GONE);
+                    requiredRecycler.setVisibility(View.VISIBLE);
+                    fab.setVisibility(View.GONE);
+                }
+                else{
+                    passaggiRecycler.setVisibility(View.VISIBLE);
+                    requiredRecycler.setVisibility(View.GONE);
+                    fab.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
+
 
         return view;
     }
+
+    private void initializeDataRequired() {
+        resultRequired = new ArrayList<Map<String,Object>>();
+
+        if(!(resultRequired.isEmpty())){
+            resultRequired.clear();
+        }
+
+        passaggiRichiesti = FirebaseFirestore.getInstance().collection("RideRequests");
+
+        Query required = passaggiRichiesti.whereEqualTo("passeggero.id",user.getUid());
+        required.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                for(DocumentSnapshot document : task.getResult()){
+                    Map<String,Object> passaggiReq = document.getData();
+                    resultRequired.add(passaggiReq);
+                }
+                requiredRecycler.scrollToPosition(resultRequired.size() - 1);
+                requiredAdapter.notifyItemInserted(resultRequired.size() - 1);
+
+            }
+        });
+    }
+
+
+
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -199,12 +261,14 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
 
 
 
-    private void initializeData() {
+    private void initializeDataPassaggi() {
         resultPassaggi = new ArrayList<Map<String,Object>>();
-        //resultPassaggi = new ArrayList<Passaggio>();
-        //ref = FirebaseDatabase.getInstance().getReference("passaggi");
+        if(!(resultPassaggi.isEmpty())){
+            resultRequired.clear();
+        }
         passaggi = FirebaseFirestore.getInstance().collection("Rides");
         //prendo solamente i passaggi che ha offerto l'utente autenticato
+
         Query offered = passaggi.whereEqualTo("autista.id",user.getUid());
         offered.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -218,48 +282,6 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
 
             }
         });
-
-
-
-
-
-
-
-
-        /*ref.child(user.getUid()).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                for(DataSnapshot data: dataSnapshot.getChildren()){
-                    //aggiungo all'arraylist un oggetto di tipo passaggio ogni volta che l'utente lo aggiunge al database
-                    resultPassaggi.add(data.getValue(Passaggio.class));
-                }
-                passaggiRecycler.scrollToPosition(resultPassaggi.size() - 1);
-                passaggiAdapter.notifyItemInserted(resultPassaggi.size() - 1);
-
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
     }
 
 

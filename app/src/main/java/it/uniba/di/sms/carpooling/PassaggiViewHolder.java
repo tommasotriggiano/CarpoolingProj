@@ -29,11 +29,12 @@ public class PassaggiViewHolder extends RecyclerView.ViewHolder implements View.
     public  Context ctx;
 
     String data1;
-    public PassaggiViewHolder(View itemView, Context ctx, ArrayList<Map<String,Object>> passaggi) {
+    public PassaggiViewHolder(View itemView, Context ctx, final ArrayList<Map<String,Object>> passaggi) {
         super(itemView);
         this.passaggi=passaggi;
         this.ctx=ctx;
         itemView.setOnClickListener(this);
+
         viewForeground=(LinearLayout)itemView.findViewById(R.id.viewForeground);
         viewBackground=(RelativeLayout) itemView.findViewById(R.id.viewBackground) ;
         cardView= (CardView) itemView.findViewById(R.id.cardview);
@@ -44,10 +45,11 @@ public class PassaggiViewHolder extends RecyclerView.ViewHolder implements View.
         postiOccupati = (TextView) itemView.findViewById(R.id.postiOcc);
     }
 
+
     @Override
     public void onClick(View view) {
         int position = getAdapterPosition();
-        Map<String,Object> psg= this.passaggi.get(position);
+        Map<String,Object> psg= (Map<String,Object>)this.passaggi.get(position).get("autista");
        
     }
 }

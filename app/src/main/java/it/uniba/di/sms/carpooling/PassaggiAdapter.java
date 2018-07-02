@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class PassaggiAdapter extends RecyclerView.Adapter<PassaggiViewHolder> {
         holder.giorno.setText((String)itemPassaggi.get(position).get("giorno"));
         holder.ora.setText((String)itemPassaggi.get(position).get("ora"));
         holder.casa.setText((String)itemPassaggi.get(position).get("tipoViaggio"));
-        // inserire il numero dei posti occupati
+        holder.onClick(holder.cardView);
 
     }
     public void removeItem(int position){

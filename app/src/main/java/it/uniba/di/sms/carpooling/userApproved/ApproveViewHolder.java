@@ -38,6 +38,7 @@ public class ApproveViewHolder extends RecyclerView.ViewHolder implements View.O
         this.ctx=ctx;
 
         itemView.setOnClickListener(this);
+
         viewForeground=(LinearLayout)itemView.findViewById(R.id.view1);
         viewBackground=(RelativeLayout) itemView.findViewById(R.id.view2);
         viewButton = (LinearLayout) itemView.findViewById(R.id.viewBtn);

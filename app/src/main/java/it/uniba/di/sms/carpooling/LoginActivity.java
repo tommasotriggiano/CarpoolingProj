@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -73,13 +74,7 @@ public class LoginActivity extends AppCompatActivity {
 
         }
 
-        //Intent intent=new Intent(this,MapsActivity.class);
-        //startActivity(intent);
-
         mAuth = FirebaseAuth.getInstance();
-        //reference al database che contiene le chiavi di tutti gli admin
-        //da migliorare
-
 
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
@@ -172,76 +167,13 @@ public class LoginActivity extends AppCompatActivity {
 
     //metodo per controllare se l'email è stata verificata
     private void checkIfEmailVerified(){
-        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
-        adminRef = FirebaseDatabase.getInstance().getReference("admin");
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user.isEmailVerified()){
             Toast.makeText(LoginActivity.this, R.string.Successful, Toast.LENGTH_SHORT).show();
-
-            /*adminRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    //se l'utente è un admin
-                    if (dataSnapshot.exists()){*/
-                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                        finish();
-                    }
-                    //se l'utente non è un admin
-                    /*
-                    else{
-                        ref.child(user.getUid()).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.exists()){
-                                    //se l'istanza del database esiste, quindi l'utente ha già inserito le sue informazioni, si passa all'activity principale
-                                    startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                                    finish();
-                                }
-                                else{
-                                    startActivity(new Intent(LoginActivity.this,RegistrationFormActivity.class));
-                                    finish();
-                                }
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-                    }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });}
-
-            //leggo l'instanza del database creato nella regsitration form
-            /*ref.child(user.getUid()).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.exists()){
-                        //se l'istanza del database esiste, quindi l'utente ha già inserito le sue informazioni, si passa all'activity principale
-                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                        finish();
-                    }
-                    else{
-                        startActivity(new Intent(LoginActivity.this,RegistrationFormActivity.class));
-                        finish();
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }*/
-        //se l'email non è stata verificata
-        else{
+            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+            finish();
+        } else{
             progressBar.setVisibility(View.INVISIBLE);
             Toast.makeText(LoginActivity.this, R.string.NotVerified, Toast.LENGTH_SHORT).show();
         }
