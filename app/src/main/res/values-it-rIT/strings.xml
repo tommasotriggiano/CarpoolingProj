@@ -17,7 +17,12 @@
     <string name="dayOfWeek">Giorno</string>
     <string name="EntDate">Inserire la data</string>
     <string name="EntTime">Inserire l\' ora di partenza</string>
-    <string name="Occupied">Posti occupati</string>
+    <string name="Occupied">Posti occupati \: </string>
+    <string name="Available">Posti disponibili \: </string>
+    <string name="requiredRide">Richiesta Passaggi</string>
+    <string name="Direction">"Direzione \: "</string>
+    <string name="dateTime">"Data e ora \: "</string>
+    <string name="driver">"Automobilista : "</string>
 
     <!-- login and registration acitivity-->
     <string name="etUserEmail">E-mail</string>
