@@ -371,41 +371,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                LatLng pos = marker.getPosition();
+                //recupero la chiave del marker che ho selezionato
                 String key = marker.getId();
+                //prendo il passaggio che è collegato alla chiave del marker selezionato
+                if(markerMap.get(key) != null){
                 Map<String,Object> pass = (Map<String,Object>) markerMap.get(key);
-                Query request = passaggi.whereEqualTo("autista.userAddress.latitude",pos.latitude)
-                                        .whereEqualTo("autista.userAddress.longitude",pos.longitude)
-                                        .whereEqualTo("dataPassaggio",data)
-                                        .whereEqualTo("ora",ora);
 
-
-
-                /*request.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        for(DocumentSnapshot doc : task.getResult()){
-                            String idPassaggio = doc.getId();
-                            Map<String,Object> passaggio = doc.getData();
-                            Map<String,Object> autista = (Map<String,Object>)passaggio.get("autista");
-                            String idAutista = (String)autista.get("id");
-                            String idPasseggero = userAuth.getUid();
-                            CollectionReference request = FirebaseFirestore.getInstance().collection("RideRequests");
-                            Map<String,Object> requestMap = new HashMap<>();
-                            requestMap.put("idAutista",idAutista);
-                            requestMap.put("idPassaggio",idPassaggio);
-                            requestMap.put("idPasseggero",idPasseggero);
-                            requestMap.put("status","IN ATTESA");
-                            //request.add(requestMap);
-                        }
-
-
-                    }
-                });*/
-
+                //creo il database delle richieste del passaggio
                 Map<String,Object> autista1 = (Map<String,Object>)pass.get("autista");
                 final Map<String,Object> requestMap = new HashMap<>();
-
+                /* una richiesta conterrà le informazioni dell'autista
+                 * del passaggio e del passeggero
+                 */
                 Map<String,Object> autista = new HashMap<>();
                 String idAut = autista1.get("id").toString();
                 autista.put("id",idAut);
@@ -447,8 +424,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String message= "Richiesta inviata";
                 Snackbar snackbar= Snackbar.make(rootLayout,message,Snackbar.LENGTH_SHORT);
                 snackbar.show();
+                startActivity(new Intent(MapsActivity.this,MainActivity.class));
+                finish();
 
-            }
+            }}
         });
 
 

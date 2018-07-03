@@ -98,6 +98,7 @@
     <string name="approved">Affiliation requests</string>
     <string name="settings">Settings</string>
     <string name="logout">Log Out</string>
+    <string name="welcome">Welcome</string>
 
     <!-- myrides -->
     <string name="offered">OFFERED</string>

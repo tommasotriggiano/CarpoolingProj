@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,8 +43,9 @@ import it.uniba.di.sms.carpooling.userApproved.ApproveFragment;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         OfferRideFragment.OnShowRideOfferedListener, MyRidesFragment.OnAddRideOfferedListener{
     private ImageView profile;
+    private TextView hello;
     private String urlImageProfile;
-    private FirebaseUser user;
+    private FirebaseUser userAuth;
     private DocumentReference adminrf;
     private DocumentReference rfUser;
     private NavigationView navigationView;
@@ -52,11 +54,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        userAuth = FirebaseAuth.getInstance().getCurrentUser();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        rfUser = FirebaseFirestore.getInstance().collection("Users").document(user.getUid());
-        adminrf = FirebaseFirestore.getInstance().collection("Admin").document(user.getUid());
+        rfUser = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
+        adminrf = FirebaseFirestore.getInstance().collection("Admin").document(userAuth.getUid());
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
+        //instanzio l'oggetto per l'header della navigation view
+        View header = navigationView.getHeaderView(0);
+
+        profile = (CircleImageView) header.findViewById(R.id.imageProfile);
+        hello = (TextView)header.findViewById(R.id.hello);
+
+
+
+
+
         adminrf.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -76,8 +93,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 navigationView.getMenu().findItem(R.id.nav_points).setVisible(false);
                                 navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
                             } else{
-                                Map<String,Object> approved = documentSnapshot.getData();
-                                boolean ap = (boolean) approved.get("approved");
+                                Map<String,Object> user = documentSnapshot.getData();
+                                String name = (String)user.get("name");
+                                hello.setText(name);
+                                boolean ap = (boolean) user.get("approved");
                                 if(!ap){
                                     navigationView.getMenu().findItem(R.id.nav_profile).setTitle(R.string.profile);
                                     navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(false);
@@ -168,16 +187,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });*/
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        //instanzio l'oggetto per l'header della navigation view
-        View header = navigationView.getHeaderView(0);
-
-        profile = (CircleImageView) header.findViewById(R.id.imageProfile);
         //creo il riferimento per l'utente autenticato
-        user = FirebaseAuth.getInstance().getCurrentUser();
         //creo il riferimento al database passaggi
 
 
