@@ -95,6 +95,8 @@
     <string name="delete">Cancella</string>
     <string name="Removed">E\' stato rimosso</string>
     <string name="UNDO">ANNULLA</string>
+    <string name="status1">Accettato</string>
+    <string name ="status2">Rifiutato</string>
     <!-- approved affiliation-->
     <string name="approve">Accetta</string>
     <string name="reject">Rifiuta</string>

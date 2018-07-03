@@ -55,13 +55,8 @@ public class RequiredAdapter extends RecyclerView.Adapter<RequiredViewHolder>{
         holder.telefono.setText((String)autista.get("phone"));
         holder.cognome.setText((String)autista.get("surname"));
         holder.nome.setText((String)autista.get("name"));
+        holder.status.setText((String)itemRideRequired.get(position).get("status"));
         final Map<String,Object> address = (Map<String,Object>)autista.get("userAddress");
-        if((boolean)itemRideRequired.get(position).get("accepted")){
-            holder.status.setText(R.string.status1);
-        }
-        else{
-            holder.status.setText(R.string.status2);
-        }
         if(autista.get("urlProfileImage") != null){
             Picasso.with(context1).load(autista.get("urlProfileImage").toString()).into(holder.immagine);}
     }

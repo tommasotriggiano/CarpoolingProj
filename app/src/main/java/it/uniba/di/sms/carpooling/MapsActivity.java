@@ -147,6 +147,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //ArrayList di posizione per il marker
     ArrayList<LatLng> markerPosList=new ArrayList<LatLng>();
+    private Map markerMap = new HashMap<String,Object>();
     private static final int LOCATION_REQUEST = 500;
     private static final float DEFAULT_ZOOM = 8.3f;
     private static final String TAG = MapsActivity.class.getSimpleName();
@@ -156,10 +157,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private String tipoViaggio,data,ora,nome;
     private TextView direzione, dataOra,automobilista,labelAut;
-    private String urlImageProfile,nomeAutista,cognomeAutista;
+    private String urlImageProfile,nomeAutista,cognomeAutista,idAutista;
     private  LinearLayout rootLayout;
 
     CollectionReference passaggi;
+    CollectionReference rideRequest;
     DocumentReference user;
     FirebaseUser userAuth;
 
@@ -179,6 +181,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         data = receive.getStringExtra("data");
         ora = receive.getStringExtra("ora");
         nome = receive.getStringExtra("nome");
+
         direzione=(TextView) findViewById(R.id.tipoViaggio) ;
         dataOra=(TextView)findViewById(R.id.textDataOra) ;
         automobilista=(TextView) findViewById(R.id.textAutomobilista);
@@ -195,6 +198,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
         passaggi = FirebaseFirestore.getInstance().collection("Rides");
+        rideRequest = FirebaseFirestore.getInstance().collection("RideRequests");
 
         //riferimento al documento dell'user loggato
         user = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
@@ -208,7 +212,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        getDeviceLocation();
+        //getDeviceLocation();
 
 
         // impostazioni della infoWindow
@@ -320,7 +324,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         for(DocumentSnapshot document : task.getResult()){
                             Map<String,Object> passaggio = document.getData();
                             Map<String,Object> autista = (Map<String,Object>) passaggio.get("autista");
-                            urlImageProfile = autista.get("urlProfileImage").toString();
+
+                            if(autista.get("urlProfileImage")!= null){
+                            urlImageProfile = autista.get("urlProfileImage").toString();}
                             nomeAutista = (String)autista.get("name");
                             cognomeAutista=(String) autista.get("surname");
                             Map<String,Object> address = (Map<String,Object>) autista.get("userAddress");
@@ -340,13 +346,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             //non mostra sulla mappa il passaggio offerto dall'utente loggato
                             if(!(userAuth.getUid().equals(autista.get("id")))){
                                 LatLng indirizzo = new LatLng(latitude,longitude);
-
                                 //attraverso la libreria picasso carico l'immagine nella ImageView preimpostata
                                // Picasso.with(MapsActivity.this).load(urlImageProfile).into(profile);
-                                mMap.addMarker(new MarkerOptions().position(indirizzo)
+                                Marker marker = mMap.addMarker(new MarkerOptions().position(indirizzo)
                                                 .title(" "+nomeAutista + " "+ cognomeAutista)
                                                 .snippet(" "+data + " " +oraPartenza+ "\n " +getResources().getString(R.string.Available).toString() +passaggio.get("postiDisponibili").toString())
                                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)) );
+                                markerMap.put(marker.getId(),passaggio);
+
 
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(indirizzo, DEFAULT_ZOOM));}
 
@@ -364,16 +371,83 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                String message= "Richiesta inviata";
-                Snackbar snackbar= Snackbar.make(rootLayout,message,Snackbar.LENGTH_LONG);
-                snackbar.setAction(getString(R.string.UNDO), new View.OnClickListener() {
+                LatLng pos = marker.getPosition();
+                String key = marker.getId();
+                Map<String,Object> pass = (Map<String,Object>) markerMap.get(key);
+                Query request = passaggi.whereEqualTo("autista.userAddress.latitude",pos.latitude)
+                                        .whereEqualTo("autista.userAddress.longitude",pos.longitude)
+                                        .whereEqualTo("dataPassaggio",data)
+                                        .whereEqualTo("ora",ora);
+
+
+
+                /*request.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onClick(View view) {
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for(DocumentSnapshot doc : task.getResult()){
+                            String idPassaggio = doc.getId();
+                            Map<String,Object> passaggio = doc.getData();
+                            Map<String,Object> autista = (Map<String,Object>)passaggio.get("autista");
+                            String idAutista = (String)autista.get("id");
+                            String idPasseggero = userAuth.getUid();
+                            CollectionReference request = FirebaseFirestore.getInstance().collection("RideRequests");
+                            Map<String,Object> requestMap = new HashMap<>();
+                            requestMap.put("idAutista",idAutista);
+                            requestMap.put("idPassaggio",idPassaggio);
+                            requestMap.put("idPasseggero",idPasseggero);
+                            requestMap.put("status","IN ATTESA");
+                            //request.add(requestMap);
+                        }
+
+
+                    }
+                });*/
+
+                Map<String,Object> autista1 = (Map<String,Object>)pass.get("autista");
+                final Map<String,Object> requestMap = new HashMap<>();
+
+                Map<String,Object> autista = new HashMap<>();
+                String idAut = autista1.get("id").toString();
+                autista.put("id",idAut);
+                autista.put("name",autista1.get("name"));
+                autista.put("phone",autista1.get("phone"));
+                autista.put("surname",autista1.get("surname"));
+                autista.put("userAddress",autista1.get("userAddress"));
+                if(autista1.get("urlProfileImage") != null){
+                    autista.put("urlProfileImage",autista1.get("urlProfileImage"));
+                }
+                requestMap.put("autista",autista);
+
+                Map<String,Object> passaggio = new HashMap<>();
+                passaggio.put("data",pass.get("dataPassaggio"));
+                passaggio.put("giorno",pass.get("giorno"));
+                passaggio.put("ora",pass.get("ora"));
+                passaggio.put("tipoViaggio",pass.get("tipoViaggio"));
+                String idPassaggio = idAut+"_"+data+"_"+ora;
+                passaggio.put("idPassaggio",idPassaggio);
+                requestMap.put("passaggio",passaggio);
+
+                readData(new FirestoreCallback() {
+                    @Override
+                    public void onCallback(Map<String, Object> user) {
+                        Map<String,Object> passeggero = new HashMap<>();
+                        passeggero.put("id",user.get("id"));
+                        passeggero.put("name",user.get("name"));
+                        passeggero.put("phone",user.get("phone"));
+                        passeggero.put("surname",user.get("surname"));
+                        passeggero.put("userAddress",user.get("userAddress"));
+                        requestMap.put("passeggero",passeggero);
+                        requestMap.put("status","IN ATTESA");
+                        rideRequest.add(requestMap);
 
                     }
                 });
-                snackbar.setActionTextColor(Color.CYAN);
+
+
+                String message= "Richiesta inviata";
+                Snackbar snackbar= Snackbar.make(rootLayout,message,Snackbar.LENGTH_SHORT);
                 snackbar.show();
+
             }
         });
 
@@ -405,7 +479,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //interfaccia per metodo di callback
     private interface FirestoreCallback {
-        void onCallback(Map<String,Object> userCompany);
+        void onCallback(Map<String,Object> user);
         }
 
     //metodo per leggere la posizione corrente del dispositivo

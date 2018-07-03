@@ -1,9 +1,11 @@
 package it.uniba.di.sms.carpooling;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Passaggio {
-    private String id;
+    private Map<String,Object> autista;
     private String tipoViaggio;
     private String dataPassaggio;
     private String ora;
@@ -12,7 +14,8 @@ public class Passaggio {
     private ArrayList<User> passeggeri;
 
 
-    public Passaggio(String data,String ora,String tipo,String giorno,int postiDisponibili) {
+    public Passaggio(Map<String,Object> autista,String data,String ora,String tipo,String giorno,int postiDisponibili) {
+        this.autista = autista;
         this.dataPassaggio = data;
         this.ora = ora;
         this.tipoViaggio = tipo;
@@ -22,6 +25,22 @@ public class Passaggio {
 
     public Passaggio(){
         //costruttore che servirà per l'on datachange()
+    }
+
+    public Map<String,Object>  getAutista() {
+        return autista;
+    }
+
+    public void setAutista(HashMap<String,Object> autista) {
+        this.autista = autista;
+    }
+
+    public ArrayList<User> getPasseggeri() {
+        return passeggeri;
+    }
+
+    public void setPasseggeri(ArrayList<User> passeggeri) {
+        this.passeggeri = passeggeri;
     }
 
     public String getTipoViaggio() {
@@ -40,9 +59,7 @@ public class Passaggio {
         this.giorno = giorno;
     }
 
-    public String getId() {
-        return id;
-    }
+
 
     public String getDataPassaggio() {
         return dataPassaggio;
@@ -55,9 +72,6 @@ public class Passaggio {
         return postiDisponibili;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public void setDataPassaggio(String dataPassaggio) {
         this.dataPassaggio = dataPassaggio;
@@ -71,10 +85,6 @@ public class Passaggio {
         this.postiDisponibili = postiDisponibili;
     }
 
-    public String toString(){
-        return "Ora: "+this.ora;
-
-    }
 }
 
 

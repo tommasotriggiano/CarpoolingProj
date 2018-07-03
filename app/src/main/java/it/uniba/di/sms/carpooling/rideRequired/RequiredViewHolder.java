@@ -25,7 +25,7 @@ public class RequiredViewHolder extends RecyclerView.ViewHolder implements View.
     public LinearLayout richiesti;
     public LinearLayout richiesti2;
     public RelativeLayout rich;
-    public ImageView immagine;
+    public CircleImageView immagine;
     public TextView data,giorno,ora,casa,telefono,nome,cognome,status;
     public ArrayList<Map<String,Object>> passaggiRichiesti;
     public  Context ctx;
@@ -49,7 +49,7 @@ public class RequiredViewHolder extends RecyclerView.ViewHolder implements View.
         telefono = (TextView) itemView.findViewById(R.id.Telefono);
         nome = (TextView) itemView.findViewById(R.id.nomeAut);
         cognome = (TextView) itemView.findViewById(R.id.cognomeAut);
-        immagine = (ImageView) itemView.findViewById(R.id.immagineProfilo);
+        immagine = (CircleImageView) itemView.findViewById(R.id.immagineProfilo);
         status = (TextView) itemView.findViewById(R.id.Status);
     }
 
