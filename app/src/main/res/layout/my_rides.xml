@@ -52,15 +52,15 @@
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#6da7a7a7">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvPassaggiOfferti"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_below="@+id/radioGroup"
-                android:layout_marginTop="0dp"
+
                 android:scrollbars="vertical"
                 android:visibility="gone">
 
@@ -71,7 +71,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_below="@+id/radioGroup"
-                android:layout_marginTop="0dp"
                 android:scrollbars="vertical"
                 android:visibility="gone">
 

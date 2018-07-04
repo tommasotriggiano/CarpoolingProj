@@ -10,6 +10,8 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -17,6 +19,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.ToolbarWidgetWrapper;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -156,9 +159,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private String tipoViaggio,data,ora,nome;
-    private TextView direzione, dataOra,automobilista,labelAut;
-    private String urlImageProfile,nomeAutista,cognomeAutista,idAutista;
-    private  LinearLayout rootLayout;
+    private TextView direzione, dataOra,automobilista,labelAut,nomeAutista,cognomeAutista,dataP,oraP,posti;
+    private String urlImageProfile,idAutista;
+    private  CoordinatorLayout rootLayout;
+    private View bottomSheetDialog;
 
     CollectionReference passaggi;
     CollectionReference rideRequest;
@@ -169,7 +173,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        rootLayout= (LinearLayout)findViewById((R.id.root)) ;
+        rootLayout= (CoordinatorLayout)findViewById((R.id.root)) ;
+        bottomSheetDialog =findViewById(R.id.bottom_sheet);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -187,6 +192,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         automobilista=(TextView) findViewById(R.id.textAutomobilista);
         labelAut=(TextView) findViewById(R.id.automobilista);
         direzione.setText(tipoViaggio);
+
         dataOra.setText(data + " "+ ora);
         if (nome.isEmpty()){
             labelAut.setVisibility(View.GONE);
@@ -215,61 +221,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //getDeviceLocation();
 
 
-        // impostazioni della infoWindow
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public View getInfoWindow(Marker arg0) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-
-                Context mContext = getBaseContext();
-
-                LinearLayout info = new LinearLayout(mContext);
-                info.setOrientation(LinearLayout.VERTICAL);
-                LinearLayout titleImage = new LinearLayout(mContext);
-                titleImage.setOrientation(LinearLayout.HORIZONTAL);
-
-                TextView title = new TextView(mContext);
-                title.setTextColor(Color.BLACK);
-                title.setGravity(Gravity.CENTER);
-                title.setTypeface(null, Typeface.BOLD);
-                title.setText(marker.getTitle());
-                title.setTextSize(20);
-                title.setSingleLine(false);
-
-                TextView snippet = new TextView(mContext);
-                snippet.setTextColor(Color.GRAY);
-                snippet.setTextSize(20);
-                snippet.setText(marker.getSnippet());
-                snippet.setSingleLine(false);
-
-                CircleImageView image = new CircleImageView(mContext);
-                image.setMaxWidth(30);
-                image.setMaxHeight(30);
-
-                Button richiedi = new Button(mContext);
-                richiedi.setText(getResources().getString(R.string.requiredRide));
-                richiedi.setHeight(20);
-                richiedi.setBackground(getResources().getDrawable(R.drawable.button_shape));
-                titleImage.addView(image);
-                titleImage.addView(title);
-                info.addView(titleImage);
-                info.addView(snippet);
-                info.addView(richiedi);
-
-                if ((title.getText().toString()).equals(getResources().getString(R.string.Home))||
-                        ((title.getText().toString()).equals(getResources().getString((R.string.Work))))){
-                    richiedi.setVisibility(View.GONE);
-                    snippet.setVisibility(View.GONE);
-                }
-                return info;
-            }
-        });
-
-
 
 
 
@@ -277,11 +228,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onCallback(Map<String, Object> user) {
                 Query findRides;
-                Map<String,Object> userAddress=(Map<String,Object>)user.get("userAddress");
-                final LatLng casa= new LatLng((Double)userAddress.get("latitude"),(Double)userAddress.get("longitude"));
-                Map<String,Object> userCompanyAddress = (Map<String,Object>)user.get("userCompany");
+                Map<String, Object> userAddress = (Map<String, Object>) user.get("userAddress");
+                final LatLng casa = new LatLng((Double) userAddress.get("latitude"), (Double) userAddress.get("longitude"));
+                Map<String, Object> userCompanyAddress = (Map<String, Object>) user.get("userCompany");
                 String userNameCompany = (String) userCompanyAddress.get("name");
-                final LatLng lavoro = new LatLng((Double)userCompanyAddress.get("latitude"),(Double)userCompanyAddress.get("longitude"));
+                final LatLng lavoro = new LatLng((Double) userCompanyAddress.get("latitude"), (Double) userCompanyAddress.get("longitude"));
 
                 /*final SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
                 Date date= null;
@@ -295,20 +246,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 final Date oraMax= date;
                 oraMax.setMinutes(date.getMinutes()+10);*/
 
-                if((nome.isEmpty())){
+                if ((nome.isEmpty())) {
                     findRides = passaggi
-                            .whereEqualTo("dataPassaggio",data)
-                            .whereEqualTo("ora",ora)
-                            .whereEqualTo("tipoViaggio",tipoViaggio)
-                            .whereEqualTo("autista.userCompany.name",userNameCompany);
+                            .whereEqualTo("dataPassaggio", data)
+                            .whereEqualTo("ora", ora)
+                            .whereEqualTo("tipoViaggio", tipoViaggio)
+                            .whereEqualTo("autista.userCompany.name", userNameCompany);
+                } else {
+                    findRides = passaggi
+                            .whereEqualTo("dataPassaggio", data)
+                            .whereEqualTo("tipoViaggio", tipoViaggio)
+                            .whereEqualTo("ora", ora)
+                            .whereEqualTo("autista.surname", nome)
+                            .whereEqualTo("autista.userCompany.name", userNameCompany);
                 }
-                else{
-                    findRides = passaggi
-                            .whereEqualTo("dataPassaggio",data)
-                            .whereEqualTo("tipoViaggio",tipoViaggio)
-                            .whereEqualTo("ora",ora)
-                            .whereEqualTo("autista.surname",nome)
-                            .whereEqualTo("autista.userCompany.name",userNameCompany);}
 
 
                 findRides.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -321,19 +272,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(casa, DEFAULT_ZOOM));
                         //mMap.animateCamera(CameraUpdateFactory.zoomIn());
 
-                        for(DocumentSnapshot document : task.getResult()){
-                            Map<String,Object> passaggio = document.getData();
-                            Map<String,Object> autista = (Map<String,Object>) passaggio.get("autista");
+                        for (DocumentSnapshot document : task.getResult()) {
+                            Map<String, Object> passaggio = document.getData();
+                            Map<String, Object> autista = (Map<String, Object>) passaggio.get("autista");
 
-                            if(autista.get("urlProfileImage")!= null){
-                            urlImageProfile = autista.get("urlProfileImage").toString();}
-                            nomeAutista = (String)autista.get("name");
-                            cognomeAutista=(String) autista.get("surname");
-                            Map<String,Object> address = (Map<String,Object>) autista.get("userAddress");
+                            if (autista.get("urlProfileImage") != null) {
+                                urlImageProfile = autista.get("urlProfileImage").toString();
+                            }
+                            // nomeAutista = (String)autista.get("name");
+                            // cognomeAutista=(String) autista.get("surname");
+                            Map<String, Object> address = (Map<String, Object>) autista.get("userAddress");
                             Double latitude = (Double) address.get("latitude");
                             Double longitude = (Double) address.get("longitude");
 
-                            String oraPartenza =(String) passaggio.get("ora");
+                            //String oraPartenza =(String) passaggio.get("ora");
 
                             /*Date oraP = null;
                             try {
@@ -344,20 +296,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             }*/
 
                             //non mostra sulla mappa il passaggio offerto dall'utente loggato
-                            if(!(userAuth.getUid().equals(autista.get("id")))){
-                                LatLng indirizzo = new LatLng(latitude,longitude);
+                            if (!(userAuth.getUid().equals(autista.get("id")))) {
+                                LatLng indirizzo = new LatLng(latitude, longitude);
                                 //attraverso la libreria picasso carico l'immagine nella ImageView preimpostata
-                               // Picasso.with(MapsActivity.this).load(urlImageProfile).into(profile);
+                                // Picasso.with(MapsActivity.this).load(urlImageProfile).into(profile);
                                 Marker marker = mMap.addMarker(new MarkerOptions().position(indirizzo)
-                                                .title(" "+nomeAutista + " "+ cognomeAutista)
-                                                .snippet(" "+data + " " +oraPartenza+ "\n " +getResources().getString(R.string.Available).toString() +passaggio.get("postiDisponibili").toString())
-                                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)) );
-                                markerMap.put(marker.getId(),passaggio);
+                                        // .title(" "+nomeAutista + " "+ cognomeAutista)
+                                        //.snippet(" "+data + " " +oraPartenza+ "\n " +getResources().getString(R.string.Available).toString() +passaggio.get("postiDisponibili").toString())
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                                markerMap.put(marker.getId(), passaggio);
 
 
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(indirizzo, DEFAULT_ZOOM));}
-
-
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(indirizzo, DEFAULT_ZOOM));
+                            }
 
 
                         }
@@ -367,68 +318,62 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public void onInfoWindowClick(Marker marker) {
+            public boolean onMarkerClick(Marker marker) {
+
+
+                final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from( bottomSheetDialog);
+
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+               mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                   @Override
+                   public void onMapClick(LatLng latLng) {
+                       bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                   }
+               });
+
+                ImageView imgAutista = (ImageView) bottomSheetDialog.findViewById(R.id.immagineProfilo);
+                nomeAutista = (TextView) bottomSheetDialog.findViewById(R.id.nomeAut);
+                cognomeAutista = (TextView) bottomSheetDialog.findViewById(R.id.cognomeAut);
+                dataP = (TextView)  bottomSheetDialog.findViewById(R.id.Data);
+                oraP = (TextView)  bottomSheetDialog.findViewById(R.id.Ora);
+                posti = (TextView)  bottomSheetDialog.findViewById(R.id.postiDisp);
+                Button required = (Button)  bottomSheetDialog.findViewById(R.id.requiredRide);
                 //recupero la chiave del marker che ho selezionato
-                String key = marker.getId();
+               final  String key = marker.getId();
                 //prendo il passaggio che è collegato alla chiave del marker selezionato
-                if(markerMap.get(key) != null){
-                Map<String,Object> pass = (Map<String,Object>) markerMap.get(key);
+                if (markerMap.get(key) != null) {
+                    Map<String, Object> pass = (Map<String, Object>) markerMap.get(key);
 
-                //creo il database delle richieste del passaggio
-                Map<String,Object> autista1 = (Map<String,Object>)pass.get("autista");
-                final Map<String,Object> requestMap = new HashMap<>();
-                /* una richiesta conterrà le informazioni dell'autista
-                 * del passaggio e del passeggero
-                 */
-                Map<String,Object> autista = new HashMap<>();
-                String idAut = autista1.get("id").toString();
-                autista.put("id",idAut);
-                autista.put("name",autista1.get("name"));
-                autista.put("phone",autista1.get("phone"));
-                autista.put("surname",autista1.get("surname"));
-                autista.put("userAddress",autista1.get("userAddress"));
-                if(autista1.get("urlProfileImage") != null){
-                    autista.put("urlProfileImage",autista1.get("urlProfileImage"));
+                    //creo il database delle richieste del passaggio
+                    final Map<String, Object> autista1 = (Map<String, Object>) pass.get("autista");
+                    if (autista1.get("urlProfileImage") != null) {
+                        urlImageProfile = autista1.get("urlProfileImage").toString();
+                        Picasso.with(MapsActivity.this).load(urlImageProfile).into(imgAutista);
+                    }else {
+                        imgAutista.setImageDrawable(getResources().getDrawable(R.drawable.ic_image_profile));
+                    }
+
+
+                    nomeAutista.setText(autista1.get("name").toString());
+                    cognomeAutista.setText(autista1.get("surname").toString());
+                    dataP.setText(data);
+                    oraP.setText(pass.get("ora").toString());
+                    posti.setText(pass.get("postiDisponibili").toString());
                 }
-                requestMap.put("autista",autista);
 
-                Map<String,Object> passaggio = new HashMap<>();
-                passaggio.put("data",pass.get("dataPassaggio"));
-                passaggio.put("giorno",pass.get("giorno"));
-                passaggio.put("ora",pass.get("ora"));
-                passaggio.put("tipoViaggio",pass.get("tipoViaggio"));
-                String idPassaggio = idAut+"_"+data+"_"+ora;
-                passaggio.put("idPassaggio",idPassaggio);
-                requestMap.put("passaggio",passaggio);
 
-                readData(new FirestoreCallback() {
+                required.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onCallback(Map<String, Object> user) {
-                        Map<String,Object> passeggero = new HashMap<>();
-                        passeggero.put("id",user.get("id"));
-                        passeggero.put("name",user.get("name"));
-                        passeggero.put("phone",user.get("phone"));
-                        passeggero.put("surname",user.get("surname"));
-                        passeggero.put("userAddress",user.get("userAddress"));
-                        requestMap.put("passeggero",passeggero);
-                        requestMap.put("status","IN ATTESA");
-                        rideRequest.add(requestMap);
-
+                    public void onClick(View view) {
+                        requiredRide(key);
                     }
                 });
-
-
-                String message= "Richiesta inviata";
-                Snackbar snackbar= Snackbar.make(rootLayout,message,Snackbar.LENGTH_SHORT);
-                snackbar.show();
-                startActivity(new Intent(MapsActivity.this,MainActivity.class));
-                finish();
-
-            }}
+                return false;
+            }
         });
+
 
 
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
@@ -437,9 +382,67 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 StartTravel();
             }
         });
+
+
+
+
+    }
+    private void requiredRide(String key){
+            //prendo il passaggio che è collegato alla chiave del marker selezionato
+            if(markerMap.get(key) != null){
+                Map<String,Object> pass = (Map<String,Object>) markerMap.get(key);
+
+                //creo il database delle richieste del passaggio
+                Map<String,Object> autista1 = (Map<String,Object>)pass.get("autista");
+        final Map<String,Object> requestMap = new HashMap<>();
+                /* una richiesta conterrà le informazioni dell'autista
+                 * del passaggio e del passeggero
+                 */
+        Map<String,Object> autista = new HashMap<>();
+        String idAut = autista1.get("id").toString();
+        autista.put("id",idAut);
+        autista.put("name",autista1.get("name"));
+        autista.put("phone",autista1.get("phone"));
+        autista.put("surname",autista1.get("surname"));
+        autista.put("userAddress",autista1.get("userAddress"));
+        if(autista1.get("urlProfileImage") != null){
+            autista.put("urlProfileImage",autista1.get("urlProfileImage"));
         }
+        requestMap.put("autista",autista);
+
+        Map<String,Object> passaggio = new HashMap<>();
+        passaggio.put("data",pass.get("dataPassaggio"));
+        passaggio.put("giorno",pass.get("giorno"));
+        passaggio.put("ora",pass.get("ora"));
+        passaggio.put("tipoViaggio",pass.get("tipoViaggio"));
+        String idPassaggio = idAut+"_"+data+"_"+ora;
+        passaggio.put("idPassaggio",idPassaggio);
+        requestMap.put("passaggio",passaggio);
+
+        readData(new FirestoreCallback() {
+            @Override
+            public void onCallback(Map<String, Object> user) {
+                Map<String,Object> passeggero = new HashMap<>();
+                passeggero.put("id",user.get("id"));
+                passeggero.put("name",user.get("name"));
+                passeggero.put("phone",user.get("phone"));
+                passeggero.put("surname",user.get("surname"));
+                passeggero.put("userAddress",user.get("userAddress"));
+                requestMap.put("passeggero",passeggero);
+                requestMap.put("status","IN ATTESA");
+                rideRequest.add(requestMap);
+
+            }
+        });
 
 
+        String message= "Richiesta inviata";
+        Snackbar snackbar= Snackbar.make(rootLayout,message,Snackbar.LENGTH_SHORT);
+        snackbar.show();
+        startActivity(new Intent(MapsActivity.this,MainActivity.class));
+        finish();
+
+    }}
 
 
         //metodo per leggere all'esterno dell'On Succes Listener
@@ -449,7 +452,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     Map<String,Object> user = documentSnapshot.getData();
-                    //Map<String,Object> userCompanyAddress = (Map<String,Object>)user.get("userCompany");
+
                     callback.onCallback(user);
 
                 }
@@ -647,8 +650,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    }
 
+ }
 
 
 
