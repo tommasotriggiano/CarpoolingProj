@@ -9,11 +9,7 @@
         android:id="@+id/cardviewRichiesti"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        card_view:cardCornerRadius="5dp"
-        card_view:cardElevation="4dp">
+        android:layout_marginBottom="2dp">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/LinearRichiesti"
@@ -43,7 +39,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_toRightOf="@+id/immagineProfilo"
                     android:text="Nome"
-                    android:textColor="#000"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <TextView
@@ -54,7 +50,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_toRightOf="@+id/nomeAut"
                     android:text="Cognome"
-                    android:textColor="#000"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <TextView
@@ -63,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:text="Status"
-                    android:textColor="#000"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
             </RelativeLayout>
 
@@ -73,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_location"
                 android:text="@string/Home"
-                android:textColor="#000"
+                android:textColor="@color/black"
                 android:textSize="20sp" />
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -88,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_today_black"
                     android:text="Giorno"
-                    android:textColor="#000"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <TextView
@@ -97,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="3dp"
                     android:text="Data"
-                    android:textColor="#000"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
 
             </LinearLayout>
@@ -108,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_access_time_black"
                 android:text="Ora"
-                android:textColor="#000"
+                android:textColor="@color/black"
                 android:textSize="20sp" />
 
 
@@ -118,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_phone"
                 android:text="Telefono"
-                android:textColor="#000"
+                android:textColor="@color/black"
                 android:textSize="20sp" />
 
         </LinearLayout>
