@@ -107,7 +107,7 @@
     <string name="Removed">It is removed</string>
     <string name="UNDO">UNDO</string>
     <string name="status1">Accepted</string>
-    <string name ="status2">Refused</string>
+    <string name="status2">Refused</string>
 
     <!-- approved affiliation-->
     <string name="approve">Approve</string>
@@ -115,6 +115,7 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_required_maps">Map</string>
 
 
 </resources>

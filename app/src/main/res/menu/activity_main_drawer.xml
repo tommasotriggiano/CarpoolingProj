@@ -11,38 +11,44 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home_black"
             android:title="@string/HomePage"
-            android:visible="false"/>
+            android:visible="false" />
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_person_black"
-            android:title="@string/Registration" />
+            android:title="@string/Registration"
+            android:visible="false"/>
 
         <item
             android:id="@+id/nav_myrides"
             android:icon="@drawable/ic_streetview_black"
             android:title="@string/myrides"
+            android:visible="false"
             />
         <item
             android:id="@+id/nav_searchride"
             android:icon="@drawable/ic_search_black"
             android:title="@string/searchride"
+            android:visible="false"
             />
 
         <item
             android:id="@+id/nav_offeraride"
             android:icon="@drawable/ic_add_circle_black"
             android:title="@string/offeraride"
+            android:visible="false"
             />
         <item
             android:id="@+id/nav_points"
             android:icon="@drawable/ic_stars_black"
             android:title="@string/Rank"
+            android:visible="false"
             />
 
         <item
             android:id="@+id/nav_approvazione"
             android:icon="@drawable/ic_check_circle_black_24dp"
             android:title="@string/approved"
+            android:visible="false"
             />
 
         <group android:checkableBehavior="single"
@@ -51,11 +57,13 @@
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_settings_black"
                 android:title="@string/settings"
+                android:visible="false"
                />
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_arrow_back_black"
                 android:title="@string/logout"
+                android:visible="false"
                />
         </group>
     </group>

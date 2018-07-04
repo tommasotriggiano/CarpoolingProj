@@ -1,6 +1,7 @@
 package it.uniba.di.sms.carpooling;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -78,8 +80,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()){
+                    navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
+                    navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(true);
+                    navigationView.getMenu().findItem(R.id.nav_searchride).setVisible(true);
+                    navigationView.getMenu().findItem(R.id.nav_offeraride).setVisible(true);
+                    navigationView.getMenu().findItem(R.id.nav_points).setVisible(true);
                     navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(true);
-                    navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
+                    navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+
                 }
                 else{
                     rfUser.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -87,11 +96,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             if(!(documentSnapshot.exists())){
                                 navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
-                                navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(false);
-                                navigationView.getMenu().findItem(R.id.nav_searchride).setVisible(false);
-                                navigationView.getMenu().findItem(R.id.nav_offeraride).setVisible(false);
-                                navigationView.getMenu().findItem(R.id.nav_points).setVisible(false);
-                                navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
+                                navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
+                                navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+
                             } else{
                                 Map<String,Object> user = documentSnapshot.getData();
                                 String name = (String)user.get("name");
@@ -99,14 +106,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 boolean ap = (boolean) user.get("approved");
                                 if(!ap){
                                     navigationView.getMenu().findItem(R.id.nav_profile).setTitle(R.string.profile);
-                                    navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(false);
-                                    navigationView.getMenu().findItem(R.id.nav_searchride).setVisible(false);
-                                    navigationView.getMenu().findItem(R.id.nav_offeraride).setVisible(false);
-                                    navigationView.getMenu().findItem(R.id.nav_points).setVisible(false);
-                                    navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);}
+                                    navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
+                                    navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
+                                    navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);}
                                 else if(ap){
                                     navigationView.getMenu().findItem(R.id.nav_profile).setTitle(R.string.profile);
-                                    navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
+                                    navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
+                                    navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
+                                    navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(true);
+                                    navigationView.getMenu().findItem(R.id.nav_searchride).setVisible(true);
+                                    navigationView.getMenu().findItem(R.id.nav_offeraride).setVisible(true);
+                                    navigationView.getMenu().findItem(R.id.nav_points).setVisible(true);
+                                    navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
+                                    navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
                             }
                         }
                     }});
@@ -313,3 +325,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ft3.commit();
     }
 }
+
+/*public class TaskCaricamentoDatabase extends AsyncTask<Void, Void, Boolean> {
+
+    @Override
+    protected Boolean doInBackground(Void...params) {
+        String responseString = "";
+        try {
+            responseString = requestDirection(strings[0]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  true;
+    }
+
+    @Override
+    protected void onPostExecute(final Boolean success) {
+        super.onPostExecute(s);
+        //Parse json here
+        MapsActivity.TaskParser taskParser = new MapsActivity.TaskParser();
+        taskParser.execute(s);
+    }
+}*/

@@ -1,18 +1,16 @@
-package it.uniba.di.sms.carpooling;
+package it.uniba.di.sms.carpooling.rideOffered;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import static android.content.ContentValues.TAG;
+import it.uniba.di.sms.carpooling.R;
+import it.uniba.di.sms.carpooling.rideOffered.PassaggiViewHolder;
 
 
 public class PassaggiAdapter extends RecyclerView.Adapter<PassaggiViewHolder> {
@@ -41,7 +39,8 @@ public class PassaggiAdapter extends RecyclerView.Adapter<PassaggiViewHolder> {
         holder.giorno.setText((String)itemPassaggi.get(position).get("giorno"));
         holder.ora.setText((String)itemPassaggi.get(position).get("ora"));
         holder.casa.setText((String)itemPassaggi.get(position).get("tipoViaggio"));
-        holder.onClick(holder.cardView);
+        Object disponibili =itemPassaggi.get(position).get("postiDisponibili");
+        holder.postiOccupati.setText("0"+"/"+disponibili.toString());
 
     }
     public void removeItem(int position){
