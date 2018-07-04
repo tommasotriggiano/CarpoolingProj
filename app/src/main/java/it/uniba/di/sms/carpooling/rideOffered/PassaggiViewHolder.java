@@ -1,4 +1,4 @@
-package it.uniba.di.sms.carpooling;
+package it.uniba.di.sms.carpooling.rideOffered;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Map;
+
+import it.uniba.di.sms.carpooling.R;
 
 /**
  * Created by tommaso on 13/06/2018.

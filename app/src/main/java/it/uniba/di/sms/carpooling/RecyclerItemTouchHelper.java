@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
+import it.uniba.di.sms.carpooling.rideOffered.PassaggiViewHolder;
+
 /**
  * Created by loiodice on 18/06/2018.
  */

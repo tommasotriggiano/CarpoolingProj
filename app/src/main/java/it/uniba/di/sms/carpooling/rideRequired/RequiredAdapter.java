@@ -1,6 +1,8 @@
 package it.uniba.di.sms.carpooling.rideRequired;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 
+import it.uniba.di.sms.carpooling.MainActivity;
+import it.uniba.di.sms.carpooling.MapsActivity;
 import it.uniba.di.sms.carpooling.R;
 
 import static android.content.ContentValues.TAG;
@@ -43,20 +47,26 @@ public class RequiredAdapter extends RecyclerView.Adapter<RequiredViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(RequiredViewHolder holder, int position) {
+    public void onBindViewHolder(RequiredViewHolder holder, final int position) {
 
         final Context context1 = holder.immagine.getContext();
+
         Map<String,Object> passaggio = (Map<String,Object>) itemRideRequired.get(position).get("passaggio");
         holder.data.setText((String)passaggio.get("data"));
         holder.giorno.setText((String)passaggio.get("giorno"));
         holder.ora.setText((String)passaggio.get("ora"));
         holder.casa.setText((String)passaggio.get("tipoViaggio"));
         Map<String,Object> autista = (Map<String,Object>) itemRideRequired.get(position).get("autista");
+        final Map<String,Object>address =(Map<String,Object>) autista.get("userAddress");
+
+        Map<String,Object>passeggero =(Map<String,Object>) itemRideRequired.get(position).get("passeggero");
+        final Map<String,Object>addressP =(Map<String,Object>) passeggero.get("userAddress");
+        holder.onClick(holder.cardView);
+
         holder.telefono.setText((String)autista.get("phone"));
         holder.cognome.setText((String)autista.get("surname"));
         holder.nome.setText((String)autista.get("name"));
         holder.status.setText((String)itemRideRequired.get(position).get("status"));
-        final Map<String,Object> address = (Map<String,Object>)autista.get("userAddress");
         if(autista.get("urlProfileImage") != null){
             Picasso.with(context1).load(autista.get("urlProfileImage").toString()).into(holder.immagine);}
     }

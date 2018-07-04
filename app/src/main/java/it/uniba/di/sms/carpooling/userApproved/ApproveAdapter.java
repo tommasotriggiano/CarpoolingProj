@@ -2,7 +2,6 @@ package it.uniba.di.sms.carpooling.userApproved;
 
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import it.uniba.di.sms.carpooling.PassaggiViewHolder;
 import it.uniba.di.sms.carpooling.R;
 
 public class ApproveAdapter extends RecyclerView.Adapter<ApproveViewHolder> {

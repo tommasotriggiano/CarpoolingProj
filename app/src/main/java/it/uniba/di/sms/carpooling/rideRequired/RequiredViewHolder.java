@@ -1,19 +1,29 @@
 package it.uniba.di.sms.carpooling.rideRequired;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.MapView;
+
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import it.uniba.di.sms.carpooling.MapsActivity;
 import it.uniba.di.sms.carpooling.R;
+import it.uniba.di.sms.carpooling.RequiredMapsActivity;
 
 /**
  * Created by loiodice on 19/06/2018.
@@ -28,7 +38,8 @@ public class RequiredViewHolder extends RecyclerView.ViewHolder implements View.
     public CircleImageView immagine;
     public TextView data,giorno,ora,casa,telefono,nome,cognome,status;
     public ArrayList<Map<String,Object>> passaggiRichiesti;
-    public  Context ctx;
+    public Context ctx;
+    public MapView mapRequired;
 
     public RequiredViewHolder(View itemView, Context ctx, ArrayList<Map<String,Object>> passaggiRichiesti) {
         super(itemView);
@@ -56,6 +67,11 @@ public class RequiredViewHolder extends RecyclerView.ViewHolder implements View.
     @Override
     public void onClick(View view) {
         int position = getAdapterPosition();
-        Map<String,Object> psg= this.passaggiRichiesti.get(position);
+        Serializable psg = (Serializable)this.passaggiRichiesti.get(position);
+        Intent mapRequired = new Intent(ctx,RequiredMapsActivity.class);
+        mapRequired.putExtra("richiestaPassaggio",psg);
+        ctx.startActivity(mapRequired);
+
+
 
     }}

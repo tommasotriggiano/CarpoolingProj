@@ -1,7 +1,5 @@
 package it.uniba.di.sms.carpooling.userApproved;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -22,14 +20,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import it.uniba.di.sms.carpooling.MainActivity;
-import it.uniba.di.sms.carpooling.PassaggiAdapter;
 import it.uniba.di.sms.carpooling.R;
 
 public class ApproveFragment extends Fragment {
