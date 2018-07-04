@@ -1,21 +1,26 @@
 package it.uniba.di.sms.carpooling.rideOffered;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 
+import it.uniba.di.sms.carpooling.OfferedMapActivity;
 import it.uniba.di.sms.carpooling.R;
 import it.uniba.di.sms.carpooling.rideOffered.PassaggiViewHolder;
 
 
 public class PassaggiAdapter extends RecyclerView.Adapter<PassaggiViewHolder> {
     private ArrayList<Map<String,Object>> itemPassaggi;
-    private Context context;
+    public Context context;
 
     public PassaggiAdapter(ArrayList<Map<String,Object>> itemPassaggi, Context context){
         this.itemPassaggi = itemPassaggi;
@@ -33,7 +38,7 @@ public class PassaggiAdapter extends RecyclerView.Adapter<PassaggiViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(PassaggiViewHolder holder, int position) {
+    public void onBindViewHolder(PassaggiViewHolder holder, final int position) {
 
         holder.data.setText((String)itemPassaggi.get(position).get("dataPassaggio"));
         holder.giorno.setText((String)itemPassaggi.get(position).get("giorno"));
@@ -41,6 +46,16 @@ public class PassaggiAdapter extends RecyclerView.Adapter<PassaggiViewHolder> {
         holder.casa.setText((String)itemPassaggi.get(position).get("tipoViaggio"));
         Object disponibili =itemPassaggi.get(position).get("postiDisponibili");
         holder.postiOccupati.setText("0"+"/"+disponibili.toString());
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent offeredMap = new Intent(context, OfferedMapActivity.class);
+                Serializable psg= (Serializable)itemPassaggi.get(position);
+                offeredMap.putExtra("passaggio",psg);
+                context.startActivity(offeredMap);
+
+            }
+        });
 
     }
     public void removeItem(int position){

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import java.util.Map;
 import it.uniba.di.sms.carpooling.MainActivity;
 import it.uniba.di.sms.carpooling.MapsActivity;
 import it.uniba.di.sms.carpooling.R;
+import it.uniba.di.sms.carpooling.RequiredMapsActivity;
 
 import static android.content.ContentValues.TAG;
 
@@ -57,11 +59,16 @@ public class RequiredAdapter extends RecyclerView.Adapter<RequiredViewHolder>{
         holder.ora.setText((String)passaggio.get("ora"));
         holder.casa.setText((String)passaggio.get("tipoViaggio"));
         Map<String,Object> autista = (Map<String,Object>) itemRideRequired.get(position).get("autista");
-        final Map<String,Object>address =(Map<String,Object>) autista.get("userAddress");
 
-        Map<String,Object>passeggero =(Map<String,Object>) itemRideRequired.get(position).get("passeggero");
-        final Map<String,Object>addressP =(Map<String,Object>) passeggero.get("userAddress");
-        holder.onClick(holder.cardView);
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mapRequired = new Intent(context, RequiredMapsActivity.class);
+                Serializable psg = (Serializable) itemRideRequired.get(position);
+                mapRequired.putExtra("richiestaPassaggio",psg);
+                context.startActivity(mapRequired);
+            }
+        });
 
         holder.telefono.setText((String)autista.get("phone"));
         holder.cognome.setText((String)autista.get("surname"));

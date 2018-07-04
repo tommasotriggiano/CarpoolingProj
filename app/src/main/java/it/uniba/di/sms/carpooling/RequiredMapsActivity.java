@@ -24,6 +24,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RequiredMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final float DEFAULT_ZOOM = 8.3f;
     public GoogleMap mMap;
     public LinearLayout richiesti;
     public LinearLayout richiesti2;
@@ -94,7 +95,7 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         Intent receive = getIntent();
-        HashMap<String,Object> richiesta = (HashMap<String,Object>)receive.getSerializableExtra("richiestaPassaggio");
+        Map<String,Object> richiesta = (Map<String,Object>)receive.getSerializableExtra("richiestaPassaggio");
         Map<String,Object> autista = (Map<String,Object>) richiesta.get("autista");
         Map<String,Object>address =(Map<String,Object>) autista.get("userAddress");
         Map<String,Object> passeggero = (Map<String,Object>) richiesta.get("passeggero");
@@ -105,6 +106,6 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
 
         mMap.addMarker(new MarkerOptions().position(indirizzoAutista).title("autista").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
         mMap.addMarker(new MarkerOptions().position(indirizzoPassegero).title(getResources().getString(R.string.Home)));
-
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(indirizzoPassegero, DEFAULT_ZOOM));
     }
 }

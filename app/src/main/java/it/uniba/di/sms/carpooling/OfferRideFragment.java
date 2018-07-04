@@ -63,6 +63,7 @@ public class OfferRideFragment extends Fragment {
     //creazione del database
     DatabaseReference databasePassaggi;
     CollectionReference passaggio;
+    DocumentReference pass;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -272,7 +273,8 @@ public class OfferRideFragment extends Fragment {
         //ricavo l'user id per collegare l'istanza del passaggio all'utente
         final FirebaseUser profile = FirebaseAuth.getInstance().getCurrentUser();
         //creo il documento per il passaggio
-        final DocumentReference pass = passaggio.document(profile.getUid()+"_"+dataPassaggio+"_"+ora);
+        final String id = profile.getUid()+"_"+dataPassaggio+"_"+ora;
+        pass = passaggio.document(id);
 
         final String tipo;
         if(campo1.equals(getResources().getString(R.string.Home))){
@@ -294,6 +296,8 @@ public class OfferRideFragment extends Fragment {
                 passaggio.put("ora",ora);
                 passaggio.put("postiDisponibili",postiDisponibili);
                 passaggio.put("giorno",giorno);
+                passaggio.put("idPassaggio",id);
+
                 pass.set(passaggio);
 
             }

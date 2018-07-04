@@ -39,7 +39,6 @@
         <activity
             android:name=".RegistrationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
@@ -62,7 +61,7 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".ServiceReceiver"
@@ -70,7 +69,10 @@
 
         <activity
             android:name=".RequiredMapsActivity"
-            android:label="@string/title_activity_required_maps"></activity>
+            android:label="@string/title_activity_required_maps" />
+        <activity
+            android:name=".OfferedMapActivity"
+            android:label="@string/title_activity_offered_map"></activity>
     </application>
 
 </manifest>

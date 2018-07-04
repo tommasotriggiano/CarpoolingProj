@@ -66,11 +66,12 @@ public class RequiredViewHolder extends RecyclerView.ViewHolder implements View.
 
     @Override
     public void onClick(View view) {
+        Context ctxCardView = cardView.getContext();
         int position = getAdapterPosition();
         Serializable psg = (Serializable)this.passaggiRichiesti.get(position);
         Intent mapRequired = new Intent(ctx,RequiredMapsActivity.class);
         mapRequired.putExtra("richiestaPassaggio",psg);
-        ctx.startActivity(mapRequired);
+        ctxCardView.startActivity(mapRequired);
 
 
 

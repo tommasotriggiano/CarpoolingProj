@@ -102,12 +102,10 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         //invoco il metodo per aggiungere i dati presi dal database nell'arraylist resultpassaggi
-        initializeDataPassaggi();
-        initializeDataRequired();
-
         passaggiRecycler.setVisibility(View.VISIBLE);
         fab.setVisibility(View.VISIBLE);
-        requiredRecycler.setVisibility(View.GONE);
+        initializeDataPassaggi();
+        initializeDataRequired();
 
 
         passaggiAdapter = new PassaggiAdapter(resultPassaggi, getActivity());
@@ -130,13 +128,13 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(checkedId == R.id.required){
-                    passaggiRecycler.setVisibility(View.GONE);
+                    passaggiRecycler.setVisibility(View.INVISIBLE);
                     requiredRecycler.setVisibility(View.VISIBLE);
                     fab.setVisibility(View.GONE);
                 }
                 else{
                     passaggiRecycler.setVisibility(View.VISIBLE);
-                    requiredRecycler.setVisibility(View.GONE);
+                    requiredRecycler.setVisibility(View.INVISIBLE);
                     fab.setVisibility(View.VISIBLE);
                 }
 
