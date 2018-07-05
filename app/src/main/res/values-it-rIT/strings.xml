@@ -19,7 +19,7 @@
     <string name="EntTime">Inserire l\' ora di partenza</string>
     <string name="Occupied">Posti occupati \: </string>
     <string name="Available">Posti disponibili \: </string>
-    <string name="requiredRide">Richiesta Passaggi</string>
+    <string name="requiredRide">Richiesta Passaggio</string>
     <string name="Direction">"Direzione \: "</string>
     <string name="dateTime">"Data e ora \: "</string>
     <string name="driver">"Automobilista : "</string>
@@ -99,6 +99,7 @@
     <string name="status1">Accettato</string>
     <string name ="status2">Rifiutato</string>
     <!-- approved affiliation-->
+    <string name="accept">Accetta</string>
     <string name="approve">Accetta</string>
     <string name="reject">Rifiuta</string>
 </resources>
