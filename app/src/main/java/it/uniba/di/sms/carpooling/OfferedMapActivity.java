@@ -111,18 +111,18 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
         Map<String,Object> indirizzoAutista = (Map<String, Object>)autista.get("userAddress");
 
         final LatLng casa = new LatLng((Double)indirizzoAutista.get("latitude"),(Double)indirizzoAutista.get("longitude"));
-        Marker casaMarker = mMap.addMarker(new MarkerOptions().position(casa)
+                mMap.addMarker(new MarkerOptions().position(casa)
                 .title(getResources().getString(R.string.Home))
                 .icon(bitmapDescriptorFromVector(OfferedMapActivity.this,R.drawable.ic_homewhite,R.drawable.ic_pin_blue)));
-        markerMap.put(casaMarker.getId(),null);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(casa, DEFAULT_ZOOM));
+
+
 
         Map<String,Object> indirizzoLavoro = (Map<String, Object>)autista.get("userCompany");
         LatLng lavoro = new LatLng((Double)indirizzoLavoro.get("latitude"),(Double)indirizzoLavoro.get("longitude"));
-        Marker lavoroMarker = mMap.addMarker(new MarkerOptions().position(lavoro)
+                mMap.addMarker(new MarkerOptions().position(lavoro)
                 .title(getResources().getString(R.string.Work))
                 .icon(bitmapDescriptorFromVector(OfferedMapActivity.this,R.drawable.ic_workwhite,R.drawable.ic_pin_blue)));
-        markerMap.put(lavoroMarker.getId(),null);
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(casa, DEFAULT_ZOOM));
             Query findrequest = request.whereEqualTo("autista.id",userAuth.getUid())
                                         .whereEqualTo("passaggio.idPassaggio",idPassaggio);
@@ -157,10 +157,6 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                         @Override
                         public boolean onMarkerClick(Marker marker) {
                             final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetDialog);
-                            final String key = marker.getId();
-                            if (markerMap.get(key) != null) {
-                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                            }
 
                             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                                 @Override
@@ -169,35 +165,42 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                                 }
                             });
 
-                            ImageView imgPass = (ImageView) bottomSheetDialog.findViewById(R.id.immagineProfilo);
-                            nomePass = (TextView) bottomSheetDialog.findViewById(R.id.nomePass);
-                            cognomePass = (TextView) bottomSheetDialog.findViewById(R.id.cognomePass);
-                            telefono = (TextView) bottomSheetDialog.findViewById(R.id.telefono);
-                            accept=(Button)bottomSheetDialog.findViewById(R.id.accept);
-                            reject=(ImageButton)bottomSheetDialog.findViewById(R.id.reject);
-
-
+                            final String key = marker.getId();
                             if (markerMap.get(key) != null) {
+                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                                ImageView imgPass = (ImageView) bottomSheetDialog.findViewById(R.id.immagineProfilo);
+                                nomePass = (TextView) bottomSheetDialog.findViewById(R.id.nomePass);
+                                cognomePass = (TextView) bottomSheetDialog.findViewById(R.id.cognomePass);
+                                telefono = (TextView) bottomSheetDialog.findViewById(R.id.telefono);
+                                accept=(Button)bottomSheetDialog.findViewById(R.id.accept);
+                                reject=(ImageButton)bottomSheetDialog.findViewById(R.id.reject);
+
+
                                 Map<String, Object> passeggeroDati = (Map<String, Object>) markerMap.get(key);
 
                                 nomePass.setText(passeggeroDati.get("name").toString());
                                 cognomePass.setText(passeggeroDati.get("surname").toString());
                                 telefono.setText(passeggeroDati.get("phone").toString());
+
+                                accept.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        //integrare parte dell'Invio della notifica, aggiornamento database, e numero posti occupati
+                                        //cambiare anche l'icona del marker
+                                    }
+                                });
+                                reject.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        //integrare parte dell'Invio della notifica, aggiornamento database
+                                        //cambiare anche l'icona del marker
+                                    }
+                                });
                             }
-                            accept.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    //integrare parte dell'Invio della notifica, aggiornamento database, e numero posti occupati
-                                    //cambiare anche l'icona del marker
-                                }
-                            });
-                            reject.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    //integrare parte dell'Invio della notifica, aggiornamento database
-                                    //cambiare anche l'icona del marker
-                                }
-                            });
+                            else{
+                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            }
 
                             return false;
                         }

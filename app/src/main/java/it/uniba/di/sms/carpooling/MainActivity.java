@@ -279,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_searchride) {
             fragment= new SearchRideFragment();
         } else if (id == R.id.nav_points) {
+            fragment= new EditProfile();
 
         } else if (id == R.id.nav_offeraride) {
           fragment= new OfferRideFragment();
