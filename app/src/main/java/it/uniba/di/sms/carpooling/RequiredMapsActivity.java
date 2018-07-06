@@ -15,6 +15,12 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -31,6 +37,8 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
     public RelativeLayout rich;
     public CircleImageView immagine;
     public TextView data,giorno,ora,casa,telefono,nome,cognome,status;
+    private DocumentReference user;
+    private FirebaseUser userAuth;
 
 
     @Override
@@ -41,6 +49,9 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        userAuth = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
 
         Intent receive = getIntent();
         HashMap<String,Object> richiesta = (HashMap<String,Object>)receive.getSerializableExtra("richiestaPassaggio");
@@ -97,15 +108,48 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
         Intent receive = getIntent();
         Map<String,Object> richiesta = (Map<String,Object>)receive.getSerializableExtra("richiestaPassaggio");
         Map<String,Object> autista = (Map<String,Object>) richiesta.get("autista");
-        Map<String,Object>address =(Map<String,Object>) autista.get("userAddress");
+        final Map<String,Object>  address =(Map<String,Object>) autista.get("userAddress");
         Map<String,Object> passeggero = (Map<String,Object>) richiesta.get("passeggero");
-        Map<String,Object>addressP =(Map<String,Object>) passeggero.get("userAddress");
+        final Map<String,Object>addressP =(Map<String,Object>) passeggero.get("userAddress");
 
-        LatLng indirizzoAutista = new LatLng((Double) address.get("latitude"),(Double)address.get("longitude"));
-        LatLng indirizzoPassegero = new LatLng((Double) addressP.get("latitude"),(Double)addressP.get("longitude"));
+        readData(new FirestoreCallback() {
+            @Override
+            public void onCallback(Map<String, Object> user) {
+                LatLng indirizzoAutista = new LatLng((Double) address.get("latitude"),(Double)address.get("longitude"));
+                LatLng indirizzoPassegero = new LatLng((Double) addressP.get("latitude"),(Double)addressP.get("longitude"));
+                Map<String, Object> userCompany = (Map<String, Object>) user.get("userCompany");
+                LatLng lavoro = new LatLng((Double) userCompany.get("latitude"), (Double) userCompany.get("longitude"));
+                mMap.addMarker(new MarkerOptions().position(lavoro).title("lavoro").snippet(userCompany.get("address").toString()).icon(BitmapDescriptorFactory.fromResource(R.drawable.markerlavoro)));
+                mMap.addMarker(new MarkerOptions().position(indirizzoAutista).title("autista").snippet(address.get("address").toString()).icon(BitmapDescriptorFactory.fromResource(R.drawable.markerautista)));
+                mMap.addMarker(new MarkerOptions().position(indirizzoPassegero).title(getResources().getString(R.string.Home)).icon(BitmapDescriptorFactory.fromResource(R.drawable.casamarker)));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(indirizzoPassegero, DEFAULT_ZOOM));
 
-        mMap.addMarker(new MarkerOptions().position(indirizzoAutista).title("autista").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-        mMap.addMarker(new MarkerOptions().position(indirizzoPassegero).title(getResources().getString(R.string.Home)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(indirizzoPassegero, DEFAULT_ZOOM));
+            }
+        });
+
+
+    }
+
+
+
+
+
+    //metodo per leggere all'esterno dell'On Succes Listener
+    private void readData(final RequiredMapsActivity.FirestoreCallback callback){
+
+        user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Map<String,Object> user = documentSnapshot.getData();
+
+                callback.onCallback(user);
+
+            }
+        });
+    }
+
+    //interfaccia per metodo di callback
+    private interface FirestoreCallback {
+        void onCallback(Map<String,Object> user);
     }
 }
