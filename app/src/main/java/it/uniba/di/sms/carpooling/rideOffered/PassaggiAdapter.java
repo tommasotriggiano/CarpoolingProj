@@ -44,8 +44,11 @@ public class PassaggiAdapter extends RecyclerView.Adapter<PassaggiViewHolder> {
         holder.giorno.setText((String)itemPassaggi.get(position).get("giorno"));
         holder.ora.setText((String)itemPassaggi.get(position).get("ora"));
         holder.casa.setText((String)itemPassaggi.get(position).get("tipoViaggio"));
-        Object disponibili =itemPassaggi.get(position).get("postiDisponibili");
-        holder.postiOccupati.setText("0"+"/"+disponibili.toString());
+        Long occupati=(Long)itemPassaggi.get(position).get("postiOccupati");
+        Long disponibili=(Long)itemPassaggi.get(position).get("postiDisponibili");
+        Long sum = occupati+disponibili;
+
+        holder.postiOccupati.setText(occupati.toString()+"/"+sum);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

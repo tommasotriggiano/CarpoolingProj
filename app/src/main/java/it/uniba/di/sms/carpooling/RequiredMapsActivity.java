@@ -1,12 +1,14 @@
 package it.uniba.di.sms.carpooling;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -14,6 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +34,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class RequiredMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final float DEFAULT_ZOOM = 8.3f;
+    private static final float MARKER_ZOOM = 18.3f;
     public GoogleMap mMap;
     public LinearLayout richiesti;
     public LinearLayout richiesti2;
@@ -122,8 +126,33 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
                 mMap.addMarker(new MarkerOptions().position(lavoro).title("lavoro").snippet(userCompany.get("address").toString()).icon(BitmapDescriptorFactory.fromResource(R.drawable.markerlavoro)));
                 mMap.addMarker(new MarkerOptions().position(indirizzoAutista).title("autista").snippet(address.get("address").toString()).icon(BitmapDescriptorFactory.fromResource(R.drawable.markerautista)));
                 mMap.addMarker(new MarkerOptions().position(indirizzoPassegero).title(getResources().getString(R.string.Home)).icon(BitmapDescriptorFactory.fromResource(R.drawable.casamarker)));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(indirizzoPassegero, DEFAULT_ZOOM));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lavoro, DEFAULT_ZOOM));
 
+
+            }
+        });
+
+        final Handler handler = new Handler();
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(final Marker marker) {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMap.animateCamera(CameraUpdateFactory.zoomTo(MARKER_ZOOM),2000,null);
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),MARKER_ZOOM));
+                    }
+                },100);
+                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                        mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM),1000,null);
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,DEFAULT_ZOOM));
+
+                    }
+                });
+                return false;
             }
         });
 

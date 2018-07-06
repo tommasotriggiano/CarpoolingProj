@@ -297,6 +297,7 @@ public class OfferRideFragment extends Fragment {
                 passaggio.put("postiDisponibili",postiDisponibili);
                 passaggio.put("giorno",giorno);
                 passaggio.put("idPassaggio",id);
+                passaggio.put("postiOccupati",0);
 
                 pass.set(passaggio);
 

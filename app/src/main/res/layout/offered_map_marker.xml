@@ -7,16 +7,17 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="128dp">
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/immagineProfilo"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentStart="true"
             android:layout_alignTop="@+id/nomeAut"
-            android:src="@drawable/ic_image_profile"
             android:layout_gravity="center|top"
-            android:elevation="4dp"/>
+            android:elevation="4dp"
+            android:src="@drawable/ic_image_profile" />
 
         <TextView
             android:id="@+id/nomePass"
@@ -30,6 +31,18 @@
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/indirizzo"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/immagineProfilo"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="17dp"
+            android:text="Address"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <TextView
             android:id="@+id/cognomePass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,13 +52,14 @@
             android:text="Cognome"
             android:textColor="@color/black"
             android:textSize="20sp" />
+
         <TextView
             android:id="@+id/telefono"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/immagineProfilo"
             android:layout_below="@+id/nomePass"
             android:layout_marginStart="5dp"
+            android:layout_toRightOf="@+id/immagineProfilo"
             android:text="@string/Phone"
             android:textColor="@color/black"
             android:textSize="20sp" />
@@ -60,16 +74,17 @@
        android:gravity="end" >
     <Button
         android:id="@+id/accept"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
         android:text="@string/accept"
-
         android:background="@android:color/transparent"
-        android:textColor="@color/text_color"/>
+        android:textColor="@color/text_color"
+        android:textSize="20dp"/>
+
     <ImageButton
         android:id="@+id/reject"
-        android:layout_width="40dp"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_gravity="center"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="5dp"
