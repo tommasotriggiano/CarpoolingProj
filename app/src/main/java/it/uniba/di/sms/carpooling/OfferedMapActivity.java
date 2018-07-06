@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -113,7 +112,7 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
         final LatLng casa = new LatLng((Double)indirizzoAutista.get("latitude"),(Double)indirizzoAutista.get("longitude"));
                 mMap.addMarker(new MarkerOptions().position(casa)
                 .title(getResources().getString(R.string.Home))
-                .icon(bitmapDescriptorFromVector(OfferedMapActivity.this,R.drawable.ic_homewhite,R.drawable.ic_pin_blue)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.casamarker)));
 
 
 
@@ -121,7 +120,7 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
         LatLng lavoro = new LatLng((Double)indirizzoLavoro.get("latitude"),(Double)indirizzoLavoro.get("longitude"));
                 mMap.addMarker(new MarkerOptions().position(lavoro)
                 .title(getResources().getString(R.string.Work))
-                .icon(bitmapDescriptorFromVector(OfferedMapActivity.this,R.drawable.ic_workwhite,R.drawable.ic_pin_blue)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.markerlavoro)));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(casa, DEFAULT_ZOOM));
             Query findrequest = request.whereEqualTo("autista.id",userAuth.getUid())
@@ -138,12 +137,16 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                         String status = richieste.get("status").toString();
                         Marker marker = mMap.addMarker(new MarkerOptions().position(indirizzoPasseggero));
 
-                        if (status.equals("IN ATTESA")) {
-                            marker.setIcon(bitmapDescriptorFromVector(OfferedMapActivity.this,R.drawable.ic_questionpoint,R.drawable.ic_pin_orange));
-                        } else if (status.equals("CONFERMATO")) {
-                            marker.setIcon(bitmapDescriptorFromVector(OfferedMapActivity.this,R.drawable.ic_acceptwhite,R.drawable.ic_pin_green));
-                        } else {
-                            marker.setIcon(bitmapDescriptorFromVector(OfferedMapActivity.this,R.drawable.ic_rejectwhite,R.drawable.ic_pin_red));
+                        switch (status) {
+                            case "IN ATTESA":
+                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrichiedi));
+                                break;
+                            case "CONFERMATO":
+                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerconfirmed));
+                                break;
+                            case "RIFIUTATO":
+                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrefused));
+                                break;
                         }
 
 
