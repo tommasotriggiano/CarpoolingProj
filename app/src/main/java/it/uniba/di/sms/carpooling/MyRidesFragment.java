@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +26,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -37,12 +41,13 @@ import it.uniba.di.sms.carpooling.rideOffered.PassaggiAdapter;
 import it.uniba.di.sms.carpooling.rideOffered.PassaggiViewHolder;
 import it.uniba.di.sms.carpooling.rideRequired.RequiredAdapter;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelperListener {
     OnAddRideOfferedListener onAddRideOfferedListener;
-
 
 
     public interface OnAddRideOfferedListener{
@@ -108,10 +113,9 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
         initializeDataRequired();
 
 
-        passaggiAdapter = new PassaggiAdapter(resultPassaggi, getActivity());
         requiredAdapter = new RequiredAdapter(resultRequired,getActivity());
 
-        passaggiRecycler.setAdapter(passaggiAdapter);
+
         requiredRecycler.setAdapter(requiredAdapter);
 
         ItemTouchHelper.SimpleCallback itemTouchHelper= new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT,this);
@@ -249,19 +253,38 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
         //prendo solamente i passaggi che ha offerto l'utente autenticato
 
         Query offered = passaggi.whereEqualTo("autista.id",user.getUid());
-        offered.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+        offered.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                for(DocumentSnapshot document : task.getResult()){
-                    Map<String,Object> passaggiOff = document.getData();
-                    resultPassaggi.add(passaggiOff);
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.e(TAG,e.toString());
+                    return;
                 }
+                for(DocumentChange dc : documentSnapshots.getDocumentChanges()){
+                    DocumentSnapshot document = dc.getDocument();
+                    Map<String,Object> map = document.getData();
+                    switch(dc.getType()){
+                        case ADDED:
+                            resultPassaggi.add(map);
+                            break;
+                        case MODIFIED:
+                            resultPassaggi.set(dc.getNewIndex(),map);
+                            break;
+
+                        }
+                    }
+                passaggiAdapter = new PassaggiAdapter(resultPassaggi, getActivity());
+                passaggiRecycler.setAdapter(passaggiAdapter);
+
+                }
+
+            });
+
                 passaggiRecycler.scrollToPosition(resultPassaggi.size() - 1);
-                passaggiAdapter.notifyItemInserted(resultPassaggi.size() - 1);
 
             }
-        });
-    }
+
 
 
     @Override
