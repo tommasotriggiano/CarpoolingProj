@@ -86,7 +86,13 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-
+   <!--edit profile-->
+    <string name="edit_Name">Name </string>
+    <string name="edit_Surname">Surname </string>
+    <string name="edit_Phone">Phone Number </string>
+    <string name="edit_Car">Your car </string>
+    <string name ="save">Save</string>
+    <string name ="nothing_car">Nothing car</string>
     <!--Main activity-->
     <string name="HomePage">Home</string>
     <string name="title_activity_main">MainActivity</string>

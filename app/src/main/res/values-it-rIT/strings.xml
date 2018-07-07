@@ -78,6 +78,13 @@
     <string name="body_mail">"Un nuovo utente ha richiesto la conferma del profilo. Accedi a carpooling app cliccando su questo link https://carpooling.page.link/app"</string>
 
 
+    <!--edit profile-->
+    <string name="edit_Name">Nome </string>
+    <string name="edit_Surname">Cognome </string>
+    <string name="edit_Phone">Numero di telefono </string>
+    <string name="edit_Car">La tua auto </string>
+    <string name ="save">Salva</string>
+    <string name ="nothing_car">Nessun auto inserita</string>
 
     <!--Main activity-->
     <string name="HomePage">Home</string>

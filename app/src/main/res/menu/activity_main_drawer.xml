@@ -13,9 +13,15 @@
             android:title="@string/HomePage"
             android:visible="false" />
         <item
-            android:id="@+id/nav_profile"
+            android:id="@+id/nav_registration"
             android:icon="@drawable/ic_person_black"
             android:title="@string/Registration"
+            android:visible="false"/>
+
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_person_black"
+            android:title="@string/profile"
             android:visible="false"/>
 
         <item

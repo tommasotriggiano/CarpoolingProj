@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,9 +55,12 @@ public class EditProfile extends Fragment {
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
     private DocumentReference user;
     private FirebaseUser userAuth;
-    private EditText nome,cognome,telefono,auto;
+    private TextView nome,cognome,telefono,auto;
+    private ImageView iNome,iCognome,iTelefono,iAuto;
+    private EditText eNome,eCognome,eTelefono,eAuto;
+    private CardView cNome,cCognome,cTelefono,cAuto;
     private CircleImageView profile;
-    private Button edit;
+    private Button save;
     private ImageButton addPhoto;
     Uri resultUri;
 
@@ -66,12 +71,29 @@ public class EditProfile extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_edit_profile, container,false);
-        nome = (EditText) view.findViewById(R.id.name);
-        cognome=(EditText) view.findViewById(R.id.surname);
-        telefono=(EditText) view.findViewById(R.id.phone);
-        auto=(EditText) view.findViewById(R.id.car);
+
+        nome = (TextView) view.findViewById(R.id.text_name);
+        cognome=(TextView) view.findViewById(R.id.text_surname);
+        telefono=(TextView) view.findViewById(R.id.text_phone);
+        auto=(TextView) view.findViewById(R.id.text_car);
+
+        eNome= (EditText) view.findViewById(R.id.edit_name);
+        eCognome=(EditText) view.findViewById(R.id.edit_surname);
+        eTelefono=(EditText) view.findViewById(R.id.edit_phone);
+        eAuto=(EditText) view.findViewById(R.id.edit_car);
+
+        iNome = (ImageView) view.findViewById(R.id.img_edit_name);
+        iCognome=(ImageView) view.findViewById(R.id.img_edit_surname);
+        iTelefono=(ImageView) view.findViewById(R.id.img_edit_phone);
+        iAuto=(ImageView) view.findViewById(R.id.img_edit_car);
+
+        cNome = (CardView) view.findViewById(R.id.card_name);
+        cCognome=(CardView) view.findViewById(R.id.card_surname);
+        cTelefono=(CardView) view.findViewById(R.id.card_phone);
+        cAuto=(CardView) view.findViewById(R.id.card_car);
+
         profile = (CircleImageView) view.findViewById(R.id.profile);
-        edit = (Button)view.findViewById(R.id.modifica);
+        save = (Button)view.findViewById(R.id.modifica);
         addPhoto = (ImageButton)view.findViewById(R.id.addPhoto);
 
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
@@ -87,6 +109,8 @@ public class EditProfile extends Fragment {
 
                     if(user.get("car") != null){
                         auto.setText((String)user.get("car"));
+                    }else {
+                        auto.setText(getResources().getString(R.string.nothing_car));
                     }
                     if(user.get("urlProfileImage")!= null){
                         Picasso.with(getActivity()).load(user.get("urlProfileImage").toString()).into(profile);
@@ -101,6 +125,41 @@ public class EditProfile extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
         getActivity().setTitle(R.string.profile);
+        iNome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cNome.setVisibility(View.GONE);
+                eNome.setVisibility(View.VISIBLE);
+                eNome.setText(nome.getText());
+
+            }
+        });
+        iCognome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cCognome.setVisibility(View.GONE);
+                eCognome.setVisibility(View.VISIBLE);
+                eCognome.setText(cognome.getText());
+            }
+        });
+        iTelefono.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cTelefono.setVisibility(View.GONE);
+                eTelefono.setVisibility(View.VISIBLE);
+                eTelefono.setText(telefono.getText());
+            }
+        });
+        iAuto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cAuto.setVisibility(View.GONE);
+                eAuto.setVisibility(View.VISIBLE);
+                eAuto.setText(auto.getText());
+            }
+        });
+
+
 
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +167,7 @@ public class EditProfile extends Fragment {
                 verifiedPermission();
             }
         });
-        edit.setOnClickListener(new View.OnClickListener() {
+        save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //modifica del database

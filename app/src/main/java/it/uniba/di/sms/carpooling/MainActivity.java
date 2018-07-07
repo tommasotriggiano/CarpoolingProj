@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             if(!(documentSnapshot.exists())){
-                                navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
+                                navigationView.getMenu().findItem(R.id.nav_registration).setVisible(true);
                                 navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
                                 navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
 
@@ -105,12 +105,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 hello.setText(name);
                                 boolean ap = (boolean) user.get("approved");
                                 if(!ap){
-                                    navigationView.getMenu().findItem(R.id.nav_profile).setTitle(R.string.profile);
                                     navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);}
                                 else if(ap){
-                                    navigationView.getMenu().findItem(R.id.nav_profile).setTitle(R.string.profile);
                                     navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(true);
@@ -271,29 +269,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         Fragment fragment = null;
-
-        if (id == R.id.nav_profile) {
-            fragment = new RegistrationForm();
-        } else if (id == R.id.nav_myrides) {
-            fragment= new MyRidesFragment();
-        } else if (id == R.id.nav_searchride) {
-            fragment= new SearchRideFragment();
-        } else if (id == R.id.nav_points) {
-            fragment= new EditProfile();
-
-        } else if (id == R.id.nav_offeraride) {
-          fragment= new OfferRideFragment();
-
-        }else if(id == R.id.nav_approvazione){
-            fragment= new ApproveFragment();
-
-        } else if (id == R.id.nav_settings) {
-
-        }else if (id == R.id.nav_logout) {
-            FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(MainActivity.this,LoginActivity.class));
-            finish();
+        switch(id){
+            case (R.id.nav_registration):
+            {
+                fragment=new RegistrationForm();
+                break;
+            }
+            case R.id.nav_profile :
+            {
+                fragment = new EditProfile();
+                break;
+            }
+            case R.id.nav_myrides:
+            {
+                fragment= new MyRidesFragment();
+                break;
+            }
+            case R.id.nav_searchride : {
+                fragment = new SearchRideFragment();
+                break;
+            }
+            case R.id.nav_points: {
+                break;
+            }
+            case R.id.nav_offeraride: {
+                fragment = new OfferRideFragment();
+                break;
+            }
+            case R.id.nav_approvazione: {
+                fragment = new ApproveFragment();
+                break;
+            }
+            case R.id.nav_settings: {
+                break;
+            }
+            case R.id.nav_logout: {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+                break;
+            }
+            default: {
+                break;
+            }
         }
+
 
 
         //replacing the fragment
