@@ -1,104 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="it.uniba.di.sms.carpooling.MainActivity"
+    android:theme="@style/ColoredHandleTheme">
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context="it.uniba.di.sms.carpooling.MainActivity"
-android:theme="@style/ColoredHandleTheme">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
-<LinearLayout
-    android:id="@+id/layout_casaLavoro"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginTop="50dp"
-    android:layout_marginLeft="30dp">
-    <TextView
-        android:id="@+id/casa"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Home"
-        android:textColor="#000"
-        android:textSize="20sp" />
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_arrow_forward" />
+        <LinearLayout
+            android:id="@+id/layout_casaLavoro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp">
+            <TextView
+                android:id="@+id/casa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Home"
+                android:textColor="#000"
+                android:textSize="20sp" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_arrow_forward" />
 
-    <TextView
-        android:id="@+id/lavoro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Work"
-        android:textColor="#000"
-        android:textSize="20sp" />
+            <TextView
+                android:id="@+id/lavoro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Work"
+                android:textColor="#000"
+                android:textSize="20sp" />
 
-    <ImageButton
-        android:id="@+id/Invert"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginLeft="18dp"
-        android:background="@drawable/button_shape"
-        android:elevation="2dp"
-        android:src="@drawable/ic_invert"/>
+            <ImageButton
+                android:id="@+id/Invert"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="18dp"
+                android:background="@drawable/button_shape"
+                android:elevation="2dp"
+                android:src="@drawable/ic_invert"/>
 
-</LinearLayout>
+        </LinearLayout>
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/layout_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_below="@+id/layout_casaLavoro"
+            android:layout_alignStart="@+id/layout_casaLavoro">
+            <TextView
+                android:id="@+id/textData"
+                android:layout_width="293dp"
+                android:layout_height="50dp"
+                android:hint="@string/Date"
+                android:drawableRight="@drawable/ic_arrow2"
+                android:background="?attr/editTextBackground"
+                android:gravity="center_vertical"
+                android:textColor="?attr/editTextColor"
+                android:textSize="20sp"/>
+            <ImageView
+                android:id="@+id/img_error_date"
+                android:layout_width="28dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_error_red"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toBottomOf="@id/textData"
+                app:layout_constraintEnd_toEndOf="@id/textData"
+                android:visibility="gone" />
+            <TextView
+                android:id="@+id/errorDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/EntDate"
+                app:layout_constraintTop_toBottomOf="@+id/textData"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="gone"/>
+        </android.support.constraint.ConstraintLayout>
 
-<TextView
-    android:id="@+id/textData"
-    android:layout_width="293dp"
-    android:layout_height="50dp"
-    android:hint="@string/Date"
-    android:layout_alignStart="@+id/layout_casaLavoro"
-    android:layout_below="@+id/layout_casaLavoro"
-    android:layout_marginTop="25dp"
-    android:drawableRight="@drawable/ic_arrow"
-    android:background="?attr/editTextBackground"
-    android:gravity="center_vertical"
-    android:textColor="?attr/editTextColor"
-    android:textSize="20sp" />
+
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/layout_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/layout_data"
+            android:layout_below="@+id/layout_data"
+            android:layout_marginTop="25dp">
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="293dp"
+            android:layout_height="50dp"
+            android:drawableRight="@drawable/ic_arrow2"
+            android:background="?attr/editTextBackground"
+            android:gravity="center_vertical"
+            android:hint="@string/Departure"
+            android:textColor="?attr/editTextColor"
+            android:textSize="20sp" />
+            <ImageView
+                android:id="@+id/img_error_time"
+                android:layout_width="28dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_error_red"
+                app:layout_constraintEnd_toEndOf="@id/tvTime"
+                app:layout_constraintBottom_toBottomOf="@id/tvTime"
+                android:visibility="gone" />
+            <TextView
+                android:id="@+id/errorTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/EntTime"
+                android:layout_below="@+id/tvTime"
+                app:layout_constraintTop_toBottomOf="@+id/tvTime"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="gone"
+                />
+        </android.support.constraint.ConstraintLayout>
+
+            <AutoCompleteTextView
+                android:id="@+id/autista"
+                android:layout_width="293dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layout_time"
+                android:hint="@string/Driver"
+                android:layout_marginTop="25dp"
+                android:layout_alignStart="@+id/layout_time"
+                android:dropDownHeight="wrap_content"
+                android:dropDownWidth="293dp"
+                android:completionThreshold="1"/>
+
+
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Search"
+            android:background="@drawable/button_shape"
+            android:textColor="#fff"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/autista"
+            android:layout_marginTop="70dp"
+            />
 
 
 
-
-
-<TextView
-    android:id="@+id/tvTime"
-    android:layout_width="293dp"
-    android:layout_height="50dp"
-    android:layout_alignStart="@+id/textData"
-    android:layout_below="@+id/textData"
-    android:layout_marginTop="25dp"
-    android:drawableRight="@drawable/ic_arrow"
-    android:background="?attr/editTextBackground"
-    android:gravity="center_vertical"
-    android:hint="@string/Departure"
-    android:textColor="?attr/editTextColor"
-    android:textSize="20sp" />
-
-
-<EditText
-    android:id="@+id/autista"
-    android:layout_width="293dp"
-    android:layout_height="wrap_content"
-    android:layout_alignStart="@+id/tvTime"
-    android:layout_below="@+id/tvTime"
-    android:layout_marginTop="32dp"
-    android:hint="@string/Driver"
-    android:textSize="20sp" />
-<Button
-    android:id="@+id/btnSearch"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/Search"
-    android:background="@drawable/button_shape"
-    android:textColor="#fff"
-    android:layout_centerHorizontal="true"
-    android:layout_below="@id/autista"
-    android:layout_marginTop="70dp"
-    />
-
-</RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

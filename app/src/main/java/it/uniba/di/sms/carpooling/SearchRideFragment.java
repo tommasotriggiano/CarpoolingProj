@@ -10,10 +10,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -41,13 +44,11 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class SearchRideFragment extends Fragment {
-    private TextView dateText;
-    private TextView tvTime;
+    private TextView dateText,tvTime,mWork,mHome,errorDate,errorTime;
     private ImageButton btnInvert;
-    private TextView mWork;
-    private TextView mHome;
-    private EditText driver;
     private Button search;
+    private AutoCompleteTextView driver ;
+    private ImageView img_date,img_time;
 
 
 
@@ -61,8 +62,16 @@ public class SearchRideFragment extends Fragment {
         btnInvert = (ImageButton) view.findViewById(R.id.Invert);
         mHome = (TextView) view.findViewById(R.id.casa);
         mWork = (TextView) view.findViewById(R.id.lavoro);
-        driver = (EditText)  view.findViewById(R.id.autista);
         search = (Button) view.findViewById(R.id.btnSearch);
+        errorDate = (TextView) view.findViewById(R.id.errorDate);
+        errorTime = (TextView) view.findViewById(R.id.errorTime);
+        img_date=(ImageView)view.findViewById(R.id.img_error_date) ;
+        img_time=(ImageView)view.findViewById(R.id.img_error_time) ;
+        String []autisti= new String[]{"Terenzia Loiodice","Tommaso Triggiano","Andrea Loizzo", "Davide Bufo"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_dropdown_item_1line, autisti);
+        driver= (AutoCompleteTextView) view.findViewById(R.id.autista);
+        driver.setAdapter(adapter);
 
 
         return view;
@@ -89,6 +98,8 @@ public class SearchRideFragment extends Fragment {
             }
         });
 
+
+
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,14 +122,34 @@ public class SearchRideFragment extends Fragment {
             tipo = getResources().getString(R.string.WorkHome);;}
 
         if(data.isEmpty()){
-            dateText.setError(getResources().getString(R.string.EntDate));
+            errorDate.setVisibility(View.VISIBLE);
+            img_date.setVisibility(View.VISIBLE);
             dateText.requestFocus();
+            dateText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    errorDate.setVisibility(View.GONE);
+                    img_date.setVisibility(View.GONE);
+                    showDatePicker();
+                }
+            });
             return;
         }
         if(ora.isEmpty()){
-            tvTime.setError(getResources().getString(R.string.EntTime));
+            errorTime.setVisibility(View.VISIBLE);
+            img_time.setVisibility(View.VISIBLE);
             tvTime.requestFocus();
+            tvTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                        errorTime.setVisibility(View.GONE);
+                        img_time.setVisibility(View.GONE);
+                        showTimePicker();
+                }
+            });
+            return;
         }
+
         Intent map = new Intent(getActivity(),MapsActivity.class);
         map.putExtra("tipoViaggio",tipo);
         map.putExtra("data",data);
