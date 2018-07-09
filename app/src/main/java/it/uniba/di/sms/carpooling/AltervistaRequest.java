@@ -116,7 +116,7 @@ public class AltervistaRequest extends AppCompatActivity {
 
 
 
-        //NotifyIfAccepted();
+        //CheckNote();
 /**
  * INSERT BUTTON
  *
@@ -134,6 +134,7 @@ public class AltervistaRequest extends AppCompatActivity {
                     codeField.setText(user.getUid());
                     Log.i(TAG,"setText");
                 }
+
                 /**      Invio     **/
                InsertIntoAltervista(codeField.getText().toString(),noteField.getText().toString());
 
@@ -199,91 +200,6 @@ public class AltervistaRequest extends AppCompatActivity {
         });
 
     }
-
-
-    public void sendNotify(String Title, String Text) {
-        Intent intentNoti=new Intent(this,MainActivity.class);
-        PendingIntent pendingIntentNoti=PendingIntent.getActivity(this, 0, intentNoti, 0);
-
-        Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder n  = new NotificationCompat.Builder(this)
-                //.setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle(Title)
-                .setContentText(Text)
-                .setSmallIcon(android.R.drawable.ic_dialog_email)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntentNoti)
-                .setSound(sound)
-                .setAutoCancel(true);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, n.build());
-    }
-
-    public void NotifyIfAccepted(){
-
-        Log.i(TAG,"NotifyIfAcceptedStart");
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        Log.i(TAG,"currUser");
-        final String idCode = currentUser.getUid();
-        Log.i(TAG,"getUid");
-        Log.i(TAG,"currentUser.getUid()");
-        String url = "http://carpoolings.altervista.org/QueryNote.php?TokenID="+idCode;
-        AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
-        RequestParams params = new RequestParams();
-        final ProgressDialog pDialog = new ProgressDialog(AltervistaRequest.this);
-        client.get(url, params, new TextHttpResponseHandler() {
-
-            @Override
-            public void onStart() {
-                pDialog.setMessage("Loading...");
-                pDialog.setIndeterminate(false);
-                pDialog.setCancelable(true);
-                pDialog.show();
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Gson gson = new Gson();
-
-                Log.i(TAG,"response: "+responseString);
-                if(responseString.compareTo("null")!=0){        //SE TROVA ALMENO UNA NOTA
-                    String founderJson = responseString;
-                    NotificaAltervista[] founderArray = gson.fromJson(founderJson, NotificaAltervista[].class);
-
-                    pDialog.dismiss();
-                    boolean founded=false;
-                    for (NotificaAltervista matchFound:founderArray ) {
-                        //if(matchFound.toString().compareTo(tokenID)==0){
-                        if(matchFound.toString().compareTo("Accettato")==0){        //SE IN UNA NOTA C'E' "Accettato"
-                            founded=true;
-                            Toast.makeText(getApplicationContext(), "Founded a note", Toast.LENGTH_LONG).show();
-                            sendNotify("Titolo","Questa è una nota e tu sei stato accettato");
-
-                        }
-
-                    }
-                    if (!founded){
-                        Toast.makeText(getApplicationContext(), "Nota trovata, ma nessun 'Accettato'", Toast.LENGTH_LONG).show();
-                    }
-
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "Nessuna nota trovata", Toast.LENGTH_LONG).show();
-                    pDialog.dismiss();
-                }
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                pDialog.dismiss();
-                Toast.makeText(getApplicationContext(), responseString, Toast.LENGTH_LONG).show();
-            }
-        });
-
-
-    }
-
 
 
     public void InsertIntoAltervista(String idCode,String message){

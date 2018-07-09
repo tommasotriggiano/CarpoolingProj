@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
-
+        startService(new Intent(getBaseContext(),ServiceReceiver.class));
     }
 
     @Override

@@ -126,6 +126,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -143,6 +146,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cz.msebera.android.httpclient.Header;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -156,6 +160,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String TAG = MapsActivity.class.getSimpleName();
     private FusedLocationProviderClient mFusedLocationProviderClient;
     static LatLng currentPosition;
+    private final String REQUEST = "TiChiedonoUnPassaggio";
+    String receiverUid;
 
     private GoogleMap mMap;
     private String tipoViaggio,data,ora,nome;
@@ -210,9 +216,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         user = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
 
 
+        //TODO riempire questo campo con userUID e non il propio
+        //receiverUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
 
 
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -367,6 +377,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 required.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //TODO sostituire idCode con uid destinatario
+                        InsertIntoAltervista("idCode",REQUEST);
                         requiredRide(key);
                     }
                 });
@@ -650,6 +662,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+
+    public void InsertIntoAltervista(String idCode,String message){
+        Log.i("altervista","startAltet");
+
+        String url = "http://carpoolings.altervista.org/InsertNote.php?TokenID="+idCode+"&Note="+message;
+        AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
+        RequestParams params = new RequestParams();
+        Log.i("altervista","param");
+        client.get(url, params, new TextHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                Log.i("altervista","onStart");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("altervista","toast");
+                Toast.makeText(getApplicationContext(), "Insert success", Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("altervista","faill");
+                Toast.makeText(getApplicationContext(), responseString, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
  }
 
