@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -234,28 +235,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String userNameCompany = (String) userCompanyAddress.get("name");
                 final LatLng lavoro = new LatLng((Double) userCompanyAddress.get("latitude"), (Double) userCompanyAddress.get("longitude"));
 
-                /*final SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
-                Date date= null;
-                try{date = dateFormat.parse(ora);
+                if(Locale.getDefault().getLanguage().equals("en")){
+                    if(tipoViaggio.equals("Work-Home")){
+                        tipoViaggio = "Lavoro-Casa";
+                    }
+                    else if(tipoViaggio.equals("Home-Work")){
+                       tipoViaggio="Casa-Lavoro";
+                    }
+                    String d[] = data.split("-");
+                    String data2 = d[1]+"-"+d[0]+"-"+d[2];
+                    data = data2;
+                    Toast.makeText(MapsActivity.this,"A"+data,Toast.LENGTH_SHORT).show();
                 }
-                catch(ParseException p){
-
-                }
-                final Date oraMin= date;
-                oraMin.setMinutes(date.getMinutes()-10);
-                final Date oraMax= date;
-                oraMax.setMinutes(date.getMinutes()+10);*/
-
                 if ((nome.isEmpty())) {
                     findRides = passaggi
                             .whereEqualTo("dataPassaggio", data)
                             .whereEqualTo("ora", ora)
                             .whereEqualTo("tipoViaggio", tipoViaggio)
+                            .whereGreaterThan("postiDisponibili",0)
                             .whereEqualTo("autista.userCompany.name", userNameCompany);
+                    Toast.makeText(MapsActivity.this,"Q"+data,Toast.LENGTH_SHORT).show();
                 } else {
                     findRides = passaggi
                             .whereEqualTo("dataPassaggio", data)
                             .whereEqualTo("tipoViaggio", tipoViaggio)
+                            .whereGreaterThan("postiDisponibili",0)
                             .whereEqualTo("ora", ora)
                             .whereEqualTo("autista.surname", nome)
                             .whereEqualTo("autista.userCompany.name", userNameCompany);
@@ -325,8 +329,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from( bottomSheetDialog);
 
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-               mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                    @Override
                    public void onMapClick(LatLng latLng) {
                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -341,9 +345,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 posti = (TextView)  bottomSheetDialog.findViewById(R.id.postiDisp);
                 Button required = (Button)  bottomSheetDialog.findViewById(R.id.requiredRide);
                 //recupero la chiave del marker che ho selezionato
-               final  String key = marker.getId();
+               final String key = marker.getId();
                 //prendo il passaggio che è collegato alla chiave del marker selezionato
                 if (markerMap.get(key) != null) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                     Map<String, Object> pass = (Map<String, Object>) markerMap.get(key);
 
                     //creo il database delle richieste del passaggio
@@ -358,10 +363,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     nomeAutista.setText(autista1.get("name").toString());
                     cognomeAutista.setText(autista1.get("surname").toString());
-                    dataP.setText(data);
+                    if(Locale.getDefault().getLanguage().equals("en")){
+                        String d[] = data.split("-");
+                        String data2 = d[1]+"-"+d[0]+"-"+d[2];
+                        dataP.setText(data2);
+                    }
+                    else{
+                    dataP.setText(data);}
                     oraP.setText(pass.get("ora").toString());
                     posti.setText(pass.get("postiDisponibili").toString());
-                }
+
 
 
                 required.setOnClickListener(new View.OnClickListener() {
@@ -369,7 +380,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onClick(View view) {
                         requiredRide(key);
                     }
-                });
+                });}
+                else{
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
                 return false;
             }
         });
