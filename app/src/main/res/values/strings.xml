@@ -11,13 +11,13 @@
     <string name="giorno">Day of week</string>
     <string name="Search">Search</string>
     <string name="Driver">Name and surname driver</string>
-    <string name="posti">N. available places</string>
+    <string name="posti">N. available seats</string>
     <string name="Offer">Offer</string>
     <string name="dayOfWeek">Day of week</string>
     <string name="EntDate">Enter date</string>
     <string name="EntTime">Enter departure\'s hour </string>
-    <string name="Occupied">Occupied Places \: </string>
-    <string name="Available">Available Places \: </string>
+    <string name="Occupied">Occupied Seats \: </string>
+    <string name="Available">Available Seats \: </string>
     <string name="requiredRide">Request Ride</string>
     <string name="Direction">"Direction \: "</string>
     <string name="dateTime">"Date and time \: "</string>
@@ -112,8 +112,9 @@
     <string name="delete">Delete</string>
     <string name="Removed">It is removed</string>
     <string name="UNDO">UNDO</string>
-    <string name="status1">Accepted</string>
-    <string name="status2">Refused</string>
+    <string name="accepted">ACCEPTED</string>
+    <string name="refused">REFUSED</string>
+    <string name="wait">PENDING</string>
 
     <!-- approved affiliation-->
     <string name="approve">Approve</string>
@@ -213,6 +214,8 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="title_activity_offered_map">Map</string>
+    <!-- OfferedMapActivity-->
+    <string name="error_seats">Seats are all occupied. It\'s impossible to accept new requests</string>
 
 
 </resources>

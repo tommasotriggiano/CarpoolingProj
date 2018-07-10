@@ -77,12 +77,16 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
         rootLayout= (CoordinatorLayout)findViewById((R.id.root)) ;
         bottomSheetDialog =findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetDialog);
+        //BottomSheetDialog
+        ImageView imgPass = (ImageView) bottomSheetDialog.findViewById(R.id.immagineProfilo);
+        nomePass = (TextView) bottomSheetDialog.findViewById(R.id.nomePass);
+        cognomePass = (TextView) bottomSheetDialog.findViewById(R.id.cognomePass);
+        telefono = (TextView) bottomSheetDialog.findViewById(R.id.telefono);
+        address1 =(TextView) bottomSheetDialog.findViewById(R.id.indirizzo);
+        accept=(Button)bottomSheetDialog.findViewById(R.id.accept);
+        reject=(ImageButton)bottomSheetDialog.findViewById(R.id.reject);
 
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-
-
-
+        //CardView
         direzione=(TextView) findViewById(R.id.casa) ;
         data=(TextView)findViewById(R.id.Data) ;
         ora=(TextView)findViewById(R.id.Ora) ;
@@ -116,7 +120,15 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                     Long occupati = (Long)documentSnapshot.get("postiOccupati");
                     Long disponibili = (Long)documentSnapshot.get("postiDisponibili");
                     Long sum = occupati+disponibili;
+                    if(disponibili <= 0){
+                        Toast.makeText(getApplicationContext(),getApplicationContext().getResources().getString(R.string.error_seats),Toast.LENGTH_SHORT).show();
+                        accept.setVisibility(View.INVISIBLE);
+
+                        posti.setText(occupati.toString()+"/"+sum);
+                    }
+                    else{
                     posti.setText(occupati.toString()+"/"+sum);
+                    }
 
                 }
 
@@ -165,37 +177,47 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
             Query findrequest = request.whereEqualTo("autista.id",userAuth.getUid())
                                         .whereEqualTo("passaggio.idPassaggio",idPassaggio);
 
-            findrequest.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            findrequest.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    for(DocumentSnapshot doc : task.getResult()) {
-                        Map<String, Object> richieste = doc.getData();
-                        //richieste = (HashMap<String,Object>)doc.getData();
-                        passeggero = (HashMap<String, Object>) richieste.get("passeggero");
-                        Map<String, Object> indirizzo = (Map<String, Object>) passeggero.get("userAddress");
-                        LatLng indirizzoPasseggero = new LatLng((Double) indirizzo.get("latitude"), (Double) indirizzo.get("longitude"));
-                        String status = richieste.get("status").toString();
-                        Marker marker = mMap.addMarker(new MarkerOptions().position(indirizzoPasseggero));
+                public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                    if(e != null){
+                        Log.e(TAG,e.toString());
+                        return;
+                    }
+                    else if(!(documentSnapshots.isEmpty())){
+                        for(DocumentSnapshot doc : documentSnapshots.getDocuments()){
+                            Map<String, Object> richieste = doc.getData();
+                            passeggero = (HashMap<String, Object>) richieste.get("passeggero");
+                            Map<String, Object> indirizzo = (Map<String, Object>) passeggero.get("userAddress");
+                            LatLng indirizzoPasseggero = new LatLng((Double) indirizzo.get("latitude"), (Double) indirizzo.get("longitude"));
+                            String status = richieste.get("status").toString();
+                            Marker marker = mMap.addMarker(new MarkerOptions().position(indirizzoPasseggero));
+                            switch (status) {
+                                case "IN ATTESA":
+                                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrichiedi));
+                                    break;
+                                case "CONFERMATO":
+                                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerconfirmed));
+                                    break;
+                                case "RIFIUTATO":
+                                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrefused));
+                                    break;
+                            }
+                            Toast.makeText(OfferedMapActivity.this,"MARKER INVIATO"+marker.getId(),Toast.LENGTH_SHORT).show();
+                            markerMap.put(marker.getId(), richieste);
 
-                        switch (status) {
-                            case "IN ATTESA":
-                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrichiedi));
-                                break;
-                            case "CONFERMATO":
-                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerconfirmed));
-                                break;
-                            case "RIFIUTATO":
-                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrefused));
-                                break;
+
+
                         }
 
 
-                        markerMap.put(marker.getId(), richieste);
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(casa, DEFAULT_ZOOM));
                     }
-                }
 
-                    });
+
+                }
+            });
+
+
                     final Handler handler = new Handler();
 
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -223,16 +245,10 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                             if (markerMap.get(key) != null) {
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-                                ImageView imgPass = (ImageView) bottomSheetDialog.findViewById(R.id.immagineProfilo);
-                                nomePass = (TextView) bottomSheetDialog.findViewById(R.id.nomePass);
-                                cognomePass = (TextView) bottomSheetDialog.findViewById(R.id.cognomePass);
-                                telefono = (TextView) bottomSheetDialog.findViewById(R.id.telefono);
-                                address1 =(TextView) bottomSheetDialog.findViewById(R.id.indirizzo);
-                                accept=(Button)bottomSheetDialog.findViewById(R.id.accept);
-                                reject=(ImageButton)bottomSheetDialog.findViewById(R.id.reject);
 
                                 final Map<String,Object> richieste = (Map<String, Object>) markerMap.get(key);
                                 String status = richieste.get("status").toString();
+                                Toast.makeText(OfferedMapActivity.this,key,Toast.LENGTH_SHORT).show();
 
 
                                 final Map<String, Object> passeggeroDati = (Map<String, Object>) richieste.get("passeggero");
@@ -243,41 +259,33 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                                 Map<String,Object> address = (Map<String, Object>) passeggeroDati.get("userAddress");
                                 address1.setText(address.get("address").toString());
 
-                                if(status.equals("CONFERMATO")){
-                                    accept.setVisibility(View.INVISIBLE);
+                                switch (status) {
+                                    case "CONFERMATO":
+                                        accept.setVisibility(View.INVISIBLE);
+                                        break;
+                                    case "RIFIUTATO":
+                                        accept.setVisibility(View.INVISIBLE);
+                                        reject.setVisibility(View.INVISIBLE);
+                                        break;
+                                    default:
+                                        accept.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                acceptPass(key);
+                                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                                            }
+                                        });
+                                        reject.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                rejectPass(key);
+                                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                            }
+                                        });
+                                        break;
                                 }
-                                else if(status.equals("RIFIUTATO")) {
-                                    accept.setVisibility(View.INVISIBLE);
-                                    reject.setVisibility(View.INVISIBLE);
-                                }
-                                else{
-
-                                accept.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        acceptPass(key);
-                                        finish();
-                                        overridePendingTransition(0, 0);
-                                        startActivity(getIntent());
-                                        overridePendingTransition(0, 0);
-
-
-                                        //integrare parte dell'Invio marker
-                                    }
-                                });
-                                reject.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        rejectPass(key);
-                                        finish();
-                                        overridePendingTransition(0, 0);
-                                        startActivity(getIntent());
-                                        overridePendingTransition(0, 0);
-                                        //integrare parte dell'Invio della notifica, aggiornamento database
-                                        //cambiare anche l'icona del marker
-                                    }
-                                });
-                            }}
+                            }
                             else{
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                             }
