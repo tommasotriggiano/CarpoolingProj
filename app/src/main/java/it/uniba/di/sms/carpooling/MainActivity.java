@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import it.uniba.di.sms.carpooling.rankUser.Rank;
 import it.uniba.di.sms.carpooling.todayRide.TodayMyRidesFragment;
 import it.uniba.di.sms.carpooling.userApproved.ApproveFragment;
 
@@ -283,6 +284,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.nav_points: {
+                fragment= new Rank();
                 break;
             }
             case R.id.nav_offeraride: {

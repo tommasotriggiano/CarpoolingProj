@@ -97,7 +97,7 @@ public class RegistrationForm extends Fragment {
 
         View view= inflater.inflate(R.layout.activity_registration_form, container,false);
 
-        image= (CircleImageView) view.findViewById(R.id.imageView2) ;
+        image= (CircleImageView) view.findViewById(R.id.profile) ;
         addPhoto=(ImageButton)view.findViewById(R.id.addPhoto);
         //istanza del profilo autenticato all'applicazione
         profile = FirebaseAuth.getInstance().getCurrentUser();
