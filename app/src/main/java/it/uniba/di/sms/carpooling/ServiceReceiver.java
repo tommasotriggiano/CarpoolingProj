@@ -33,6 +33,7 @@ public class ServiceReceiver extends IntentService {
 
     private final String TAG = "altervista";
     private final String ACCETTATO = "Accettato";
+    private final String RIFIUTATO = "Rifiutato";
     private final String REQUEST = "TiChiedonoUnPassaggio;";
     private final String PASSAGGIOACCETTATO = "PassaggioAccettato";
     private final String PASSAGGIORIFIUTATO = "PassaggioRifiutato";
@@ -88,6 +89,27 @@ public class ServiceReceiver extends IntentService {
         notificationManager.notify(identifier, n.build());
     }
 
+    public void sendNotify(String Title, String Text, int identifier,boolean sendToMyRides) {
+        Intent intentNoti=new Intent(this,MainActivity.class);
+        if(sendToMyRides) {
+            intentNoti=new Intent(this,MyRidesFragment.class);
+        }
+        PendingIntent pendingIntentNoti=PendingIntent.getActivity(this, 0, intentNoti, 0);
+
+        Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder n  = new NotificationCompat.Builder(this)
+                //.setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle(Title)
+                .setContentText(Text)
+                .setSmallIcon(android.R.drawable.ic_dialog_email)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntentNoti)
+                .setSound(sound)
+                .setAutoCancel(true);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(identifier, n.build());
+    }
+
     public void CheckNote(String userUid) throws IOException {
 
         final String idCode = userUid;
@@ -108,14 +130,19 @@ public class ServiceReceiver extends IntentService {
                     Log.i(TAG,"nota inviata");
                     deleteNote(ACCETTATO,userUid);
                 }
-                //if(matchFound.toString().compareTo(REQUEST)==0){        //SE IN UNA NOTA C'E' "Ti chiedono un passaggio"
+                if(matchFound.toString().compareTo(RIFIUTATO)==0){        //SE IN UNA NOTA C'E' "Accettato"
+                    Toast.makeText(getApplicationContext(), "Founded a note", Toast.LENGTH_LONG).show();
+                    sendNotify("Carpooling","Non sei stato accettato, spiacente",0);
+                    Log.i(TAG,"nota non accettato inviata");
+                    deleteNote(ACCETTATO,userUid);
+                }
                 if(matchFound.toString().contains(REQUEST)) {        //SE IN UNA NOTA C'E' "Ti chiedono un passaggio"
                     Toast.makeText(getApplicationContext(), "Founded a note", Toast.LENGTH_LONG).show();
                     String richiedente=matchFound.toString();
                     String nomeRichiedente = richiedente.substring(richiedente.indexOf(';')+1);
-                    sendNotify("Richiesta da " + nomeRichiedente.trim() ,"Vuoi dargli un passaggio?",1);
-                    Log.i(TAG,"nota richiesta passaggio ricevuta");
-                    deleteNote(REQUEST,userUid);
+                    sendNotify("Richiesta da " + nomeRichiedente.trim() ,"Vuoi dargli un passaggio?",1,true);
+                    Log.i(TAG,REQUEST+nomeRichiedente);
+                    deleteNote(richiedente,userUid);
                 }
                 if(matchFound.toString().compareTo(PASSAGGIOACCETTATO)==0){
                     Toast.makeText(getApplicationContext(), "Founded a note", Toast.LENGTH_LONG).show();

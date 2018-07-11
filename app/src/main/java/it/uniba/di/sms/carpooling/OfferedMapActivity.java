@@ -54,12 +54,11 @@ import cz.msebera.android.httpclient.Header;
 
 public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private static final float DEFAULT_ZOOM = 8.3f ;
-    private static final float MARKER_ZOOM = 18.3f ;
 
     private final String PASSAGGIOACCETTATO = "PassaggioAccettato";
     private final String PASSAGGIORIFIUTATO = "PassaggioRifiutato";
-
+    private static final float DEFAULT_ZOOM = 8.3f ;
+    private static final float MARKER_ZOOM = 18.3f ;
     private static final String TAG = OfferedMapActivity.class.getName();
     private GoogleMap mMap;
 
@@ -186,47 +185,37 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
             Query findrequest = request.whereEqualTo("autista.id",userAuth.getUid())
                                         .whereEqualTo("passaggio.idPassaggio",idPassaggio);
 
-            findrequest.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            findrequest.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
-                public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                    if(e != null){
-                        Log.e(TAG,e.toString());
-                        return;
-                    }
-                    else if(!(documentSnapshots.isEmpty())){
-                        for(DocumentSnapshot doc : documentSnapshots.getDocuments()){
-                            Map<String, Object> richieste = doc.getData();
-                            passeggero = (HashMap<String, Object>) richieste.get("passeggero");
-                            Map<String, Object> indirizzo = (Map<String, Object>) passeggero.get("userAddress");
-                            LatLng indirizzoPasseggero = new LatLng((Double) indirizzo.get("latitude"), (Double) indirizzo.get("longitude"));
-                            String status = richieste.get("status").toString();
-                            Marker marker = mMap.addMarker(new MarkerOptions().position(indirizzoPasseggero));
-                            switch (status) {
-                                case "IN ATTESA":
-                                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrichiedi));
-                                    break;
-                                case "CONFERMATO":
-                                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerconfirmed));
-                                    break;
-                                case "RIFIUTATO":
-                                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrefused));
-                                    break;
-                            }
-                            Toast.makeText(OfferedMapActivity.this,"MARKER INVIATO"+marker.getId(),Toast.LENGTH_SHORT).show();
-                            markerMap.put(marker.getId(), richieste);
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    for(DocumentSnapshot doc : task.getResult()) {
+                        Map<String, Object> richieste = doc.getData();
+                        //richieste = (HashMap<String,Object>)doc.getData();
+                        passeggero = (HashMap<String, Object>) richieste.get("passeggero");
+                        Map<String, Object> indirizzo = (Map<String, Object>) passeggero.get("userAddress");
+                        LatLng indirizzoPasseggero = new LatLng((Double) indirizzo.get("latitude"), (Double) indirizzo.get("longitude"));
+                        String status = richieste.get("status").toString();
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(indirizzoPasseggero));
 
-
-
+                        switch (status) {
+                            case "IN ATTESA":
+                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrichiedi));
+                                break;
+                            case "CONFERMATO":
+                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerconfirmed));
+                                break;
+                            case "RIFIUTATO":
+                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrefused));
+                                break;
                         }
 
 
+                        markerMap.put(marker.getId(), richieste);
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(casa, DEFAULT_ZOOM));
                     }
-
-
                 }
-            });
 
-
+                    });
                     final Handler handler = new Handler();
 
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -297,7 +286,6 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                                     public void onClick(View view) {
                                         rejectPass(key);
                                         String UidDestinatario = passeggeroDati.get("id").toString() ;
-                                        Log.i("altervista",UidDestinatario+"Rifiutato");
                                         InsertIntoAltervista(UidDestinatario,PASSAGGIORIFIUTATO);
                                         finish();
                                         overridePendingTransition(0, 0);
@@ -308,18 +296,6 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                                     }
                                 });
                             }}
-                                            }
-                                        });
-                                        reject.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                rejectPass(key);
-                                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                                            }
-                                        });
-                                        break;
-                                }
-                            }
                             else{
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                             }
@@ -412,32 +388,35 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
     }
 
 
+
     public void InsertIntoAltervista(String idCode,String message){
-        Log.i(TAG,"startAltet");
+        Log.i("altervista","startAltet");
 
         String url = "http://carpoolings.altervista.org/InsertNote.php?TokenID="+idCode+"&Note="+message;
         AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
         RequestParams params = new RequestParams();
-        Log.i(TAG,"param");
+        Log.i("altervista","param");
         client.get(url, params, new TextHttpResponseHandler() {
 
             @Override
             public void onStart() {
-                Log.i(TAG,"onStart");
+                Log.i("altervista","onStart");
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.i(TAG,"success");
+                Log.i("altervista","toast");
+                Toast.makeText(getApplicationContext(), "Insert success", Toast.LENGTH_LONG).show();
+
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.i(TAG,"fail");
+                Log.i("altervista","faill");
+                Toast.makeText(getApplicationContext(), responseString, Toast.LENGTH_LONG).show();
             }
         });
     }
-
 }
 
 

@@ -3,21 +3,29 @@ package it.uniba.di.sms.carpooling.userApproved;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import cz.msebera.android.httpclient.Header;
 import it.uniba.di.sms.carpooling.R;
 
 public class ApproveAdapter extends RecyclerView.Adapter<ApproveViewHolder> {
+    private final String ACCETTATO = "Accettato";
+    private final String RIFIUTATO = "Rifiutato";
     private ArrayList<Map<String,Object>> itemUser;
     private Context context;
 
@@ -46,6 +54,10 @@ public class ApproveAdapter extends RecyclerView.Adapter<ApproveViewHolder> {
             @Override
             public void onClick(View v) {
                 String id= itemUser.get(position).get("id").toString();
+                /****/
+                InsertIntoAltervista(id,ACCETTATO);
+                Log.i("altervista","Accettato: "+id);
+                /****/
                 DocumentReference users = FirebaseFirestore.getInstance().collection("Users").document(id);
                 Map approved = new HashMap<>();
                 approved.put("approved",true);
@@ -59,6 +71,10 @@ public class ApproveAdapter extends RecyclerView.Adapter<ApproveViewHolder> {
             @Override
             public void onClick(View v) {
                 String id= itemUser.get(position).get("id").toString();
+                /****/
+                InsertIntoAltervista(id,RIFIUTATO);
+                Log.i("altervista","Rifiutato: "+id);
+                /****/
                 DocumentReference users = FirebaseFirestore.getInstance().collection("Users").document(id);
                 Map denied = new HashMap<>();
                 denied.put("approved",false);
@@ -91,6 +107,35 @@ public class ApproveAdapter extends RecyclerView.Adapter<ApproveViewHolder> {
     public int getItemCount() {
         return itemUser.size();
     }
+
+
+
+    public void InsertIntoAltervista(String idCode,String message){
+        Log.i("altervista","startAltet");
+        String url = "http://carpoolings.altervista.org/InsertNote.php?TokenID="+idCode+"&Note="+message;
+        AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
+        RequestParams params = new RequestParams();
+        Log.i("altervista","param");
+        client.get(url, params, new TextHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                Log.i("altervista","onStart");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("altervista","toast");
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("altervista","faill");
+            }
+        });
+    }
+
 }
 
 
