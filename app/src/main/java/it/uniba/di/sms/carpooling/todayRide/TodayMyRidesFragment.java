@@ -56,7 +56,7 @@ public class TodayMyRidesFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.today_rides, container,false);
         getActivity().setTitle(R.string.HomePage);
-        
+
         passaggiOggiRecycler = (RecyclerView) view.findViewById(R.id.rvTodayRides);
         passaggiOggiRecycler.setNestedScrollingEnabled(false);
         passaggiOggiRecycler.setHasFixedSize(true);
