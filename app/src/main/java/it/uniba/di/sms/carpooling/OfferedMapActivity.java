@@ -43,14 +43,23 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import cz.msebera.android.httpclient.Header;
 
 public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final float DEFAULT_ZOOM = 8.3f ;
     private static final float MARKER_ZOOM = 18.3f ;
+
+    private final String PASSAGGIOACCETTATO = "PassaggioAccettato";
+    private final String PASSAGGIORIFIUTATO = "PassaggioRifiutato";
+
     private static final String TAG = OfferedMapActivity.class.getName();
     private GoogleMap mMap;
 
@@ -256,6 +265,8 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                                     @Override
                                     public void onClick(View view) {
                                         acceptPass(key);
+                                        String UidDestinatario = passeggeroDati.get("id").toString() ;
+                                        InsertIntoAltervista(UidDestinatario,PASSAGGIOACCETTATO);
                                         finish();
                                         overridePendingTransition(0, 0);
                                         startActivity(getIntent());
@@ -269,6 +280,9 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                                     @Override
                                     public void onClick(View view) {
                                         rejectPass(key);
+                                        String UidDestinatario = passeggeroDati.get("id").toString() ;
+                                        Log.i("altervista",UidDestinatario+"Rifiutato");
+                                        InsertIntoAltervista(UidDestinatario,PASSAGGIORIFIUTATO);
                                         finish();
                                         overridePendingTransition(0, 0);
                                         startActivity(getIntent());
@@ -369,6 +383,32 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
 
     }
 
+
+    public void InsertIntoAltervista(String idCode,String message){
+        Log.i(TAG,"startAltet");
+
+        String url = "http://carpoolings.altervista.org/InsertNote.php?TokenID="+idCode+"&Note="+message;
+        AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
+        RequestParams params = new RequestParams();
+        Log.i(TAG,"param");
+        client.get(url, params, new TextHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                Log.i(TAG,"onStart");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i(TAG,"success");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i(TAG,"fail");
+            }
+        });
+    }
 
 }
 

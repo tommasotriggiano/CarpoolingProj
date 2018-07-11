@@ -160,8 +160,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String TAG = MapsActivity.class.getSimpleName();
     private FusedLocationProviderClient mFusedLocationProviderClient;
     static LatLng currentPosition;
-    private final String REQUEST = "TiChiedonoUnPassaggio";
+    private final String REQUEST = "TiChiedonoUnPassaggio;";
     String receiverUid;
+
+    String nomeRichiedente, cognomeRichiedente;
+
 
     private GoogleMap mMap;
     private String tipoViaggio,data,ora,nome;
@@ -242,6 +245,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 final LatLng casa = new LatLng((Double) userAddress.get("latitude"), (Double) userAddress.get("longitude"));
                 Map<String, Object> userCompanyAddress = (Map<String, Object>) user.get("userCompany");
                 String userNameCompany = (String) userCompanyAddress.get("name");
+
+                Log.i("altervista","richiesta");
+                DocumentReference currUser = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
+                currUser.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()){
+                            Map<String,Object> user = documentSnapshot.getData();
+                            nomeRichiedente=((String)user.get("name"));
+                            cognomeRichiedente=((String)user.get("surname"));
+
+                            Log.i("altervista",nomeRichiedente+cognomeRichiedente);
+
+                        }}
+                });
+
                 final LatLng lavoro = new LatLng((Double) userCompanyAddress.get("latitude"), (Double) userCompanyAddress.get("longitude"));
 
                 /*final SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
@@ -285,6 +304,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         for (DocumentSnapshot document : task.getResult()) {
                             Map<String, Object> passaggio = document.getData();
                             Map<String, Object> autista = (Map<String, Object>) passaggio.get("autista");
+
 
                             if (autista.get("urlProfileImage") != null) {
                                 urlImageProfile = autista.get("urlProfileImage").toString();
@@ -365,7 +385,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         imgAutista.setImageDrawable(getResources().getDrawable(R.drawable.ic_image_profile));
                     }
 
-
+                    idAutista = autista1.get("id").toString();
                     nomeAutista.setText(autista1.get("name").toString());
                     cognomeAutista.setText(autista1.get("surname").toString());
                     dataP.setText(data);
@@ -377,8 +397,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 required.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //TODO sostituire idCode con uid destinatario
-                        InsertIntoAltervista("idCode",REQUEST);
+                        Log.i("altervista","id: "+idAutista);
+                        InsertIntoAltervista(idAutista,REQUEST+nomeRichiedente+" "+cognomeRichiedente);
                         requiredRide(key);
                     }
                 });
