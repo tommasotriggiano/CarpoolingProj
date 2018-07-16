@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 
 import it.uniba.di.sms.carpooling.OfferedMapActivity;
@@ -39,16 +40,29 @@ public class PassaggiAdapter extends RecyclerView.Adapter<PassaggiViewHolder> {
 
     @Override
     public void onBindViewHolder(PassaggiViewHolder holder, final int position) {
-
-        holder.data.setText((String)itemPassaggi.get(position).get("dataPassaggio"));
+        if(Locale.getDefault().getLanguage().equals("en")){
+            if(itemPassaggi.get(position).get("tipoViaggio").toString().equals("Casa-Lavoro")){
+                holder.casa.setText(context.getResources().getString(R.string.HomeWork));
+            }
+            else if(itemPassaggi.get(position).get("tipoViaggio").toString().equals("Lavoro-Casa")){
+                holder.casa.setText(context.getResources().getString(R.string.WorkHome));
+            }
+            String dp = itemPassaggi.get(position).get("dataPassaggio").toString();
+            String d[] = dp.split("-");
+            String dataPassaggio = d[1]+"-"+d[0]+"-"+d[2];
+            holder.data.setText(dataPassaggio);
+        }
+        else{
+            holder.data.setText((String)itemPassaggi.get(position).get("dataPassaggio"));
+            holder.casa.setText((String)itemPassaggi.get(position).get("tipoViaggio"));
+        }
         holder.giorno.setText((String)itemPassaggi.get(position).get("giorno"));
         holder.ora.setText((String)itemPassaggi.get(position).get("ora"));
-        holder.casa.setText((String)itemPassaggi.get(position).get("tipoViaggio"));
         Long occupati=(Long)itemPassaggi.get(position).get("postiOccupati");
         Long disponibili=(Long)itemPassaggi.get(position).get("postiDisponibili");
+        if(occupati != null && disponibili != null){
         Long sum = occupati+disponibili;
-
-        holder.postiOccupati.setText(occupati.toString()+"/"+sum);
+        holder.postiOccupati.setText(occupati.toString()+"/"+sum);}
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

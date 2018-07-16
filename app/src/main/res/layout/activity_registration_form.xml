@@ -20,22 +20,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/profile"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:contentDescription="@string/etUsername"
-                    android:layout_marginBottom="46dp"
-                    android:layout_marginEnd="142dp"
-                    android:layout_marginStart="142dp"
-                    android:layout_marginTop="58dp"
-                    app:layout_constraintBottom_toTopOf="@+id/layout_nome"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:src="@drawable/ic_image_profile"
-                    />
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/imageView2"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginBottom="46dp"
+                android:layout_marginEnd="142dp"
+                android:layout_marginStart="142dp"
+                android:layout_marginTop="58dp"
+                android:contentDescription="@string/etUsername"
+                android:src="@drawable/ic_image_profile"
+                app:layout_constraintBottom_toTopOf="@+id/layout_nome"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
 
@@ -147,14 +145,19 @@
                android:layout_marginTop="5dp"
                app:layout_constraintStart_toStartOf="parent"
                app:layout_constraintTop_toBottomOf="@+id/Azienda">
-               <EditText
-                   android:id="@+id/Telefono"
-                   android:layout_width="269dp"
-                   android:layout_height="wrap_content"
-                   android:ems="10"
-                   android:hint="@string/Phone"
-                   android:inputType="phone"
-                   />
+
+                <Spinner
+                    android:id="@+id/spinnerCountries"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/Telefono"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/Phone"
+                    android:inputType="phone" />
 
            </android.support.design.widget.TextInputLayout>
 

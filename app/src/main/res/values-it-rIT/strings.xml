@@ -112,4 +112,8 @@
     <string name="reject">Rifiuta</string>
     <!-- OfferedMapActivity-->
     <string name="error_seats">I posti sono tutti occupati, impossibile accettare altre richieste</string>
+    <!--VerifyNumberActivity-->
+    <string name="waitForVerification">Attendi il codice di verifica via SMS</string>
+    <string name="enterCode">Inserisci codice di verifica</string>
+    <string name="confirm">Conferma</string>
 </resources>

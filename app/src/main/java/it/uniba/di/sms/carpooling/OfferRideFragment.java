@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,7 +63,7 @@ public class OfferRideFragment extends Fragment {
 
     //creazione del database
     DatabaseReference databasePassaggi;
-    CollectionReference passaggio;
+    CollectionReference passaggioRf;
     DocumentReference pass;
 
     @Override
@@ -82,7 +83,7 @@ public class OfferRideFragment extends Fragment {
         //istanza del database riguardanti i passaggi
         databasePassaggi = FirebaseDatabase.getInstance().getReference("passaggi");
         //creo la collezione dei passaggi
-        passaggio = FirebaseFirestore.getInstance().collection("Rides");
+        passaggioRf = FirebaseFirestore.getInstance().collection("Rides");
 
         btnMinus=(ImageView) view.findViewById(R.id.btnMinus);
 
@@ -257,7 +258,6 @@ public class OfferRideFragment extends Fragment {
         final int postiDisponibili = postiIns;
         final String giorno = dayOfWeek.getText().toString().trim();
         String campo1 = mHome.getText().toString().trim();
-        String campo2 = mWork.getText().toString().trim();
 
         if(dataPassaggio.isEmpty()){
             dateText.setError(getResources().getString(R.string.EntDate));
@@ -274,13 +274,13 @@ public class OfferRideFragment extends Fragment {
         final FirebaseUser profile = FirebaseAuth.getInstance().getCurrentUser();
         //creo il documento per il passaggio
         final String id = profile.getUid()+"_"+dataPassaggio+"_"+ora;
-        pass = passaggio.document(id);
+
 
         final String tipo;
         if(campo1.equals(getResources().getString(R.string.Home))){
-            tipo = getResources().getString(R.string.HomeWork);}
+            tipo = getActivity().getResources().getString(R.string.HomeWork);}
         else {
-            tipo = getResources().getString(R.string.WorkHome);;}
+            tipo = getActivity().getResources().getString(R.string.WorkHome);}
 
         DocumentReference userrf = FirebaseFirestore.getInstance().collection("Users").document(profile.getUid());
 
@@ -291,12 +291,31 @@ public class OfferRideFragment extends Fragment {
                 Map<String,Object> autista = documentSnapshot.getData();
                 Map<String,Object> passaggio = new HashMap<>();
                 passaggio.put("autista",autista);
-                passaggio.put("tipoViaggio",tipo);
+
+                if(Locale.getDefault().getLanguage().equals("en")){
+                    if(tipo.equals("Work-Home")){
+                        passaggio.put("tipoViaggio","Lavoro-Casa");
+                    }
+                    else if(tipo.equals("Home-Work")){
+                        passaggio.put("tipoViaggio","Casa-Lavoro");
+                    }
+                    String dP = dateText.getText().toString().trim();
+                    String d[] = dP.split("-");
+                    String dataPassaggio2 = d[1]+"-"+d[0]+"-"+d[2];
+                    String id2 = profile.getUid()+"_"+dataPassaggio2+"_"+ora;
+                    passaggio.put("idPassaggio",id2);
+                    passaggio.put("dataPassaggio",dataPassaggio2);
+                    pass = passaggioRf.document(id2);
+                }
+                else{
                 passaggio.put("dataPassaggio",dataPassaggio);
+                passaggio.put("idPassaggio",id);
+                passaggio.put("tipoViaggio",tipo);
+                pass = passaggioRf.document(id);
+                }
                 passaggio.put("ora",ora);
                 passaggio.put("postiDisponibili",postiDisponibili);
                 passaggio.put("giorno",giorno);
-                passaggio.put("idPassaggio",id);
                 passaggio.put("postiOccupati",0);
 
                 pass.set(passaggio);

@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -54,10 +55,37 @@ public class RequiredAdapter extends RecyclerView.Adapter<RequiredViewHolder>{
         final Context context1 = holder.immagine.getContext();
 
         Map<String,Object> passaggio = (Map<String,Object>) itemRideRequired.get(position).get("passaggio");
+
+        if(Locale.getDefault().getLanguage().equals("en")){
+            if(passaggio.get("tipoViaggio").toString().equals("Casa-Lavoro")){
+                holder.casa.setText(context.getResources().getString(R.string.HomeWork));
+            }
+            else if(passaggio.get("tipoViaggio").toString().equals("Lavoro-Casa")){
+                holder.casa.setText(context.getResources().getString(R.string.WorkHome));
+            }
+            String status = itemRideRequired.get(position).get("status").toString();
+            switch (status) {
+                case "IN ATTESA":
+                    holder.status.setText(context.getResources().getString(R.string.wait));
+                    break;
+                case "CONFERMATO":
+                    holder.status.setText(context.getResources().getString(R.string.accepted));
+                    break;
+                case "RIFIUTATO":
+                    holder.status.setText(context.getResources().getString(R.string.refused));
+                    break;
+            }
+            String dp = passaggio.get("data").toString();
+            String d[] = dp.split("-");
+            String dataPassaggio = d[1]+"-"+d[0]+"-"+d[2];
+            holder.data.setText(dataPassaggio);
+        }
+        else{
         holder.data.setText((String)passaggio.get("data"));
+        holder.status.setText((String)itemRideRequired.get(position).get("status"));
+        holder.casa.setText(passaggio.get("tipoViaggio").toString());}
         holder.giorno.setText((String)passaggio.get("giorno"));
         holder.ora.setText((String)passaggio.get("ora"));
-        holder.casa.setText((String)passaggio.get("tipoViaggio"));
         Map<String,Object> autista = (Map<String,Object>) itemRideRequired.get(position).get("autista");
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -73,7 +101,6 @@ public class RequiredAdapter extends RecyclerView.Adapter<RequiredViewHolder>{
         holder.telefono.setText((String)autista.get("phone"));
         holder.cognome.setText((String)autista.get("surname"));
         holder.nome.setText((String)autista.get("name"));
-        holder.status.setText((String)itemRideRequired.get(position).get("status"));
         if(autista.get("urlProfileImage") != null){
             Picasso.with(context1).load(autista.get("urlProfileImage").toString()).into(holder.immagine);}
     }

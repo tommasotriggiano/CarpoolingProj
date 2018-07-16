@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -113,10 +114,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
         initializeDataRequired();
 
 
-        requiredAdapter = new RequiredAdapter(resultRequired,getActivity());
 
-
-        requiredRecycler.setAdapter(requiredAdapter);
 
         ItemTouchHelper.SimpleCallback itemTouchHelper= new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT,this);
         new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(passaggiRecycler);
@@ -151,27 +149,44 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
     }
 
     private void initializeDataRequired() {
-        resultRequired = new ArrayList<Map<String,Object>>();
+        resultRequired = new ArrayList<Map<String, Object>>();
 
-        if(!(resultRequired.isEmpty())){
+        if (!(resultRequired.isEmpty())) {
             resultRequired.clear();
         }
 
         passaggiRichiesti = FirebaseFirestore.getInstance().collection("RideRequests");
 
-        Query required = passaggiRichiesti.whereEqualTo("passeggero.id",user.getUid());
-        required.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        Query required = passaggiRichiesti.whereEqualTo("passeggero.id", user.getUid());
+
+        required.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                for(DocumentSnapshot document : task.getResult()){
-                    Map<String,Object> passaggiReq = document.getData();
-                    resultRequired.add(passaggiReq);
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.e(TAG, e.toString());
+                    return;
                 }
-                requiredRecycler.scrollToPosition(resultRequired.size() - 1);
-                requiredAdapter.notifyItemInserted(resultRequired.size() - 1);
+                for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
+                    DocumentSnapshot document = dc.getDocument();
+                    Map<String, Object> map = document.getData();
+                    switch (dc.getType()) {
+                        case ADDED:
+                            resultRequired.add(map);
+                            break;
+                        case MODIFIED:
+                            resultRequired.set(dc.getNewIndex(), map);
+                            break;
+                        case REMOVED:
+                            resultRequired.remove(dc.getNewIndex());
+
+                    }
+                }
+                requiredAdapter = new RequiredAdapter(resultRequired, getActivity());
+                requiredRecycler.setAdapter(requiredAdapter);
 
             }
         });
+        requiredRecycler.scrollToPosition(resultPassaggi.size() - 1);
     }
 
 
@@ -269,6 +284,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                             resultPassaggi.add(map);
                             break;
                         case MODIFIED:
+                            Toast.makeText(getContext(),""+dc.getNewIndex(),Toast.LENGTH_SHORT).show();
                             resultPassaggi.set(dc.getNewIndex(),map);
                             break;
 

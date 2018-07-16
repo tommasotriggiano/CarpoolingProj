@@ -5,19 +5,24 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -25,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import it.uniba.di.sms.carpooling.R;
+
+import static android.content.ContentValues.TAG;
 
 public class ApproveFragment extends Fragment {
     private View view;
@@ -68,8 +75,6 @@ public class ApproveFragment extends Fragment {
 
         approveLayoutManager = new LinearLayoutManager(getActivity());
         userRecycler.setLayoutManager(approveLayoutManager);
-        approveAdapter = new ApproveAdapter(users,getActivity());
-        userRecycler.setAdapter(approveAdapter);
 
         return view;
 
@@ -78,26 +83,48 @@ public class ApproveFragment extends Fragment {
     private void initializeData() {
         users = new ArrayList<Map<String,Object>>();
 
+        if (!(users.isEmpty())) {
+            users.clear();
+        }
 
         dipendenti = FirebaseFirestore.getInstance().collection("Users");
         adminrf = FirebaseFirestore.getInstance().collection("Admin").document(admin.getUid());
         Query sameCompany = dipendenti.whereEqualTo("userCompany.idAdmin",adminrf.getId());
-        sameCompany.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+        sameCompany.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                for(DocumentSnapshot doc : task.getResult()){
-                    Map<String,Object> dipendenti = doc.getData();
-                    String idDipendenti = (String) dipendenti.get("id");
-                    boolean approved = (boolean) dipendenti.get("approved");
-                    if(!(idDipendenti.equals(admin.getUid())) && !(approved)){
-                        users.add(dipendenti);
-                }}
-                userRecycler.scrollToPosition(users.size()-1);
-                approveAdapter.notifyItemInserted(users.size() - 1);
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.e(TAG,e.toString());
+                    return;
+                }
+                    for(DocumentChange dc : documentSnapshots.getDocumentChanges()){
+                        DocumentSnapshot d = dc.getDocument();
+                        Map<String,Object> dipendenti = d.getData();
+                        String idDipendenti = (String) dipendenti.get("id");
+                        boolean approved = (boolean) dipendenti.get("approved");
+                        switch (dc.getType()) {
+                            case ADDED:
+                                if(!(idDipendenti.equals(admin.getUid())) && !(approved)){
+                                users.add(dipendenti);}
+                                break;
+                            case MODIFIED:
+                                //Toast.makeText(getContext(),""+dc.getOldIndex(),Toast.LENGTH_SHORT).show();
+                                //users.set(dc.getNewIndex(), dipendenti);
+                                break;
+                            case REMOVED:
+                                //users.remove(dc.getNewIndex());
+                                break;
+
+                        }
+                    }
+                    approveAdapter = new ApproveAdapter(users,getActivity());
+                    userRecycler.setAdapter(approveAdapter);
+
 
             }
         });
-
+        userRecycler.scrollToPosition(users.size()-1);
     }
 
 

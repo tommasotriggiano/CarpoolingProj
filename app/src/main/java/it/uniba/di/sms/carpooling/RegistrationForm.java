@@ -37,6 +37,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -74,6 +75,7 @@ public class RegistrationForm extends Fragment {
     private EditText cognome;
     private Spinner azienda;
     private EditText telefono;
+    private Spinner countryPrefix;
     private EditText automobile;
     private Button confermaAccount;
     private ImageButton addPhoto;
@@ -97,7 +99,7 @@ public class RegistrationForm extends Fragment {
 
         View view= inflater.inflate(R.layout.activity_registration_form, container,false);
 
-        image= (CircleImageView) view.findViewById(R.id.profile) ;
+        image= (CircleImageView) view.findViewById(R.id.imageView2);
         addPhoto=(ImageButton)view.findViewById(R.id.addPhoto);
         //istanza del profilo autenticato all'applicazione
         profile = FirebaseAuth.getInstance().getCurrentUser();
@@ -114,6 +116,8 @@ public class RegistrationForm extends Fragment {
         indirizzoCasa = (TextView) view.findViewById(R.id.Indirizzo);
         text=(TextView) view.findViewById(R.id.ind);
         azienda = (Spinner) view.findViewById(R.id.Azienda);
+        countryPrefix = (Spinner) view.findViewById(R.id.spinnerCountries);
+        countryPrefix.setAdapter(new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_dropdown_item,CountryData.countryNames));
         telefono = (EditText) view.findViewById(R.id.Telefono);
         automobile = (EditText) view.findViewById(R.id.Auto);
         confermaAccount = (Button) view.findViewById(R.id.confirm);
@@ -149,9 +153,8 @@ public class RegistrationForm extends Fragment {
         confermaAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addUser();
                 addProfileImage();
-                sendMail();
+                addUser();
 
 
             }
@@ -186,6 +189,7 @@ public class RegistrationForm extends Fragment {
         String address = indirizzoCasa.getText().toString().trim();
         String company = azienda.getSelectedItem().toString().trim();
         final String phone = telefono.getText().toString().trim();
+        final String car = automobile.getText().toString().trim();
 
         if(name.isEmpty()){
             nome.setError(getResources().getString(R.string.EntName));
@@ -207,11 +211,15 @@ public class RegistrationForm extends Fragment {
             telefono.requestFocus();
             return;
         }
-        if(phone.length() != 10){
+        if(phone.length() < 10){
             telefono.setError(getResources().getString(R.string.EntPhone2));
             telefono.requestFocus();
             return;
         }
+        if(!(car.isEmpty())){
+
+        }
+
 
         //ricavo l'email dall'autenticazione
         final String email = profile.getEmail();
@@ -230,6 +238,10 @@ public class RegistrationForm extends Fragment {
 
                 //creo un'instanza dell'oggetto User
                 Map<String,Object> user = new HashMap<>();
+                if(!(car.isEmpty())){
+                    user.put("car",car);
+                }
+                
                 user.put("id",profile.getUid());
                 user.put("email",email);
                 user.put("name",name);
@@ -243,9 +255,13 @@ public class RegistrationForm extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            startActivity(new Intent(getActivity(), MainActivity.class));
+                            String code = CountryData.countryAreaCodes[countryPrefix.getSelectedItemPosition()];
+                            String phoneNumber = "+" + code + phone;
+                            Intent intent = new Intent(getActivity(),VerifyPhoneActivity.class);
+                            intent.putExtra("phone",phoneNumber);
+                            sendMail();
+                            startActivity(intent);
                             getActivity().finish();
-
                         }
                         else{
                             //visualizza messaggio di errore
@@ -276,6 +292,12 @@ public class RegistrationForm extends Fragment {
                     in cui ci sarà l'url dell'immagine caricata*/
                     rf.update(newImage);
 
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG,"l'immagine non è stata caricata nel database");
 
                 }
             });

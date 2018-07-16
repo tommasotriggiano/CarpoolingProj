@@ -216,6 +216,10 @@
     <string name="title_activity_offered_map">Map</string>
     <!-- OfferedMapActivity-->
     <string name="error_seats">Seats are all occupied. It\'s impossible to accept new requests</string>
+    <!-- VerifyNumberActivity-->
+    <string name="waitForVerification">Wait for the verification code by SMS</string>
+    <string name="enterCode">Enter Verification Code</string>
+    <string name="confirm">Confirm</string>
 
 
 </resources>

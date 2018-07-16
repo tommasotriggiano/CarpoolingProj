@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,16 +37,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ImageView profile;
     private TextView hello;
     private String urlImageProfile;
+    private FirebaseAuth authInstance = FirebaseAuth.getInstance();
     private FirebaseUser userAuth;
     private DocumentReference adminrf;
     private DocumentReference rfUser;
     private NavigationView navigationView;
+    private static final String TAG = MainActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        userAuth = FirebaseAuth.getInstance().getCurrentUser();
+        userAuth = authInstance.getCurrentUser();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         rfUser = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
@@ -299,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.nav_logout: {
-                FirebaseAuth.getInstance().signOut();
+                authInstance.signOut();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
                 break;
@@ -340,6 +343,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ft3.addToBackStack(null);
         ft3.commit();
     }
+
+
+
 }
 
 /*public class TaskCaricamentoDatabase extends AsyncTask<Void, Void, Boolean> {

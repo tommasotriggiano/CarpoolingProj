@@ -39,8 +39,7 @@
         <activity
             android:name=".RegistrationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".AltervistaRequest"/>
+        <activity android:name=".AltervistaRequest" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
@@ -74,7 +73,8 @@
             android:label="@string/title_activity_required_maps" />
         <activity
             android:name=".OfferedMapActivity"
-            android:label="@string/title_activity_offered_map"></activity>
+            android:label="@string/title_activity_offered_map" />
+        <activity android:name=".VerifyPhoneActivity"></activity>
     </application>
 
 </manifest>

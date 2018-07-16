@@ -185,7 +185,47 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
             Query findrequest = request.whereEqualTo("autista.id",userAuth.getUid())
                                         .whereEqualTo("passaggio.idPassaggio",idPassaggio);
 
-            findrequest.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            findrequest.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                    if(e != null){
+                        Log.e(TAG,e.toString());
+                        return;
+                    }
+                    else if(!(documentSnapshots.isEmpty())){
+                        for(DocumentSnapshot doc : documentSnapshots.getDocuments()){
+                            Map<String, Object> richieste = doc.getData();
+                            passeggero = (HashMap<String, Object>) richieste.get("passeggero");
+                            Map<String, Object> indirizzo = (Map<String, Object>) passeggero.get("userAddress");
+                            LatLng indirizzoPasseggero = new LatLng((Double) indirizzo.get("latitude"), (Double) indirizzo.get("longitude"));
+                            String status = richieste.get("status").toString();
+                            Marker marker = mMap.addMarker(new MarkerOptions().position(indirizzoPasseggero));
+                            switch (status) {
+                                case "IN ATTESA":
+                                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrichiedi));
+                                    break;
+                                case "CONFERMATO":
+                                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerconfirmed));
+                                    break;
+                                case "RIFIUTATO":
+                                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrefused));
+                                    break;
+                            }
+                            Toast.makeText(OfferedMapActivity.this,"MARKER INVIATO"+marker.getId(),Toast.LENGTH_SHORT).show();
+                            markerMap.put(marker.getId(), richieste);
+
+
+
+                        }
+
+
+                    }
+
+
+                }
+            });
+
+            /*findrequest.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     for(DocumentSnapshot doc : task.getResult()) {
@@ -215,7 +255,7 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                     }
                 }
 
-                    });
+                    });*/
                     final Handler handler = new Handler();
 
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -257,45 +297,38 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                                 Map<String,Object> address = (Map<String, Object>) passeggeroDati.get("userAddress");
                                 address1.setText(address.get("address").toString());
 
-                                if(status.equals("CONFERMATO")){
-                                    accept.setVisibility(View.INVISIBLE);
+                                switch (status) {
+                                    case "CONFERMATO":
+                                        accept.setVisibility(View.INVISIBLE);
+                                        break;
+                                    case "RIFIUTATO":
+                                        accept.setVisibility(View.INVISIBLE);
+                                        reject.setVisibility(View.INVISIBLE);
+                                        break;
+                                    default:
+                                        accept.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                acceptPass(key);
+                                                String UidDestinatario = passeggeroDati.get("id").toString() ;
+                                                InsertIntoAltervista(UidDestinatario,PASSAGGIOACCETTATO);
+                                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                                            }
+                                        });
+                                        reject.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                rejectPass(key);
+                                                String UidDestinatario = passeggeroDati.get("id").toString() ;
+                                                InsertIntoAltervista(UidDestinatario,PASSAGGIORIFIUTATO);
+
+                                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                            }
+                                        });
+                                        break;
                                 }
-                                else if(status.equals("RIFIUTATO")) {
-                                    accept.setVisibility(View.INVISIBLE);
-                                    reject.setVisibility(View.INVISIBLE);
-                                }
-                                else{
-
-                                accept.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        acceptPass(key);
-                                        String UidDestinatario = passeggeroDati.get("id").toString() ;
-                                        InsertIntoAltervista(UidDestinatario,PASSAGGIOACCETTATO);
-                                        finish();
-                                        overridePendingTransition(0, 0);
-                                        startActivity(getIntent());
-                                        overridePendingTransition(0, 0);
-
-
-                                        //integrare parte dell'Invio marker
-                                    }
-                                });
-                                reject.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        rejectPass(key);
-                                        String UidDestinatario = passeggeroDati.get("id").toString() ;
-                                        InsertIntoAltervista(UidDestinatario,PASSAGGIORIFIUTATO);
-                                        finish();
-                                        overridePendingTransition(0, 0);
-                                        startActivity(getIntent());
-                                        overridePendingTransition(0, 0);
-                                        //integrare parte dell'Invio della notifica, aggiornamento database
-                                        //cambiare anche l'icona del marker
-                                    }
-                                });
-                            }}
+                            }
                             else{
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                             }
