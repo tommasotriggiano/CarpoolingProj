@@ -17,6 +17,7 @@
     <string name="dayOfWeek">Giorno</string>
     <string name="EntDate">Inserire la data</string>
     <string name="EntTime">Inserire l\' ora di partenza</string>
+    <string name="EntNameSurname">Inserire nome e cognome dell\'autista</string>
     <string name="Occupied">Posti occupati \: </string>
     <string name="Available">Posti disponibili \: </string>
     <string name="requiredRide">Richiesta Passaggio</string>

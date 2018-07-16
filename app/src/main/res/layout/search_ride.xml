@@ -76,14 +76,16 @@
                 app:layout_constraintBottom_toBottomOf="@id/textData"
                 app:layout_constraintEnd_toEndOf="@id/textData"
                 android:visibility="gone" />
+
             <TextView
                 android:id="@+id/errorDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/EntDate"
-                app:layout_constraintTop_toBottomOf="@+id/textData"
                 android:textColor="@android:color/holo_red_dark"
-                android:visibility="gone"/>
+                android:visibility="invisible"
+                app:layout_constraintTop_toBottomOf="@+id/textData" />
+
         </android.support.constraint.ConstraintLayout>
 
 
@@ -105,14 +107,16 @@
             android:hint="@string/Departure"
             android:textColor="?attr/editTextColor"
             android:textSize="20sp" />
+
             <ImageView
                 android:id="@+id/img_error_time"
                 android:layout_width="28dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_error_red"
-                app:layout_constraintEnd_toEndOf="@id/tvTime"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/tvTime"
-                android:visibility="gone" />
+                app:layout_constraintEnd_toEndOf="@id/tvTime" />
+
             <TextView
                 android:id="@+id/errorTime"
                 android:layout_width="wrap_content"
@@ -137,6 +141,27 @@
                 android:dropDownWidth="293dp"
                 android:completionThreshold="1"/>
 
+
+        <ImageView
+            android:id="@+id/img_error_name"
+            android:layout_width="28dp"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@+id/autista"
+            android:layout_alignEnd="@+id/autista"
+            android:src="@drawable/ic_error_red"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/autista"
+            app:layout_constraintEnd_toEndOf="@id/autista" />
+
+        <TextView
+            android:id="@+id/errorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/autista"
+            android:layout_below="@+id/autista"
+            android:text="@string/EntNameSurname"
+            android:textColor="@android:color/holo_red_dark"
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/btnSearch"

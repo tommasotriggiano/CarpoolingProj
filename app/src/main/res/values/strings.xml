@@ -16,6 +16,7 @@
     <string name="dayOfWeek">Day of week</string>
     <string name="EntDate">Enter date</string>
     <string name="EntTime">Enter departure\'s hour </string>
+    <string name="EntNameSurname">Enter name and surname of the driver </string>
     <string name="Occupied">Occupied Seats \: </string>
     <string name="Available">Available Seats \: </string>
     <string name="requiredRide">Request Ride</string>

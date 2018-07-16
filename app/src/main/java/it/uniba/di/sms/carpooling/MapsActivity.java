@@ -168,7 +168,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private GoogleMap mMap;
-    private String tipoViaggio,data,ora,nome;
+    private String tipoViaggio,data,ora,nome,cognome;
     private TextView direzione, dataOra,automobilista,labelAut,nomeAutista,cognomeAutista,dataP,oraP,posti;
     private String urlImageProfile,idAutista;
     private  CoordinatorLayout rootLayout;
@@ -196,6 +196,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         data = receive.getStringExtra("data");
         ora = receive.getStringExtra("ora");
         nome = receive.getStringExtra("nome");
+        cognome = receive.getStringExtra("cognome");
 
         direzione=(TextView) findViewById(R.id.tipoViaggio) ;
         dataOra=(TextView)findViewById(R.id.textDataOra) ;
@@ -209,7 +210,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             automobilista.setVisibility(View.GONE);
         }else
         {
-            automobilista.setText(nome);
+            automobilista.setText(nome+" "+cognome);
         }
 
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
@@ -283,14 +284,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             .whereEqualTo("tipoViaggio", tipoViaggio)
                             .whereGreaterThan("postiDisponibili",0)
                             .whereEqualTo("autista.userCompany.name", userNameCompany);
-                    Toast.makeText(MapsActivity.this,"Q"+data,Toast.LENGTH_SHORT).show();
                 } else {
                     findRides = passaggi
                             .whereEqualTo("dataPassaggio", data)
                             .whereEqualTo("tipoViaggio", tipoViaggio)
                             .whereGreaterThan("postiDisponibili",0)
                             .whereEqualTo("ora", ora)
-                            .whereEqualTo("autista.surname", nome)
+                            .whereEqualTo("autista.name", nome)
+                            .whereEqualTo("autista.surname",cognome)
                             .whereEqualTo("autista.userCompany.name", userNameCompany);
                 }
 

@@ -44,11 +44,12 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class SearchRideFragment extends Fragment {
-    private TextView dateText,tvTime,mWork,mHome,errorDate,errorTime;
+    private TextView dateText,tvTime,mWork,mHome,errorDate,errorTime,errorName;
     private ImageButton btnInvert;
     private Button search;
     private AutoCompleteTextView driver ;
-    private ImageView img_date,img_time;
+    private ImageView img_date,img_time,img_name;
+    CollectionReference autisti;
 
 
 
@@ -65,17 +66,38 @@ public class SearchRideFragment extends Fragment {
         search = (Button) view.findViewById(R.id.btnSearch);
         errorDate = (TextView) view.findViewById(R.id.errorDate);
         errorTime = (TextView) view.findViewById(R.id.errorTime);
+        errorName = (TextView) view.findViewById(R.id.errorName);
         img_date=(ImageView)view.findViewById(R.id.img_error_date) ;
         img_time=(ImageView)view.findViewById(R.id.img_error_time) ;
-        String []autisti= new String[]{"Terenzia Loiodice","Tommaso Triggiano","Andrea Loizzo", "Davide Bufo"};
+        img_name = (ImageView)view.findViewById(R.id.img_error_name) ;
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_dropdown_item_1line, autisti);
+                android.R.layout.simple_dropdown_item_1line, getData());
         driver= (AutoCompleteTextView) view.findViewById(R.id.autista);
         driver.setAdapter(adapter);
 
 
         return view;
     }
+
+    private ArrayList<String> getData() {
+        final ArrayList<String> utenti = new ArrayList<String>();
+        autisti = FirebaseFirestore.getInstance().collection("Rides");
+        autisti.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                for(DocumentSnapshot d : task.getResult()){
+                    Map<String,Object> passaggi = d.getData();
+                    Map<String,Object> autisti =(Map<String,Object>) passaggi.get("autista");
+                    String complete = autisti.get("name").toString()+" "+autisti.get("surname").toString();
+                    if(!(utenti.contains(complete))){
+                        utenti.add(complete);}
+                }
+
+            }
+        });
+        return utenti;
+    }
+
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState){
         super.onViewCreated(view,savedInstanceState);
@@ -114,7 +136,9 @@ public class SearchRideFragment extends Fragment {
         String campo1 = mHome.getText().toString().trim();
         String data = dateText.getText().toString().trim();
         String ora = tvTime.getText().toString().trim();
-        String nome = driver.getText().toString().trim();
+        String complete = driver.getText().toString().trim();
+        String parts[] = complete.split(" ");
+
 
         if(campo1.equals(getResources().getString(R.string.Home))){
             tipo = getResources().getString(R.string.HomeWork);}
@@ -149,12 +173,23 @@ public class SearchRideFragment extends Fragment {
             });
             return;
         }
+        if (!(complete.isEmpty())){
+            if (parts.length < 2){
+                driver.requestFocus();
+                errorName.setVisibility(View.VISIBLE);
+                img_name.setVisibility(View.VISIBLE);
+
+
+                return;
+            }
+        }
 
         Intent map = new Intent(getActivity(),MapsActivity.class);
         map.putExtra("tipoViaggio",tipo);
         map.putExtra("data",data);
         map.putExtra("ora",ora);
-        map.putExtra("nome",nome);
+        map.putExtra("nome",parts[0]);
+        map.putExtra("cognome",parts[1]);
         startActivity(map);
 
     }

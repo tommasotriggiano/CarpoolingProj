@@ -216,9 +216,6 @@ public class RegistrationForm extends Fragment {
             telefono.requestFocus();
             return;
         }
-        if(!(car.isEmpty())){
-
-        }
 
 
         //ricavo l'email dall'autenticazione
@@ -241,7 +238,7 @@ public class RegistrationForm extends Fragment {
                 if(!(car.isEmpty())){
                     user.put("car",car);
                 }
-                
+
                 user.put("id",profile.getUid());
                 user.put("email",email);
                 user.put("name",name);
