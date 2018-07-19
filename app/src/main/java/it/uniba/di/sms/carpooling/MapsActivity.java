@@ -205,7 +205,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         direzione.setText(tipoViaggio);
 
         dataOra.setText(data + " "+ ora);
-        if (nome.isEmpty()){
+        if (nome == null && cognome == null){
             labelAut.setVisibility(View.GONE);
             automobilista.setVisibility(View.GONE);
         }else
@@ -249,19 +249,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String userNameCompany = (String) userCompanyAddress.get("name");
 
                 Log.i("altervista","richiesta");
-                DocumentReference currUser = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
-                currUser.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if(documentSnapshot.exists()){
-                            Map<String,Object> user = documentSnapshot.getData();
-                            nomeRichiedente=((String)user.get("name"));
-                            cognomeRichiedente=((String)user.get("surname"));
-
-                            Log.i("altervista",nomeRichiedente+cognomeRichiedente);
-
-                        }}
-                });
+                nomeRichiedente=((String)user.get("name"));
+                cognomeRichiedente=((String)user.get("surname"));
+                Log.i("altervista",nomeRichiedente+cognomeRichiedente);
 
                 final LatLng lavoro = new LatLng((Double) userCompanyAddress.get("latitude"), (Double) userCompanyAddress.get("longitude"));
 
@@ -275,9 +265,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     String d[] = data.split("-");
                     String data2 = d[1]+"-"+d[0]+"-"+d[2];
                     data = data2;
-                    Toast.makeText(MapsActivity.this,"A"+data,Toast.LENGTH_SHORT).show();
                 }
-                if ((nome.isEmpty())) {
+                if (nome == null && cognome == null) {
                     findRides = passaggi
                             .whereEqualTo("dataPassaggio", data)
                             .whereEqualTo("ora", ora)
@@ -445,37 +434,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 /* una richiesta conterrà le informazioni dell'autista
                  * del passaggio e del passeggero
                  */
-        Map<String,Object> autista = new HashMap<>();
+        //Map<String,Object> autista = new HashMap<>();
         String idAut = autista1.get("id").toString();
-        autista.put("id",idAut);
-        autista.put("name",autista1.get("name"));
-        autista.put("phone",autista1.get("phone"));
-        autista.put("surname",autista1.get("surname"));
-        autista.put("userAddress",autista1.get("userAddress"));
-        if(autista1.get("urlProfileImage") != null){
-            autista.put("urlProfileImage",autista1.get("urlProfileImage"));
-        }
-        requestMap.put("autista",autista);
+        requestMap.put("idAutista",idAut);
+        //autista.put("name",autista1.get("name"));
+        //autista.put("phone",autista1.get("phone"));
+        //autista.put("surname",autista1.get("surname"));
+        //autista.put("userAddress",autista1.get("userAddress"));
+        //if(autista1.get("urlProfileImage") != null){
+            //autista.put("urlProfileImage",autista1.get("urlProfileImage"));
+        //}
+        //requestMap.put("autista",autista);
 
-        Map<String,Object> passaggio = new HashMap<>();
+        /*Map<String,Object> passaggio = new HashMap<>();
         passaggio.put("data",pass.get("dataPassaggio"));
         passaggio.put("giorno",pass.get("giorno"));
         passaggio.put("ora",pass.get("ora"));
-        passaggio.put("tipoViaggio",pass.get("tipoViaggio"));
-        String idPassaggio = idAut+"_"+data+"_"+ora;
-        passaggio.put("idPassaggio",idPassaggio);
-        requestMap.put("passaggio",passaggio);
+        passaggio.put("tipoViaggio",pass.get("tipoViaggio"));*/
+        //String idPassaggio = idAut+"_"+data+"_"+ora;
+                String idPassaggio = pass.get("idPassaggio").toString();
+        requestMap.put("idPassaggio",idPassaggio);
+        //requestMap.put("passaggio",passaggio);
 
         readData(new FirestoreCallback() {
             @Override
             public void onCallback(Map<String, Object> user) {
                 Map<String,Object> passeggero = new HashMap<>();
-                passeggero.put("id",user.get("id"));
-                passeggero.put("name",user.get("name"));
+                requestMap.put("idPasseggero",user.get("id"));
+                /*passeggero.put("name",user.get("name"));
                 passeggero.put("phone",user.get("phone"));
                 passeggero.put("surname",user.get("surname"));
                 passeggero.put("userAddress",user.get("userAddress"));
-                requestMap.put("passeggero",passeggero);
+                requestMap.put("passeggero",passeggero);*/
                 requestMap.put("status","IN ATTESA");
                 rideRequest.add(requestMap);
 

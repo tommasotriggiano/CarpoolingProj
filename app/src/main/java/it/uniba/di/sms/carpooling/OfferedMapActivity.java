@@ -62,9 +62,11 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
     private static final String TAG = OfferedMapActivity.class.getName();
     private GoogleMap mMap;
 
-    private HashMap<String,Object> passeggero;
+    //private HashMap<String,Object> passeggero;
     private Map markerMap = new HashMap<String,Object>();
+    private Map markerPass = new HashMap<String,String>();
     private CollectionReference request;
+    private DocumentReference passeggero;
     private FirebaseUser userAuth;
     private  CoordinatorLayout rootLayout;
     private String idPassaggio;
@@ -145,7 +147,6 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
 
 
 
-
         request = FirebaseFirestore.getInstance().collection("RideRequests");
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
     }
@@ -164,7 +165,6 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-
         Map<String,Object> autista = (Map<String, Object>)passaggio.get("autista");
         Map<String,Object> indirizzoAutista = (Map<String, Object>)autista.get("userAddress");
 
@@ -182,8 +182,8 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.markerlavoro)));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(casa, DEFAULT_ZOOM));
-            Query findrequest = request.whereEqualTo("autista.id",userAuth.getUid())
-                                        .whereEqualTo("passaggio.idPassaggio",idPassaggio);
+            Query findrequest = request.whereEqualTo("idAutista",userAuth.getUid())
+                                        .whereEqualTo("idPassaggio",idPassaggio);
 
             findrequest.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
@@ -194,27 +194,43 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                     }
                     else if(!(documentSnapshots.isEmpty())){
                         for(DocumentSnapshot doc : documentSnapshots.getDocuments()){
-                            Map<String, Object> richieste = doc.getData();
-                            passeggero = (HashMap<String, Object>) richieste.get("passeggero");
-                            Map<String, Object> indirizzo = (Map<String, Object>) passeggero.get("userAddress");
-                            LatLng indirizzoPasseggero = new LatLng((Double) indirizzo.get("latitude"), (Double) indirizzo.get("longitude"));
-                            String status = richieste.get("status").toString();
-                            Marker marker = mMap.addMarker(new MarkerOptions().position(indirizzoPasseggero));
-                            switch (status) {
-                                case "IN ATTESA":
-                                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrichiedi));
-                                    break;
-                                case "CONFERMATO":
-                                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerconfirmed));
-                                    break;
-                                case "RIFIUTATO":
-                                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrefused));
-                                    break;
-                            }
-                            Toast.makeText(OfferedMapActivity.this,"MARKER INVIATO"+marker.getId(),Toast.LENGTH_SHORT).show();
-                            markerMap.put(marker.getId(), richieste);
+                            final Map<String, Object> richieste = doc.getData();
+                            String idPassegero = richieste.get("idPasseggero").toString();
+                            final String status = richieste.get("status").toString();
+                            passeggero = FirebaseFirestore.getInstance().collection("Users").document(idPassegero);
 
+                            passeggero.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                @Override
+                                public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                                    if(e!= null){
+                                        Log.e(TAG,e.toString());
+                                    }
+                                    Map<String,Object> passeggero = documentSnapshot.getData();
 
+                                    //inizializzo i marker
+                                    Map<String, Object> indirizzo = (Map<String, Object>) passeggero.get("userAddress");
+                                    LatLng indirizzoPasseggero = new LatLng((Double) indirizzo.get("latitude"), (Double) indirizzo.get("longitude"));
+                                    Marker marker = mMap.addMarker(new MarkerOptions().position(indirizzoPasseggero));
+                                    switch (status) {
+                                        case "IN ATTESA":
+                                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrichiedi));
+                                            break;
+                                        case "CONFERMATO":
+                                            accept.setVisibility(View.INVISIBLE);
+                                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerconfirmed));
+                                            break;
+                                        case "RIFIUTATO":
+                                            accept.setVisibility(View.INVISIBLE);
+                                            reject.setVisibility(View.INVISIBLE);
+                                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrefused));
+                                            break;
+                                    }
+                                    Map<String,Object> richiesta = new HashMap<>();
+                                    richiesta.put("idPassaggio",richieste.get("idPassaggio").toString());
+                                    richiesta.put("passeggero",passeggero);
+                                    markerMap.put(marker.getId(), richiesta);
+                                }
+                            });
 
                         }
 
@@ -283,35 +299,24 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                             if (markerMap.get(key) != null) {
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-
-                                final Map<String,Object> richieste = (Map<String, Object>) markerMap.get(key);
-                                String status = richieste.get("status").toString();
-                                Toast.makeText(OfferedMapActivity.this,key,Toast.LENGTH_SHORT).show();
+                                final Map<String,Object> richiesta = (Map<String, Object>) markerMap.get(key);
+                                final Map<String,Object> passeggero = (Map<String, Object>) richiesta.get("passeggero");
 
 
-                                final Map<String, Object> passeggeroDati = (Map<String, Object>) richieste.get("passeggero");
 
-                                nomePass.setText(passeggeroDati.get("name").toString());
-                                cognomePass.setText(passeggeroDati.get("surname").toString());
-                                telefono.setText(passeggeroDati.get("phone").toString());
-                                Map<String,Object> address = (Map<String, Object>) passeggeroDati.get("userAddress");
+                                nomePass.setText(passeggero.get("name").toString());
+                                cognomePass.setText(passeggero.get("surname").toString());
+                                telefono.setText(passeggero.get("phone").toString());
+                                Map<String,Object> address = (Map<String, Object>) passeggero.get("userAddress");
                                 address1.setText(address.get("address").toString());
 
-                                switch (status) {
-                                    case "CONFERMATO":
-                                        accept.setVisibility(View.INVISIBLE);
-                                        break;
-                                    case "RIFIUTATO":
-                                        accept.setVisibility(View.INVISIBLE);
-                                        reject.setVisibility(View.INVISIBLE);
-                                        break;
-                                    default:
                                         accept.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
                                                 acceptPass(key);
-                                                String UidDestinatario = passeggeroDati.get("id").toString() ;
+                                                String UidDestinatario = passeggero.get("id").toString() ;
                                                 InsertIntoAltervista(UidDestinatario,PASSAGGIOACCETTATO);
+                                                //provare il recreate
                                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
                                             }
@@ -320,19 +325,18 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                                             @Override
                                             public void onClick(View view) {
                                                 rejectPass(key);
-                                                String UidDestinatario = passeggeroDati.get("id").toString() ;
+                                                String UidDestinatario = passeggero.get("id").toString() ;
                                                 InsertIntoAltervista(UidDestinatario,PASSAGGIORIFIUTATO);
-
+                                                //provare il recreate
                                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                                             }
                                         });
-                                        break;
-                                }
+
+
                             }
                             else{
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                             }
-
                             return false;
                         }
                     });
@@ -340,13 +344,13 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                 }
 
     private void rejectPass(String key) {
-        Map<String,Object> richieste = (Map<String, Object>) markerMap.get(key);
-        Map<String,Object> passaggio = (Map<String, Object>) richieste.get("passaggio");
-        Map<String,Object> passeggero = (Map<String,Object>) richieste.get("passeggero");
+        Map<String,Object> richiesta = (Map<String, Object>) markerMap.get(key);
+        String idPassaggio = richiesta.get("idPassaggio").toString();
+        Map<String,Object> passeggero = (Map<String,Object>) richiesta.get("passeggero");
         CollectionReference requests = FirebaseFirestore.getInstance().collection("RideRequests");
-        Query aggiorna = requests.whereEqualTo("autista.id",userAuth.getUid())
-                .whereEqualTo("passaggio.idPassaggio",passaggio.get("idPassaggio").toString())
-                .whereEqualTo("passeggero.id",passeggero.get("id").toString());
+        Query aggiorna = requests.whereEqualTo("idAutista",userAuth.getUid())
+                .whereEqualTo("idPassaggio",idPassaggio)
+                .whereEqualTo("idPasseggero",passeggero.get("id").toString());
 
         aggiorna.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -369,13 +373,13 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
 
          */
         //1)
-        Map<String,Object> richieste = (Map<String, Object>) markerMap.get(key);
-        Map<String,Object> passaggio = (Map<String, Object>) richieste.get("passaggio");
-        Map<String,Object> passeggero = (Map<String,Object>) richieste.get("passeggero");
+        Map<String,Object> richiesta = (Map<String, Object>) markerMap.get(key);
+        String idPassaggio = richiesta.get("idPassaggio").toString();
+        Map<String,Object> passeggero = (Map<String,Object>) richiesta.get("passeggero");
         CollectionReference requests = FirebaseFirestore.getInstance().collection("RideRequests");
-        Query aggiorna = requests.whereEqualTo("autista.id",userAuth.getUid())
-                                 .whereEqualTo("passaggio.idPassaggio",passaggio.get("idPassaggio").toString())
-                                .whereEqualTo("passeggero.id",passeggero.get("id").toString());
+        Query aggiorna = requests.whereEqualTo("idAutista",userAuth.getUid())
+                                 .whereEqualTo("idPassaggio",idPassaggio)
+                                .whereEqualTo("idPasseggero",passeggero.get("id").toString());
 
         aggiorna.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -390,14 +394,13 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
         //2)
-        String id = passaggio.get("idPassaggio").toString();
-        passeggeri = FirebaseFirestore.getInstance().collection("Rides").document(id).collection("Passeggeri");
+        passeggeri = FirebaseFirestore.getInstance().collection("Rides").document(idPassaggio).collection("Passeggeri");
         String idPasseggero = passeggero.get("id").toString();
         itemPasseggero = passeggeri.document(idPasseggero);
         itemPasseggero.set(passeggero);
 
         //3)
-        final DocumentReference passaggioRf = FirebaseFirestore.getInstance().collection("Rides").document(id);
+        final DocumentReference passaggioRf = FirebaseFirestore.getInstance().collection("Rides").document(idPassaggio);
         passaggioRf.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {

@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -75,7 +76,9 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
     //DatabaseReference ref;
     FirebaseUser user;
     CollectionReference passaggi;
+    CollectionReference requests;
     CollectionReference passaggiRichiesti;
+    DocumentReference passaggio;
     private ArrayList resultPassaggi;
     private ArrayList resultRequired;
 
@@ -107,6 +110,8 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
         fab=(FloatingActionButton)view.findViewById(R.id.fabPlus);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
+        passaggi = FirebaseFirestore.getInstance().collection("Rides");
+        requests = FirebaseFirestore.getInstance().collection("RideRequests");
         //invoco il metodo per aggiungere i dati presi dal database nell'arraylist resultpassaggi
         passaggiRecycler.setVisibility(View.VISIBLE);
         fab.setVisibility(View.VISIBLE);
@@ -157,7 +162,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
 
         passaggiRichiesti = FirebaseFirestore.getInstance().collection("RideRequests");
 
-        Query required = passaggiRichiesti.whereEqualTo("passeggero.id", user.getUid());
+        Query required = passaggiRichiesti.whereEqualTo("idPasseggero", user.getUid());
 
         required.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -166,26 +171,28 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                     Log.e(TAG, e.toString());
                     return;
                 }
-                for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
+                for (final DocumentChange dc : documentSnapshots.getDocumentChanges()) {
                     DocumentSnapshot document = dc.getDocument();
-                    Map<String, Object> map = document.getData();
-                    switch (dc.getType()) {
-                        case ADDED:
-                            resultRequired.add(map);
-                            break;
-                        case MODIFIED:
-                            resultRequired.set(dc.getNewIndex(), map);
-                            break;
-                        case REMOVED:
-                            resultRequired.remove(dc.getNewIndex());
+                    Map<String, Object> richieste = document.getData();
 
-                    }
-                }
+                        switch (dc.getType()) {
+                                case ADDED:
+                                    resultRequired.add(richieste);
+                                    break;
+                                case MODIFIED:
+                                    resultRequired.set(dc.getNewIndex(), richieste);
+                                    break;
+                                case REMOVED:
+                                    resultRequired.remove(dc.getOldIndex());
+
+                            }
+
+
+                        }
                 requiredAdapter = new RequiredAdapter(resultRequired, getActivity());
                 requiredRecycler.setAdapter(requiredAdapter);
-
-            }
-        });
+                    }
+            });
         requiredRecycler.scrollToPosition(resultPassaggi.size() - 1);
     }
 
@@ -237,6 +244,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                             .whereEqualTo("autista.id",user.getUid())
                             .whereEqualTo("dataPassaggio",deletePassaggio.get("dataPassaggio"))
                             .whereEqualTo("ora",deletePassaggio.get("ora"));
+                    Query deleteRequest = requests.whereEqualTo("idPassaggio",deletePassaggio.get("idPassaggio"));
 
                     findRideToDelete.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -244,6 +252,15 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                             for (DocumentSnapshot d : task.getResult()) {
                                 passaggi.document(d.getId()).delete();
                             }
+                        }
+                    });
+                    deleteRequest.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            for (DocumentSnapshot d : task.getResult()) {
+                                requests.document(d.getId()).delete();
+                            }
+
                         }
                     });
                     }

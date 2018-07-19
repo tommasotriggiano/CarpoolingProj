@@ -61,10 +61,11 @@ public class OfferRideFragment extends Fragment {
     ImageView btnPlus,btnMinus;
     Button offer;
 
-    //creazione del database
-    DatabaseReference databasePassaggi;
+
     CollectionReference passaggioRf;
     DocumentReference pass;
+    DocumentReference userrf;
+    FirebaseUser profile;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,10 +81,12 @@ public class OfferRideFragment extends Fragment {
         offer = (Button)view.findViewById(R.id.btnOffri);
         dayOfWeek=(TextView) view.findViewById(R.id.day) ;
 
-        //istanza del database riguardanti i passaggi
-        databasePassaggi = FirebaseDatabase.getInstance().getReference("passaggi");
+
+
         //creo la collezione dei passaggi
         passaggioRf = FirebaseFirestore.getInstance().collection("Rides");
+        profile = FirebaseAuth.getInstance().getCurrentUser();
+        userrf = FirebaseFirestore.getInstance().collection("Users").document(profile.getUid());
 
         btnMinus=(ImageView) view.findViewById(R.id.btnMinus);
 
@@ -270,8 +273,8 @@ public class OfferRideFragment extends Fragment {
             return;
         }
 
-        //ricavo l'user id per collegare l'istanza del passaggio all'utente
-        final FirebaseUser profile = FirebaseAuth.getInstance().getCurrentUser();
+
+
         //creo il documento per il passaggio
         final String id = profile.getUid()+"_"+dataPassaggio+"_"+ora;
 
@@ -282,13 +285,13 @@ public class OfferRideFragment extends Fragment {
         else {
             tipo = getActivity().getResources().getString(R.string.WorkHome);}
 
-        DocumentReference userrf = FirebaseFirestore.getInstance().collection("Users").document(profile.getUid());
 
 
         userrf.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Map<String,Object> autista = documentSnapshot.getData();
+                if(autista.get("car") != null){
                 Map<String,Object> passaggio = new HashMap<>();
                 passaggio.put("autista",autista);
 
@@ -319,12 +322,21 @@ public class OfferRideFragment extends Fragment {
                 passaggio.put("postiOccupati",0);
 
                 pass.set(passaggio);
+                    onShowRideOfferedListener.onShowRideOffered();
 
             }
-        });
+            else{
+                    //da far apparire come un alert dialog con bottone modifica che porta alla sezione del profilo
+                    //portare l'attività al fragment profilo per inserire la macchina
+                    Toast.makeText(getActivity(),getResources().getString(R.string.EntCar),Toast.LENGTH_LONG).show();
+                }
+            }
 
 
-        onShowRideOfferedListener.onShowRideOffered();
+            });
+        }
+
+
 
 
     }
@@ -339,6 +351,6 @@ public class OfferRideFragment extends Fragment {
 
 
 
-}
+
 
 

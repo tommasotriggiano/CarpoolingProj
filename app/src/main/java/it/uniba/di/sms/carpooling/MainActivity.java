@@ -22,7 +22,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.squareup.picasso.Picasso;
 
 import java.util.Map;
@@ -38,25 +41,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView hello;
     private String urlImageProfile;
     private FirebaseAuth authInstance = FirebaseAuth.getInstance();
-    private FirebaseUser userAuth;
-    private DocumentReference adminrf;
     private DocumentReference rfUser;
     private NavigationView navigationView;
+    private ListenerRegistration listenerRegistrationAdmin;
+    private ListenerRegistration listenerRegistrationUser;
+    private ListenerRegistration listenerRegistrationImage;
     private static final String TAG = MainActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        userAuth = authInstance.getCurrentUser();
+        FirebaseUser userAuth = authInstance.getCurrentUser();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-
-        rfUser = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
-        adminrf = FirebaseFirestore.getInstance().collection("Admin").document(userAuth.getUid());
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
 
         //instanzio l'oggetto per l'header della navigation view
         View header = navigationView.getHeaderView(0);
@@ -64,13 +63,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profile = (CircleImageView) header.findViewById(R.id.imageProfile);
         hello = (TextView)header.findViewById(R.id.hello);
 
+        rfUser = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
+        DocumentReference adminrf = FirebaseFirestore.getInstance().collection("Admin").document(userAuth.getUid());
 
-
-
-
-        adminrf.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        listenerRegistrationAdmin = adminrf.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()){
                     navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
                     navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(true);
@@ -83,9 +81,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 }
                 else{
-                    rfUser.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    listenerRegistrationUser = rfUser.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                         @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                             if(!(documentSnapshot.exists())){
                                 navigationView.getMenu().findItem(R.id.nav_registration).setVisible(true);
                                 navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
@@ -109,95 +107,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     navigationView.getMenu().findItem(R.id.nav_points).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+                                }
                             }
+
                         }
-                    }});
-
-
-
-
-
-
-
-
+                    });
                 }
 
             }
         });
 
-
-
-
-
-
-
-
-        /*adminRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+        listenerRegistrationImage = rfUser.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-               if(dataSnapshot.exists()){
-
-                   se nel database degli admin esiste l'uid dell'utente che si è autenticato allora
-                   quell'utente è un admin e,oltre a vedere tutte le opzioni visibili ad utenti normali,
-                    potrà vedere la voce del menu Affiliazioni
-
-                   navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(true);
-                   navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
-               }
-               else{
-                   //se nel database degli admin non esiste l'uid dell'utente autenticato
-                   allora vorrà dire che l'utente non è un admin
-
-                   navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
-                   refUser = FirebaseDatabase.getInstance().getReference("users");
-                   refUser.child(user.getUid()).addValueEventListener(new ValueEventListener() {
-                       @Override
-                       public void onDataChange(DataSnapshot dataSnapshot) {
-                           if (dataSnapshot.exists()){
-                               navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
-                               //è possibile visionare solo l'opzione per modificare il profilo ma non viene più
-                               // mandata la richiesta al mobility manager
-                               //navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
-                           }
-                           else{
-                               //se l'utente non ha registrato i suoi dati non può fare nient'altro se non
-                               //fare il logout.
-                               navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
-                               navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(false);
-                               navigationView.getMenu().findItem(R.id.nav_searchride).setVisible(false);
-                               navigationView.getMenu().findItem(R.id.nav_offeraride).setVisible(false);
-                               navigationView.getMenu().findItem(R.id.nav_points).setVisible(false);
-                               navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(false);
-
-                           }
-
-
-                       }
-
-                       @Override
-                       public void onCancelled(DatabaseError databaseError) {
-
-                       }
-                   });
-               }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
-
-
-        //creo il riferimento per l'utente autenticato
-        //creo il riferimento al database passaggi
-
-
-        //cerco nelle informazioni dell'utente autenticato l'url dell'immagine di profilo.
-        rfUser.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.e(TAG,e.toString());
+                }
                 if(documentSnapshot.exists()){
                     Map<String,Object> map = documentSnapshot.getData();
                     if(map.get("urlProfileImage")!= null){
@@ -207,10 +132,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
 
 
-
-                }
             }
-        });
+        }});
+
 
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -302,8 +226,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.nav_logout: {
-                authInstance.signOut();
+                if(listenerRegistrationAdmin != null){
+                listenerRegistrationAdmin.remove();}
+                if(listenerRegistrationUser != null){
+                listenerRegistrationUser.remove();}
+                if(listenerRegistrationImage != null){
+                listenerRegistrationImage.remove();}
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
+
                 finish();
                 break;
             }
@@ -343,6 +273,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ft3.addToBackStack(null);
         ft3.commit();
     }
+
+
 
 
 

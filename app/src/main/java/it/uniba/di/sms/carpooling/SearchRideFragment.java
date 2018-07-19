@@ -188,8 +188,9 @@ public class SearchRideFragment extends Fragment {
         map.putExtra("tipoViaggio",tipo);
         map.putExtra("data",data);
         map.putExtra("ora",ora);
+        if(!complete.isEmpty()){
         map.putExtra("nome",parts[0]);
-        map.putExtra("cognome",parts[1]);
+        map.putExtra("cognome",parts[1]);}
         startActivity(map);
 
     }

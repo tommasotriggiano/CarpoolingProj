@@ -1,8 +1,6 @@
 package it.uniba.di.sms.carpooling;
 
-import android.*;
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,11 +9,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +24,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,24 +37,37 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import de.hdodenhof.circleimageview.CircleImageView;
-
 import static android.app.Activity.RESULT_OK;
+import static android.content.ContentValues.TAG;
 
 
 public class EditProfile extends Fragment {
     private final int REQUEST_CAMERA=2, SELECT_FILE=0;
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
+    private LinearLayout rootLayout;
     private DocumentReference user;
+    private CollectionReference rides;
+    DocumentReference ride;
+    private CollectionReference request;
+    DocumentReference rideRequest1;
+    DocumentReference rideRequest2;
+
     private FirebaseUser userAuth;
+    //creazione dello storage per la foto utente
+    private StorageReference mStorage;
     private TextView nome,cognome,telefono,auto;
     private ImageView iNome,iCognome,iTelefono,iAuto;
     private EditText eNome,eCognome,eTelefono,eAuto;
@@ -63,6 +76,8 @@ public class EditProfile extends Fragment {
     private Button save;
     private ImageButton addPhoto;
     Uri resultUri;
+    Snackbar snackbar;
+    WriteBatch batch;
 
 
 
@@ -71,6 +86,7 @@ public class EditProfile extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_edit_profile, container,false);
+        rootLayout = (LinearLayout)  view.findViewById(R.id.linear);
 
         nome = (TextView) view.findViewById(R.id.text_name);
         cognome=(TextView) view.findViewById(R.id.text_surname);
@@ -96,8 +112,16 @@ public class EditProfile extends Fragment {
         save = (Button)view.findViewById(R.id.modifica);
         addPhoto = (ImageButton)view.findViewById(R.id.addPhoto);
 
+
+        //reference allo storage
+        mStorage = FirebaseStorage.getInstance().getReference();
+        batch = FirebaseFirestore.getInstance().batch();
+
+
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
         user = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
+        rides = FirebaseFirestore.getInstance().collection("Rides");
+        request = FirebaseFirestore.getInstance().collection("RideRequests");
         user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -106,7 +130,6 @@ public class EditProfile extends Fragment {
                     nome.setText((String)user.get("name"));
                     cognome.setText((String)user.get("surname"));
                     telefono.setText((String)user.get("phone"));
-
                     if(user.get("car") != null){
                         auto.setText((String)user.get("car"));
                     }else {
@@ -115,10 +138,11 @@ public class EditProfile extends Fragment {
                     if(user.get("urlProfileImage")!= null){
                         Picasso.with(getActivity()).load(user.get("urlProfileImage").toString()).into(profile);
                     }
-
-
-            }}
+                }
+            }
         });
+
+
         return view;
     }
 
@@ -131,6 +155,7 @@ public class EditProfile extends Fragment {
                 cNome.setVisibility(View.GONE);
                 eNome.setVisibility(View.VISIBLE);
                 eNome.setText(nome.getText());
+                eNome.requestFocus();
 
             }
         });
@@ -140,6 +165,7 @@ public class EditProfile extends Fragment {
                 cCognome.setVisibility(View.GONE);
                 eCognome.setVisibility(View.VISIBLE);
                 eCognome.setText(cognome.getText());
+                eCognome.requestFocus();
             }
         });
         iTelefono.setOnClickListener(new View.OnClickListener() {
@@ -148,6 +174,7 @@ public class EditProfile extends Fragment {
                 cTelefono.setVisibility(View.GONE);
                 eTelefono.setVisibility(View.VISIBLE);
                 eTelefono.setText(telefono.getText());
+                eTelefono.requestFocus();
             }
         });
         iAuto.setOnClickListener(new View.OnClickListener() {
@@ -156,6 +183,7 @@ public class EditProfile extends Fragment {
                 cAuto.setVisibility(View.GONE);
                 eAuto.setVisibility(View.VISIBLE);
                 eAuto.setText(auto.getText());
+                eAuto.requestFocus();
             }
         });
 
@@ -170,13 +198,134 @@ public class EditProfile extends Fragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //modifica del database
+                saveChanges();
+
 
             }
         });
 
 
     }
+
+    private void saveChanges() {
+        final Map modifiche = new HashMap();
+        cNome.setVisibility(View.VISIBLE);
+        cCognome.setVisibility(View.VISIBLE);
+        cTelefono.setVisibility(View.VISIBLE);
+        cAuto.setVisibility(View.VISIBLE);
+        eNome.setVisibility(View.GONE);
+        eCognome.setVisibility(View.GONE);
+        eTelefono.setVisibility(View.GONE);
+        eAuto.setVisibility(View.GONE);
+
+        if (resultUri != null) {
+            StorageReference filePath = mStorage.child("Foto profilo").child(userAuth.getUid());
+            filePath.putFile(resultUri);
+            modifiche.put("urlProfileImage", resultUri.toString());
+        }
+
+        final String name = eNome.getText().toString().trim();
+        if (!(name.isEmpty())) {
+            nome.setText(name);
+            modifiche.put("name", name);
+        }
+
+        final String surname = eCognome.getText().toString().trim();
+        if (!(surname.isEmpty())) {
+            cognome.setText(surname);
+            modifiche.put("surname", surname);
+        }
+
+        final String phone = eTelefono.getText().toString().trim();
+        if (!(phone.isEmpty())) {
+            telefono.setText(phone);
+            modifiche.put("phone", phone);
+        }
+
+        final String car = eAuto.getText().toString().trim();
+        if (!(car.isEmpty())) {
+            auto.setText(car);
+            modifiche.put("car", car);
+        }
+
+
+        Query findRides = rides.whereEqualTo("autista.id", userAuth.getUid());
+
+        findRides.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                for (DocumentSnapshot d : documentSnapshots.getDocuments()) {
+                    String id = d.getId();
+                    ride = rides.document(id);
+                    if (!name.isEmpty()) {
+                        batch.update(ride,"autista.name", name);
+                    }
+                    if (!surname.isEmpty()) {
+                        batch.update(ride,"autista.surname", surname);
+                    }
+                    if (!phone.isEmpty()) {
+                        batch.update(ride,"autista.phone", phone);
+                    }
+                    if (!car.isEmpty()) {
+                        batch.update(ride,"autista.car", car);
+                    }
+                }
+                batch.update(user,modifiche);
+                batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        snackbar = Snackbar.make(rootLayout,getResources().getString(R.string.saved),Snackbar.LENGTH_SHORT);
+                        snackbar.show();
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG,"Batch is not commited"+ e.getMessage());
+
+                    }
+                });
+
+            }
+        });
+
+
+    }
+
+
+        /*batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                snackbar = Snackbar.make(rootLayout, getResources().getString(R.string.saved), Snackbar.LENGTH_LONG);
+                snackbar.show();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, "Il database non è stato modificato" + e.getMessage());
+            }
+        });*/
+
+
+        /*Task update = user.update(modifiche);
+        update.addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                snackbar = Snackbar.make(rootLayout,getResources().getString(R.string.saved),Snackbar.LENGTH_LONG);
+                snackbar.show();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG,"Il database non è stato modificato" + e.getMessage());
+            }
+        });
+
+
+    }*/
 
     public void selectImage(){
         final RegistrationForm.Item[] items = {
@@ -186,7 +335,7 @@ public class EditProfile extends Fragment {
         };
 
         ListAdapter adapter = new ArrayAdapter<RegistrationForm.Item>(getContext(), android.R.layout.select_dialog_item, android.R.id.text1, items){
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 //Use super class to create the View
                 View v = super.getView(position, convertView, parent);
                 TextView tv = (TextView)v.findViewById(android.R.id.text1);
@@ -279,7 +428,7 @@ public class EditProfile extends Fragment {
         }
         return true;
     }
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS:
             {

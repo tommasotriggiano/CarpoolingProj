@@ -18,6 +18,7 @@
     <string name="EntDate">Inserire la data</string>
     <string name="EntTime">Inserire l\' ora di partenza</string>
     <string name="EntNameSurname">Inserire nome e cognome dell\'autista</string>
+    <string name="EntCar">Per offrire un passaggio occorre prima inserire l\'automobile</string>
     <string name="Occupied">Posti occupati \: </string>
     <string name="Available">Posti disponibili \: </string>
     <string name="requiredRide">Richiesta Passaggio</string>
@@ -86,6 +87,7 @@
     <string name="edit_Car">La tua auto </string>
     <string name ="save">Salva</string>
     <string name ="nothing_car">Nessun auto inserita</string>
+    <string name="saved">Il tuo profilo è stato modificato</string>
 
     <!--Main activity-->
     <string name="HomePage">Home</string>

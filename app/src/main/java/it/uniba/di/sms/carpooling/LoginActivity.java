@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView resetPassword;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
+    private FirebaseAuth authInstance = FirebaseAuth.getInstance();
 
     private String adminUid;
     private DatabaseReference adminRef;
@@ -47,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        authInstance.signOut();
         boolean isApproved=false;
         if( isApproved ){
 
