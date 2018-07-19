@@ -82,13 +82,9 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
         status.setText((String) richiesta.get("status"));
         String idPassaggio = richiesta.get("idPassaggio").toString();
         DocumentReference passaggio = FirebaseFirestore.getInstance().collection("Rides").document(idPassaggio);
-
-        passaggio.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        passaggio.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.e(TAG, e.toString());
-                }
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Map<String, Object> passaggio = documentSnapshot.getData();
                 data.setText((String) passaggio.get("data"));
                 giorno.setText((String) passaggio.get("giorno"));
@@ -104,10 +100,8 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
                 }
             }
         });
+
     }
-
-
-
 
 
     /**
@@ -130,12 +124,9 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
             public void onCallback(final Map<String, Object> user) {
                 String idAutista = richiesta.get("idAutista").toString();
                 DocumentReference autista = FirebaseFirestore.getInstance().collection("Users").document(idAutista);
-                autista.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                autista.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
-                    public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                        if(e!= null){
-                            Log.e(TAG,e.toString());
-                        }
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Map<String,Object> autista = documentSnapshot.getData();
                         Map<String,Object> address = (Map<String, Object>) autista.get("userAddress");
                         LatLng indirizzoAutista = new LatLng((Double) address.get("latitude"),(Double)address.get("longitude"));

@@ -79,6 +79,7 @@
     <string name="ConfirmUser">User stored into the database</string>
     <string name="Failure">Operation failed</string>
     <string name="emailSend">Wait\.\.\. request sent</string>
+    <string name="requestSend">The request has been sent</string>
     <string name="body_mail">New user has required confirm of account.Login Carpooling app, click on linkhttps://carpooling.page.link/app </string>
     <!--Drawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>

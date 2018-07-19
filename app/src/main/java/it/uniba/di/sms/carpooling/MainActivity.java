@@ -1,6 +1,7 @@
 package it.uniba.di.sms.carpooling;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -16,8 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -42,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String urlImageProfile;
     private FirebaseAuth authInstance = FirebaseAuth.getInstance();
     private DocumentReference rfUser;
+    DocumentReference adminrf;
     private NavigationView navigationView;
     private ListenerRegistration listenerRegistrationAdmin;
     private ListenerRegistration listenerRegistrationUser;
@@ -63,8 +63,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profile = (CircleImageView) header.findViewById(R.id.imageProfile);
         hello = (TextView)header.findViewById(R.id.hello);
 
-        rfUser = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
-        DocumentReference adminrf = FirebaseFirestore.getInstance().collection("Admin").document(userAuth.getUid());
+        if (userAuth != null) {
+            rfUser = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
+            adminrf = FirebaseFirestore.getInstance().collection("Admin").document(userAuth.getUid());
+        }
 
         listenerRegistrationAdmin = adminrf.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -80,25 +82,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
 
                 }
-                else{
+                else
                     listenerRegistrationUser = rfUser.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                         @Override
                         public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                            if(!(documentSnapshot.exists())){
+                            if (!(documentSnapshot.exists())) {
                                 navigationView.getMenu().findItem(R.id.nav_registration).setVisible(true);
                                 navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
                                 navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
 
-                            } else{
-                                Map<String,Object> user = documentSnapshot.getData();
-                                String name = (String)user.get("name");
+                            } else {
+                                Map<String, Object> user = documentSnapshot.getData();
+                                String name = (String) user.get("name");
                                 hello.setText(name);
                                 boolean ap = (boolean) user.get("approved");
-                                if(!ap){
+                                if (!ap) {
                                     navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
-                                    navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);}
-                                else if(ap){
+                                    navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+                                } else {
                                     navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(true);
@@ -112,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                         }
                     });
-                }
 
             }
         });
@@ -180,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 

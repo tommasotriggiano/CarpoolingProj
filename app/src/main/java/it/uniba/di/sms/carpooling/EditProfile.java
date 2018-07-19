@@ -15,7 +15,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -39,7 +36,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -51,7 +47,6 @@ import java.util.List;
 import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 import static android.app.Activity.RESULT_OK;
-import static android.content.ContentValues.TAG;
 
 
 public class EditProfile extends Fragment {
@@ -61,14 +56,11 @@ public class EditProfile extends Fragment {
     private DocumentReference user;
     private CollectionReference rides;
     DocumentReference ride;
-    private CollectionReference request;
-    DocumentReference rideRequest1;
-    DocumentReference rideRequest2;
 
     private FirebaseUser userAuth;
     //creazione dello storage per la foto utente
     private StorageReference mStorage;
-    private TextView nome,cognome,telefono,auto;
+    private TextView nome,cognome,prefix,telefono,auto;
     private ImageView iNome,iCognome,iTelefono,iAuto;
     private EditText eNome,eCognome,eTelefono,eAuto;
     private CardView cNome,cCognome,cTelefono,cAuto;
@@ -90,6 +82,7 @@ public class EditProfile extends Fragment {
 
         nome = (TextView) view.findViewById(R.id.text_name);
         cognome=(TextView) view.findViewById(R.id.text_surname);
+        prefix=(TextView) view.findViewById(R.id.prefix);
         telefono=(TextView) view.findViewById(R.id.text_phone);
         auto=(TextView) view.findViewById(R.id.text_car);
 
@@ -121,7 +114,6 @@ public class EditProfile extends Fragment {
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
         user = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
         rides = FirebaseFirestore.getInstance().collection("Rides");
-        request = FirebaseFirestore.getInstance().collection("RideRequests");
         user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -129,7 +121,9 @@ public class EditProfile extends Fragment {
                     Map<String,Object> user = documentSnapshot.getData();
                     nome.setText((String)user.get("name"));
                     cognome.setText((String)user.get("surname"));
-                    telefono.setText((String)user.get("phone"));
+                    String parts[] = user.get("phone").toString().split(" ");
+                    prefix.setText(parts[0]);
+                    telefono.setText(parts[1]);
                     if(user.get("car") != null){
                         auto.setText((String)user.get("car"));
                     }else {
@@ -209,6 +203,7 @@ public class EditProfile extends Fragment {
 
     private void saveChanges() {
         final Map modifiche = new HashMap();
+
         cNome.setVisibility(View.VISIBLE);
         cCognome.setVisibility(View.VISIBLE);
         cTelefono.setVisibility(View.VISIBLE);
@@ -237,9 +232,10 @@ public class EditProfile extends Fragment {
         }
 
         final String phone = eTelefono.getText().toString().trim();
+        final String phone_complete = prefix.getText().toString() + " "+phone;
         if (!(phone.isEmpty())) {
             telefono.setText(phone);
-            modifiche.put("phone", phone);
+            modifiche.put("phone", phone_complete);
         }
 
         final String car = eAuto.getText().toString().trim();
@@ -248,84 +244,48 @@ public class EditProfile extends Fragment {
             modifiche.put("car", car);
         }
 
-
         Query findRides = rides.whereEqualTo("autista.id", userAuth.getUid());
 
         findRides.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
                 for (DocumentSnapshot d : documentSnapshots.getDocuments()) {
+
                     String id = d.getId();
                     ride = rides.document(id);
-                    if (!name.isEmpty()) {
-                        batch.update(ride,"autista.name", name);
+
+                    if (resultUri != null) {
+                        StorageReference filePath = mStorage.child("Foto profilo").child(userAuth.getUid());
+                        filePath.putFile(resultUri);
+                        ride.update("autista.urlProfileImage", resultUri.toString());
                     }
-                    if (!surname.isEmpty()) {
-                        batch.update(ride,"autista.surname", surname);
+                    if (!(name.isEmpty())) {
+                        ride.update("autista.name", name);
                     }
-                    if (!phone.isEmpty()) {
-                        batch.update(ride,"autista.phone", phone);
+                    if (!(surname.isEmpty())) {
+                        ride.update("autista.surname", surname);
                     }
-                    if (!car.isEmpty()) {
-                        batch.update(ride,"autista.car", car);
+                    if (!(phone.isEmpty())) {
+                        ride.update("autista.phone", phone_complete);
+                    }
+                    if (!(car.isEmpty())) {
+                        ride.update("autista.car", car);
                     }
                 }
-                batch.update(user,modifiche);
-                batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        snackbar = Snackbar.make(rootLayout,getResources().getString(R.string.saved),Snackbar.LENGTH_SHORT);
-                        snackbar.show();
 
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG,"Batch is not commited"+ e.getMessage());
-
-                    }
-                });
 
             }
         });
-
-
-    }
-
-
-        /*batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                snackbar = Snackbar.make(rootLayout, getResources().getString(R.string.saved), Snackbar.LENGTH_LONG);
-                snackbar.show();
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "Il database non è stato modificato" + e.getMessage());
-            }
-        });*/
-
-
-        /*Task update = user.update(modifiche);
-        update.addOnSuccessListener(new OnSuccessListener() {
+        user.update(modifiche).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
-                snackbar = Snackbar.make(rootLayout,getResources().getString(R.string.saved),Snackbar.LENGTH_LONG);
+                snackbar = Snackbar.make(rootLayout,getActivity().getResources().getString(R.string.saved),Snackbar.LENGTH_SHORT);
                 snackbar.show();
 
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG,"Il database non è stato modificato" + e.getMessage());
-            }
         });
+    }
 
-
-    }*/
 
     public void selectImage(){
         final RegistrationForm.Item[] items = {

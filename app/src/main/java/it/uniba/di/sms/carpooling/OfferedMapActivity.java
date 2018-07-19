@@ -198,13 +198,9 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                             String idPassegero = richieste.get("idPasseggero").toString();
                             final String status = richieste.get("status").toString();
                             passeggero = FirebaseFirestore.getInstance().collection("Users").document(idPassegero);
-
-                            passeggero.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            passeggero.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
-                                public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                                    if(e!= null){
-                                        Log.e(TAG,e.toString());
-                                    }
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     Map<String,Object> passeggero = documentSnapshot.getData();
 
                                     //inizializzo i marker
@@ -230,48 +226,12 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                                     richiesta.put("passeggero",passeggero);
                                     markerMap.put(marker.getId(), richiesta);
                                 }
+
                             });
-
                         }
-
-
                     }
-
-
                 }
             });
-
-            /*findrequest.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    for(DocumentSnapshot doc : task.getResult()) {
-                        Map<String, Object> richieste = doc.getData();
-                        //richieste = (HashMap<String,Object>)doc.getData();
-                        passeggero = (HashMap<String, Object>) richieste.get("passeggero");
-                        Map<String, Object> indirizzo = (Map<String, Object>) passeggero.get("userAddress");
-                        LatLng indirizzoPasseggero = new LatLng((Double) indirizzo.get("latitude"), (Double) indirizzo.get("longitude"));
-                        String status = richieste.get("status").toString();
-                        Marker marker = mMap.addMarker(new MarkerOptions().position(indirizzoPasseggero));
-
-                        switch (status) {
-                            case "IN ATTESA":
-                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrichiedi));
-                                break;
-                            case "CONFERMATO":
-                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerconfirmed));
-                                break;
-                            case "RIFIUTATO":
-                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrefused));
-                                break;
-                        }
-
-
-                        markerMap.put(marker.getId(), richieste);
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(casa, DEFAULT_ZOOM));
-                    }
-                }
-
-                    });*/
                     final Handler handler = new Handler();
 
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {

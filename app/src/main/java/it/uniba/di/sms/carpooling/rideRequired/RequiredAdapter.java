@@ -3,16 +3,14 @@ package it.uniba.di.sms.carpooling.rideRequired;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,8 +18,6 @@ import java.util.Locale;
 import java.util.Map;
 import it.uniba.di.sms.carpooling.R;
 import it.uniba.di.sms.carpooling.RequiredMapsActivity;
-
-import static android.content.ContentValues.TAG;
 
 
 public class RequiredAdapter extends RecyclerView.Adapter<RequiredViewHolder>{
@@ -47,12 +43,9 @@ public class RequiredAdapter extends RecyclerView.Adapter<RequiredViewHolder>{
         final Context context1 = holder.immagine.getContext();
         String idPassaggio = itemRideRequired.get(position).get("idPassaggio").toString();
         DocumentReference passaggio = FirebaseFirestore.getInstance().collection("Rides").document(idPassaggio);
-        passaggio.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        passaggio.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                if(e!= null){
-                    Log.e(TAG,e.toString());
-                }
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(documentSnapshot.exists()){
                     Map<String,Object> passaggio = documentSnapshot.getData();
 
@@ -75,13 +68,13 @@ public class RequiredAdapter extends RecyclerView.Adapter<RequiredViewHolder>{
                                 holder.status.setText(context.getResources().getString(R.string.refused));
                                 break;
                         }
-                        String dp = passaggio.get("data").toString();
+                        String dp = passaggio.get("dataPassaggio").toString();
                         String d[] = dp.split("-");
                         String dataPassaggio = d[1]+"-"+d[0]+"-"+d[2];
                         holder.data.setText(dataPassaggio);
                     }
                     else{
-                        holder.data.setText((String)passaggio.get("data"));
+                        holder.data.setText((String)passaggio.get("dataPassaggio"));
                         holder.status.setText((String)itemRideRequired.get(position).get("status"));
                         holder.casa.setText(passaggio.get("tipoViaggio").toString());}
                     holder.giorno.setText((String)passaggio.get("giorno"));

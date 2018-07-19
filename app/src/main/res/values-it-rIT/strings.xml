@@ -77,6 +77,7 @@
     <string name="ConfirmUser">Utente aggiunto al database</string>
     <string name="Failure">Operazione fallita</string>
     <string name="emailSend">Attendi\.\.\. richiesta inviata</string>
+    <string name="requestSend">Richiesta inviata</string>
     <string name="body_mail">"Un nuovo utente ha richiesto la conferma del profilo. Accedi a carpooling app cliccando su questo link https://carpooling.page.link/app"</string>
 
 

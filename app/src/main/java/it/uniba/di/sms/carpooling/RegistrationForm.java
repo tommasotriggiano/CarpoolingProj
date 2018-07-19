@@ -238,22 +238,21 @@ public class RegistrationForm extends Fragment {
                 if(!(car.isEmpty())){
                     user.put("car",car);
                 }
-
+                String code = CountryData.countryAreaCodes[countryPrefix.getSelectedItemPosition()];
+                final String phoneNumber = "+" + code +" "+ phone;
                 user.put("id",profile.getUid());
                 user.put("email",email);
                 user.put("name",name);
                 user.put("surname",surname);
                 user.put("userAddress",userAddress);
                 user.put("userCompany",com);
-                user.put("phone",phone);
+                user.put("phone",phoneNumber);
                 user.put("approved",false);
 
                 rf.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            String code = CountryData.countryAreaCodes[countryPrefix.getSelectedItemPosition()];
-                            String phoneNumber = "+" + code + phone;
                             Intent intent = new Intent(getActivity(),VerifyPhoneActivity.class);
                             intent.putExtra("phone",phoneNumber);
                             sendMail();

@@ -1,7 +1,6 @@
 package it.uniba.di.sms.carpooling;
 
-import android.app.Activity;
-import android.content.Context;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -162,7 +161,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationProviderClient;
     static LatLng currentPosition;
     private final String REQUEST = "TiChiedonoUnPassaggio;";
-    String receiverUid;
+    BottomSheetBehavior bottomSheetBehavior;
 
     String nomeRichiedente, cognomeRichiedente;
 
@@ -185,6 +184,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         rootLayout= (CoordinatorLayout)findViewById((R.id.root)) ;
         bottomSheetDialog =findViewById(R.id.bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetDialog);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -347,7 +347,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onMarkerClick(Marker marker) {
 
 
-                final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from( bottomSheetDialog);
 
 
                 mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -400,6 +399,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onClick(View view) {
                         Log.i("altervista","id: "+idAutista);
                         InsertIntoAltervista(idAutista,REQUEST+nomeRichiedente+" "+cognomeRichiedente);
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         requiredRide(key);
                     }
                 });}
@@ -467,17 +467,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 passeggero.put("userAddress",user.get("userAddress"));
                 requestMap.put("passeggero",passeggero);*/
                 requestMap.put("status","IN ATTESA");
-                rideRequest.add(requestMap);
+                rideRequest.add(requestMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Snackbar snackbar= Snackbar.make(rootLayout,getResources().getString(R.string.requestSend),Snackbar.LENGTH_SHORT);
+                        snackbar.show();
+
+                    }
+                });
 
             }
         });
-
-
-        String message= "Richiesta inviata";
-        Snackbar snackbar= Snackbar.make(rootLayout,message,Snackbar.LENGTH_SHORT);
-        snackbar.show();
-        startActivity(new Intent(MapsActivity.this,MainActivity.class));
-        finish();
 
     }}
 

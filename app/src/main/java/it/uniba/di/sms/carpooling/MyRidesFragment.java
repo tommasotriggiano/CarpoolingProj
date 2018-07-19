@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -81,6 +83,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
     DocumentReference passaggio;
     private ArrayList resultPassaggi;
     private ArrayList resultRequired;
+    private ListenerRegistration listenerRegistration;
 
     public MyRidesFragment() {
         // Required empty public constructor
@@ -140,6 +143,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                     fab.setVisibility(View.GONE);
                 }
                 else{
+
                     passaggiRecycler.setVisibility(View.VISIBLE);
                     requiredRecycler.setVisibility(View.INVISIBLE);
                     fab.setVisibility(View.VISIBLE);
@@ -164,7 +168,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
 
         Query required = passaggiRichiesti.whereEqualTo("idPasseggero", user.getUid());
 
-        required.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        listenerRegistration = required.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                 if (e != null) {
@@ -301,7 +305,6 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                             resultPassaggi.add(map);
                             break;
                         case MODIFIED:
-                            Toast.makeText(getContext(),""+dc.getNewIndex(),Toast.LENGTH_SHORT).show();
                             resultPassaggi.set(dc.getNewIndex(),map);
                             break;
 
