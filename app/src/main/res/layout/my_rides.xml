@@ -55,24 +55,25 @@
         android:layout_height="match_parent"
         android:background="#6da7a7a7">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvPassaggiOfferti"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/radioGroup"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvPassaggiOfferti"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/radioGroup"
 
-                android:scrollbars="vertical"
-                android:visibility="gone">
+            android:scrollbars="vertical"
+            android:visibility="gone">
 
-            </android.support.v7.widget.RecyclerView>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvPassaggiRichiesti"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@+id/radioGroup"
-                android:scrollbars="vertical"
-                android:visibility="gone">
+        </android.support.v7.widget.RecyclerView>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvPassaggiRichiesti"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/radioGroup"
+            android:scrollbars="vertical"
+            android:visibility="gone">
 
         </android.support.v7.widget.RecyclerView>
 

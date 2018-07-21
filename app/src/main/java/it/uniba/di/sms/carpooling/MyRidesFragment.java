@@ -39,6 +39,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import it.uniba.di.sms.carpooling.rideOffered.PassaggiAdapter;
@@ -59,31 +60,19 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
     }
 
     CoordinatorLayout rootLayout;
-    private RadioGroup radioGroup;
-    private RadioButton offered,required;
-    private TextView messageNotFound;
     private FloatingActionButton fab;
-    private View view;
     //definisco la recyclerView
     private RecyclerView passaggiRecycler;
     private RecyclerView requiredRecycler;
     //definisco l'adapter
     private PassaggiAdapter passaggiAdapter;
     private RequiredAdapter requiredAdapter;
-    //definisco il layout manager
-    private RecyclerView.LayoutManager passaggiLayoutManager;
-    private RecyclerView.LayoutManager requiredLayoutManager;
-    private int  sizeResult=0;
-    //definisco le variabili per il riferimento al database passaggi e al profilo che si è autenticato
-    //DatabaseReference ref;
     FirebaseUser user;
     CollectionReference passaggi;
     CollectionReference requests;
     CollectionReference passaggiRichiesti;
-    DocumentReference passaggio;
     private ArrayList resultPassaggi;
     private ArrayList resultRequired;
-    private ListenerRegistration listenerRegistration;
 
     public MyRidesFragment() {
         // Required empty public constructor
@@ -94,13 +83,13 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        view= inflater.inflate(R.layout.my_rides,container,false);
+        View view = inflater.inflate(R.layout.my_rides, container, false);
         getActivity().setTitle(R.string.myrides);
         rootLayout= (CoordinatorLayout) view.findViewById(R.id.coordinator);
-        radioGroup= (RadioGroup) view.findViewById(R.id.radioGroup) ;
-        offered=(RadioButton)view.findViewById(R.id.offered) ;
-        required=(RadioButton)view.findViewById(R.id.required) ;
-        messageNotFound=(TextView) view.findViewById(R.id.message) ;
+        RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
+        RadioButton offered = (RadioButton) view.findViewById(R.id.offered);
+        RadioButton required = (RadioButton) view.findViewById(R.id.required);
+        TextView messageNotFound = (TextView) view.findViewById(R.id.message);
 
         passaggiRecycler = (RecyclerView) view.findViewById(R.id.rvPassaggiOfferti);
         passaggiRecycler.setNestedScrollingEnabled(false);
@@ -110,7 +99,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
         requiredRecycler.setNestedScrollingEnabled(false);
         requiredRecycler.setHasFixedSize(true);
 
-        fab=(FloatingActionButton)view.findViewById(R.id.fabPlus);
+        fab=(FloatingActionButton) view.findViewById(R.id.fabPlus);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         passaggi = FirebaseFirestore.getInstance().collection("Rides");
@@ -127,8 +116,8 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
         ItemTouchHelper.SimpleCallback itemTouchHelper= new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT,this);
         new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(passaggiRecycler);
 
-        passaggiLayoutManager = new LinearLayoutManager(getActivity());
-        requiredLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager passaggiLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager requiredLayoutManager = new LinearLayoutManager(getActivity());
 
         passaggiRecycler.setLayoutManager(passaggiLayoutManager);
         requiredRecycler.setLayoutManager(requiredLayoutManager);
@@ -168,7 +157,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
 
         Query required = passaggiRichiesti.whereEqualTo("idPasseggero", user.getUid());
 
-        listenerRegistration = required.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        ListenerRegistration listenerRegistration = required.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                 if (e != null) {
@@ -179,24 +168,24 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                     DocumentSnapshot document = dc.getDocument();
                     Map<String, Object> richieste = document.getData();
 
-                        switch (dc.getType()) {
-                                case ADDED:
-                                    resultRequired.add(richieste);
-                                    break;
-                                case MODIFIED:
-                                    resultRequired.set(dc.getNewIndex(), richieste);
-                                    break;
-                                case REMOVED:
-                                    resultRequired.remove(dc.getOldIndex());
+                    switch (dc.getType()) {
+                        case ADDED:
+                            resultRequired.add(richieste);
+                            break;
+                        case MODIFIED:
+                            resultRequired.set(dc.getNewIndex(), richieste);
+                            break;
+                        case REMOVED:
+                            resultRequired.remove(dc.getOldIndex());
 
-                            }
+                    }
 
 
-                        }
+                }
                 requiredAdapter = new RequiredAdapter(resultRequired, getActivity());
                 requiredRecycler.setAdapter(requiredAdapter);
-                    }
-            });
+            }
+        });
         requiredRecycler.scrollToPosition(resultPassaggi.size() - 1);
     }
 
@@ -297,29 +286,26 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                     Log.e(TAG,e.toString());
                     return;
                 }
-                for(DocumentChange dc : documentSnapshots.getDocumentChanges()){
+                for(final DocumentChange dc : documentSnapshots.getDocumentChanges()){
                     DocumentSnapshot document = dc.getDocument();
                     Map<String,Object> map = document.getData();
-                    switch(dc.getType()){
-                        case ADDED:
-                            resultPassaggi.add(map);
-                            break;
-                        case MODIFIED:
-                            resultPassaggi.set(dc.getNewIndex(),map);
-                            break;
+                    final Map<String,Object> passaggio = new HashMap<>();
+                    passaggio.put("passaggio",map);
 
+                            switch(dc.getType()){
+                                case ADDED:
+                                    resultPassaggi.add(passaggio);
+                                    break;
+                                case MODIFIED:
+                                    resultPassaggi.set(dc.getNewIndex(),passaggio);
+                                    break;
+                            }
                         }
-                    }
                 passaggiAdapter = new PassaggiAdapter(resultPassaggi, getActivity());
                 passaggiRecycler.setAdapter(passaggiAdapter);
-
+                    }});
+        passaggiRecycler.scrollToPosition(resultPassaggi.size() - 1);
                 }
-
-            });
-
-                passaggiRecycler.scrollToPosition(resultPassaggi.size() - 1);
-
-            }
 
 
 

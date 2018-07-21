@@ -25,6 +25,7 @@ public class PassaggiViewHolder extends RecyclerView.ViewHolder implements View.
     public TextView data;
     public TextView giorno;
     public TextView ora;
+    public TextView badge;
     public TextView casa;
     public TextView postiOccupati;
     public ArrayList<Map<String,Object>> passaggi;
@@ -45,6 +46,7 @@ public class PassaggiViewHolder extends RecyclerView.ViewHolder implements View.
         ora = (TextView) itemView.findViewById(R.id.Ora);
         casa = (TextView) itemView.findViewById(R.id.casa);
         postiOccupati = (TextView) itemView.findViewById(R.id.postiOcc);
+        badge = (TextView) itemView.findViewById(R.id.cart_badge);
     }
 
 

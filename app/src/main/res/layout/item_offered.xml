@@ -13,12 +13,13 @@
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         >
 
-    <RelativeLayout
+        <RelativeLayout
         android:id="@+id/viewBackground"
         android:background="#c1fd0202"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ImageView
+
+            <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:id="@+id/delete"
@@ -40,49 +41,70 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+        <LinearLayout
             android:id="@+id/viewForeground"
             android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/casa"
+            <FrameLayout
+                android:layout_width="339dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/cart_badge"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="right"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/casa"
+                    android:layout_width="163dp"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_location"
+                    android:text="@string/Home"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+            </FrameLayout>
+
+            <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_location"
-                android:text="@string/Home"
+                android:src="@drawable/ic_today_black" />
+
+            <TextView
+                android:id="@+id/Giorno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giorno"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/Data"
+                android:layout_width="254dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginStart="10dp">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_today_black"/>
-                <TextView
-                    android:id="@+id/Giorno"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Giorno"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-                <TextView
-                    android:id="@+id/Data"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
-                    android:text="Data"
-                    android:textColor="#000"
-                    android:textSize="20sp"/>
+                android:layout_marginStart="3dp"
+                android:text="Data"
+                android:textColor="#000"
+                android:textSize="20sp" />
 
-            </LinearLayout>
+        </LinearLayout>
             <TextView
                 android:layout_marginStart="10dp"
                 android:id="@+id/Ora"

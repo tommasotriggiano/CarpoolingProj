@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -135,8 +136,20 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
                         Map<String, Object> userCompany = (Map<String, Object>) user.get("userCompany");
                         LatLng lavoro = new LatLng((Double) userCompany.get("latitude"), (Double) userCompany.get("longitude"));
                         mMap.addMarker(new MarkerOptions().position(lavoro).title("lavoro").snippet(userCompany.get("address").toString()).icon(BitmapDescriptorFactory.fromResource(R.drawable.markerlavoro)));
-                        mMap.addMarker(new MarkerOptions().position(indirizzoAutista).title("autista").snippet(address.get("address").toString()).icon(BitmapDescriptorFactory.fromResource(R.drawable.markerautista)));
                         mMap.addMarker(new MarkerOptions().position(indirizzoPassegero).title(getResources().getString(R.string.Home)).icon(BitmapDescriptorFactory.fromResource(R.drawable.casamarker)));
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(indirizzoAutista).title("autista").snippet(address.get("address").toString()));
+                        String status = richiesta.get("status").toString();
+                        switch (status) {
+                            case "IN ATTESA":
+                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.autista_richiedi));
+                                break;
+                            case "CONFERMATO":
+                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.autista_conferma));
+                                break;
+                            case "RIFIUTATO":
+                                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.autista_negato));
+                                break;
+                        }
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lavoro, DEFAULT_ZOOM));
 
                     }

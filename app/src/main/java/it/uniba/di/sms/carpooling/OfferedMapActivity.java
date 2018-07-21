@@ -46,11 +46,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -58,7 +60,7 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
     private final String PASSAGGIOACCETTATO = "PassaggioAccettato";
     private final String PASSAGGIORIFIUTATO = "PassaggioRifiutato";
     private static final float DEFAULT_ZOOM = 8.3f ;
-    private static final float MARKER_ZOOM = 18.3f ;
+    private static final float MARKER_ZOOM = 16.3f ;
     private static final String TAG = OfferedMapActivity.class.getName();
     private GoogleMap mMap;
 
@@ -74,6 +76,7 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
     private Button accept;
     private ImageButton reject;
     private TextView direzione,data,ora,posti,giorno,nomePass,cognomePass,telefono,address1;
+    private CircleImageView imgPass;
     private HashMap<String,Object> passaggio;
     BottomSheetBehavior bottomSheetBehavior;
     CollectionReference passeggeri;
@@ -87,8 +90,9 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
         rootLayout= (CoordinatorLayout)findViewById((R.id.root)) ;
         bottomSheetDialog =findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetDialog);
+
         //BottomSheetDialog
-        ImageView imgPass = (ImageView) bottomSheetDialog.findViewById(R.id.immagineProfilo);
+        imgPass = (CircleImageView) bottomSheetDialog.findViewById(R.id.immagineProfilo);
         nomePass = (TextView) bottomSheetDialog.findViewById(R.id.nomePass);
         cognomePass = (TextView) bottomSheetDialog.findViewById(R.id.cognomePass);
         telefono = (TextView) bottomSheetDialog.findViewById(R.id.telefono);
@@ -209,6 +213,8 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                                     Marker marker = mMap.addMarker(new MarkerOptions().position(indirizzoPasseggero));
                                     switch (status) {
                                         case "IN ATTESA":
+                                            if(accept.getVisibility() != View.VISIBLE){
+                                            accept.setVisibility(View.VISIBLE);}
                                             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrichiedi));
                                             break;
                                         case "CONFERMATO":
@@ -263,6 +269,10 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                                 final Map<String,Object> passeggero = (Map<String, Object>) richiesta.get("passeggero");
 
 
+                                if(passeggero.get("urlProfileImage") != null){
+                                    String urlProfileImage = passeggero.get("urlProfileImage").toString();
+                                    Picasso.with(OfferedMapActivity.this).load(urlProfileImage).into(imgPass);
+                                }
 
                                 nomePass.setText(passeggero.get("name").toString());
                                 cognomePass.setText(passeggero.get("surname").toString());
