@@ -62,9 +62,9 @@
                     android:layout_gravity="right"
                     android:background="@drawable/badge_background"
                     android:gravity="center"
-                    android:textColor="@color/white"
                     android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:visibility="visible" />
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/casa"

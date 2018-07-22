@@ -1,30 +1,39 @@
 package it.uniba.di.sms.carpooling;
 
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.Map;
@@ -34,10 +43,15 @@ import it.uniba.di.sms.carpooling.rankUser.Rank;
 import it.uniba.di.sms.carpooling.todayRide.TodayMyRidesFragment;
 import it.uniba.di.sms.carpooling.userApproved.ApproveFragment;
 
+import static it.uniba.di.sms.carpooling.R.drawable.badge_background;
+import static it.uniba.di.sms.carpooling.R.drawable.ic_homewhite;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         OfferRideFragment.OnShowRideOfferedListener, MyRidesFragment.OnAddRideOfferedListener{
     private ImageView profile;
     private TextView hello;
+    private TextView affiliation;
+    private TextView affiliation2;
     private String urlImageProfile;
     private FirebaseAuth authInstance = FirebaseAuth.getInstance();
     private DocumentReference rfUser;
@@ -46,22 +60,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ListenerRegistration listenerRegistrationAdmin;
     private ListenerRegistration listenerRegistrationUser;
     private ListenerRegistration listenerRegistrationImage;
+    private ListenerRegistration listenerRegistrationUserCount;
+    FirebaseUser userAuth;
     private static final String TAG = MainActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FirebaseUser userAuth = authInstance.getCurrentUser();
+        userAuth = authInstance.getCurrentUser();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         //instanzio l'oggetto per l'header della navigation view
         View header = navigationView.getHeaderView(0);
 
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        affiliation2 = (TextView)  findViewById(R.id.hamburger_count);
+
+        navigationView.setNavigationItemSelectedListener(this);
+        startService(new Intent(getBaseContext(),ServiceReceiver.class));
+
         profile = (CircleImageView) header.findViewById(R.id.imageProfile);
         hello = (TextView)header.findViewById(R.id.hello);
+        affiliation = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_approvazione));
+
 
         if (userAuth != null) {
             rfUser = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
@@ -72,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()){
+                    initializeBadge();
                     navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
                     navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(true);
                     navigationView.getMenu().findItem(R.id.nav_searchride).setVisible(true);
@@ -135,16 +163,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         }});
+    }
+
+    private void initializeBadge() {
+        CollectionReference user = FirebaseFirestore.getInstance().collection("Users");
+        listenerRegistrationUserCount = user.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.e(TAG,e.toString());
+                }
+                int count = 0;
+                for(DocumentSnapshot d : documentSnapshots.getDocuments()){
+                    String id = d.getData().get("id").toString();
+                    if(!(id.equals(userAuth.getUid()))){
+                        boolean ap = (boolean) d.getData().get("approved");
+                        if(!ap){
+                            count++;
+                        }
+                    }
+                }
+                if(count != 0){
+                        affiliation2.setVisibility(View.VISIBLE);
+                        affiliation2.setText(String.valueOf(count));
+                        affiliation.setVisibility(View.VISIBLE);
+                        affiliation.setText(String.valueOf(count));
+                        affiliation.setTextColor(getResources().getColor(R.color.colorAccent));
+                        affiliation.setTypeface(null,Typeface.BOLD);
+                        affiliation.setTextSize(16);
+                        affiliation.setGravity(Gravity.CENTER_VERTICAL);
+                }
+                else{
+                    affiliation.setVisibility(View.GONE);
+                    affiliation2.setVisibility(View.GONE);
+                }
 
 
-        setSupportActionBar(toolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        navigationView.setNavigationItemSelectedListener(this);
-        startService(new Intent(getBaseContext(),ServiceReceiver.class));
+            }
+        });
     }
 
     @Override
@@ -233,6 +289,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 listenerRegistrationUser.remove();}
                 if(listenerRegistrationImage != null){
                 listenerRegistrationImage.remove();}
+                if(listenerRegistrationUserCount != null){
+                    listenerRegistrationUserCount.remove();
+                }
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
 
                 finish();
