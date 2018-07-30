@@ -7,9 +7,9 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvTodayRides"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_height="506dp"
         android:scrollbars="vertical"
-        >
-    </android.support.v7.widget.RecyclerView>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></android.support.v7.widget.RecyclerView>
 </android.support.constraint.ConstraintLayout>

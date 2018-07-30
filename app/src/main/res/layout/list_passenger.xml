@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/immagineProfiloPassegero"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/nomePass"
+        android:src="@drawable/ic_image_profile" />
+
+    <TextView
+        android:id="@+id/nomePass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/immagineProfiloPassegero"
+        android:text="Nome"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/cognomePass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/nomePass"
+        android:text="Cognome"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/telefono"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/nomePass"
+        android:layout_below="@+id/nomePass"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="5dp"
+        android:drawableStart="@drawable/ic_phone"
+        android:text="@string/edit_Phone"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+
+</LinearLayout>

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,11 +22,14 @@ import it.uniba.di.sms.carpooling.R;
 public class TodayMyRidesViewHolder  extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     public CircleImageView immagine;
-    public TextView data,giorno,ora,casa,telefono,nome,cognome;
+    public TextView data,giorno,ora,casa,telefono,nome,cognome,driver,passengers;
     public ArrayList<Map<String,Object>> todayRides;
-    public CardView cardView;
+    public CardView cardView,cardView2;
     public Context ctx;
-    public RelativeLayout listaPasseggeri;
+    public RelativeLayout listaPasseggeri,rel2;
+    public LinearLayout linearLayout1,linearLayout2,lin;
+    public RelativeLayout linear;
+    public ListView listView;
 
     public TodayMyRidesViewHolder(View itemView, Context ctx, ArrayList<Map<String,Object>> todayRides){
         super(itemView);
@@ -33,17 +38,26 @@ public class TodayMyRidesViewHolder  extends RecyclerView.ViewHolder implements 
         itemView.setOnClickListener(this);
 
 
-        //listaPasseggeri=(RelativeLayout) itemView.findViewById(R.id.lista_passeggeri);
+        listaPasseggeri=(RelativeLayout) itemView.findViewById(R.id.relativeToday);
+        linearLayout1 = (LinearLayout) itemView.findViewById(R.id.LinearToday);
+        linearLayout2 = (LinearLayout) itemView.findViewById(R.id.LinearToday2);
+        lin = (LinearLayout) itemView.findViewById(R.id.lin);
+        linear = (RelativeLayout) itemView.findViewById(R.id.linear);
+        rel2 = (RelativeLayout) itemView.findViewById(R.id.rel2);
         cardView= (CardView) itemView.findViewById(R.id.cardviewToday);
+        cardView2= (CardView) itemView.findViewById(R.id.card2);
+
         data = (TextView) itemView.findViewById(R.id.Data);
         giorno = (TextView) itemView.findViewById(R.id.Giorno);
         ora = (TextView) itemView.findViewById(R.id.Ora);
         casa = (TextView) itemView.findViewById(R.id.Casa);
-        telefono = (TextView) itemView.findViewById(R.id.Telefono);
-        nome = (TextView) itemView.findViewById(R.id.nomeAut);
-        cognome = (TextView) itemView.findViewById(R.id.cognomeAut);
-        immagine = (CircleImageView) itemView.findViewById(R.id.immagineProfilo);
-       // status = (TextView) itemView.findViewById(R.id.Status);
+        driver = (TextView) itemView.findViewById(R.id.driver);
+        passengers = (TextView) itemView.findViewById(R.id.passeggeri);
+        immagine = (CircleImageView) itemView.findViewById(R.id.immagineProfiloPassegero);
+        nome = (TextView) itemView.findViewById(R.id.nomePass);
+        cognome = (TextView) itemView.findViewById(R.id.cognomePass);
+        telefono = (TextView) itemView.findViewById(R.id.telefono);
+        listView = (ListView)itemView.findViewById(R.id.listView);
 
     }
 

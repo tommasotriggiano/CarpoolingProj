@@ -24,6 +24,8 @@
     <string name="Direction">"Direction \: "</string>
     <string name="dateTime">"Date and time \: "</string>
     <string name="driver">"Driver : "</string>
+    <string name="passengers">Passengers :</string>
+
     <!-- login and registration activity-->
     <string name="etUsername">Username</string>
     <string name="etName">Username</string>

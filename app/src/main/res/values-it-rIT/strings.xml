@@ -25,6 +25,7 @@
     <string name="Direction">"Direzione \: "</string>
     <string name="dateTime">"Data e ora \: "</string>
     <string name="driver">"Automobilista : "</string>
+    <string name="passengers">Passeggeri :</string>
 
     <!-- login and registration acitivity-->
     <string name="etUserEmail">E-mail</string>
