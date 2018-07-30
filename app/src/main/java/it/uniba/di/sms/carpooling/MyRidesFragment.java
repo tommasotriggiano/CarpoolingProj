@@ -233,6 +233,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                 */
                 public void onDismissed(Snackbar snackbar1,int event){
                     if(event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT){
+                        Toast.makeText(getContext(),deletePassaggio.toString(),Toast.LENGTH_LONG).show();
                     Query findRideToDelete = passaggi
                             .whereEqualTo("autista.id",user.getUid())
                             .whereEqualTo("dataPassaggio",deletePassaggio.get("dataPassaggio"))
@@ -286,11 +287,9 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                     Log.e(TAG,e.toString());
                     return;
                 }
-                for(final DocumentChange dc : documentSnapshots.getDocumentChanges()){
+                for(DocumentChange dc : documentSnapshots.getDocumentChanges()){
                     DocumentSnapshot document = dc.getDocument();
-                    Map<String,Object> map = document.getData();
-                    final Map<String,Object> passaggio = new HashMap<>();
-                    passaggio.put("passaggio",map);
+                    Map<String,Object> passaggio = document.getData();
 
                             switch(dc.getType()){
                                 case ADDED:
@@ -303,9 +302,10 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                         }
                 passaggiAdapter = new PassaggiAdapter(resultPassaggi, getActivity());
                 passaggiRecycler.setAdapter(passaggiAdapter);
-                    }});
+            }
+        });
         passaggiRecycler.scrollToPosition(resultPassaggi.size() - 1);
-                }
+    }
 
 
 

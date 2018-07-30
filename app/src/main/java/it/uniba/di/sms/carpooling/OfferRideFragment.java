@@ -206,15 +206,43 @@ public class OfferRideFragment extends Fragment {
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
             Date pick= new Date(year,monthOfYear,dayOfMonth-1);
+            int month = Integer.parseInt(String.valueOf(monthOfYear+1));
+            int day = Integer.parseInt(String.valueOf(dayOfMonth));
+            Toast.makeText(getActivity(),""+month,Toast.LENGTH_LONG).show();
             if (Locale.getDefault().getLanguage().equals("en") ){
+                if(month<10){
+                    if(day<10){
+                        dateText.setText("0"+String.valueOf(monthOfYear+1) + "-" + "0"+String.valueOf(dayOfMonth)
+                                + "-" + String.valueOf(year));}
+                    else{
+                        dateText.setText("0"+String.valueOf(monthOfYear+1) + "-" +String.valueOf(dayOfMonth)
+                                + "-" + String.valueOf(year));}
+                }
+                else if(day<10){
+                    dateText.setText(String.valueOf(monthOfYear+1) + "-" + "0"+String.valueOf(dayOfMonth)
+                            + "-" + String.valueOf(year));}
+                else{
                 dateText.setText(String.valueOf(monthOfYear+1) + "-" + String.valueOf(dayOfMonth)
-                        + "-" + String.valueOf(year));
+                        + "-" + String.valueOf(year));}
                 dayOfWeek.setText(sdf.format(pick));
 
 
             }else{
+                if(month<10){
+                    if(day<10){
+                        dateText.setText("0"+String.valueOf(dayOfMonth) + "-" + "0"+String.valueOf(monthOfYear+1)
+                                + "-" + String.valueOf(year));
+                    }
+                    else{
+                        dateText.setText(String.valueOf(dayOfMonth) + "-" +"0"+String.valueOf(monthOfYear+1)
+                                + "-" + String.valueOf(year));}
+                }
+                else if(day<10){
+                    dateText.setText("0"+String.valueOf(dayOfMonth) + "-" +String.valueOf(monthOfYear+1)
+                            + "-" + String.valueOf(year));}
+                else{
                   dateText.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear+1)
-                    + "-" + String.valueOf(year));
+                    + "-" + String.valueOf(year));}
                 dayOfWeek.setText(sdf.format(pick));
             }
         }

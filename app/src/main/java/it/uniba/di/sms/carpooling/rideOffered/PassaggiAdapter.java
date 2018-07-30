@@ -50,7 +50,7 @@ public class PassaggiAdapter extends RecyclerView.Adapter<PassaggiViewHolder> {
 
     @Override
     public void onBindViewHolder(final PassaggiViewHolder holder, final int position) {
-        final Map<String,Object> passaggio = (Map<String, Object>) itemPassaggi.get(position).get("passaggio");
+        final Map<String,Object> passaggio = itemPassaggi.get(position);
         if(Locale.getDefault().getLanguage().equals("en")){
             if(passaggio.get("tipoViaggio").toString().equals("Casa-Lavoro")){
                 holder.casa.setText(context.getResources().getString(R.string.HomeWork));

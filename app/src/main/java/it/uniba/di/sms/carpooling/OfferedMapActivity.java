@@ -48,6 +48,7 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -364,10 +365,10 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
         //2)
-        passeggeri = FirebaseFirestore.getInstance().collection("Rides").document(idPassaggio).collection("Passeggeri");
+        ArrayList passeggeri = new ArrayList<String>();
         String idPasseggero = passeggero.get("id").toString();
-        itemPasseggero = passeggeri.document(idPasseggero);
-        itemPasseggero.set(passeggero);
+        passeggeri.add(idPasseggero);
+        passaggioRf.update("passeggeri",passeggeri);
 
         //3)
         final DocumentReference passaggioRf = FirebaseFirestore.getInstance().collection("Rides").document(idPassaggio);
