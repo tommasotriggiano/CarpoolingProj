@@ -14,12 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -120,8 +118,6 @@ public class SearchRideFragment extends Fragment {
             }
         });
 
-
-
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,7 +139,7 @@ public class SearchRideFragment extends Fragment {
         if(campo1.equals(getResources().getString(R.string.Home))){
             tipo = getResources().getString(R.string.HomeWork);}
         else {
-            tipo = getResources().getString(R.string.WorkHome);;}
+            tipo = getResources().getString(R.string.WorkHome);}
 
         if(data.isEmpty()){
             errorDate.setVisibility(View.VISIBLE);
@@ -215,18 +211,16 @@ public class SearchRideFragment extends Fragment {
 
     private void showDatePicker() {
         DatePickerFragment date = new DatePickerFragment();
-        /**
-         * Set Up Current Date Into dialog
-         */
+        //Set Up Current Date Into dialog
+
         Calendar calender = Calendar.getInstance();
         Bundle args = new Bundle();
         args.putInt("year", calender.get(Calendar.YEAR));
         args.putInt("month", calender.get(Calendar.MONTH));
         args.putInt("day", calender.get(Calendar.DAY_OF_MONTH));
         date.setArguments(args);
-        /**
-         * Set Call back to capture selected date
-         */
+        //Set Call back to capture selected date
+
         date.setCallBack(ondate);
         date.show(getFragmentManager(), "Date Picker");
     }
@@ -238,69 +232,80 @@ public class SearchRideFragment extends Fragment {
                               int dayOfMonth) {
             int month = Integer.parseInt(String.valueOf(monthOfYear+1));
             int day = Integer.parseInt(String.valueOf(dayOfMonth));
+            String dateString;
             if (Locale.getDefault().getLanguage().equals("en") ){
                 if(month<10){
                     if(day<10){
-                        dateText.setText("0"+String.valueOf(monthOfYear+1) + "-" + "0"+String.valueOf(dayOfMonth)
-                                + "-" + String.valueOf(year));}
+                        dateString="0"+String.valueOf(monthOfYear+1) + "-" + "0"+String.valueOf(dayOfMonth)
+                                + "-" + String.valueOf(year);
+                        dateText.setText(dateString);}
                     else{
-                        dateText.setText("0"+String.valueOf(monthOfYear+1) + "-" +String.valueOf(dayOfMonth)
-                                + "-" + String.valueOf(year));}
+                        dateString="0"+String.valueOf(monthOfYear+1) + "-" +String.valueOf(dayOfMonth)
+                                + "-" + String.valueOf(year);
+                        dateText.setText(dateString);}
                 }
                 else if(day<10){
-                    dateText.setText(String.valueOf(monthOfYear+1) + "-" + "0"+String.valueOf(dayOfMonth)
-                            + "-" + String.valueOf(year));}
+                    dateString=String.valueOf(monthOfYear+1) + "-" + "0"+String.valueOf(dayOfMonth)
+                            + "-" + String.valueOf(year);
+                    dateText.setText(dateString);}
                 else{
-                dateText.setText(String.valueOf(monthOfYear+1) + "-" + String.valueOf(dayOfMonth)
-                        + "-" + String.valueOf(year));}
+                    dateString=String.valueOf(monthOfYear+1) + "-" + String.valueOf(dayOfMonth)
+                            + "-" + String.valueOf(year);
+                dateText.setText(dateString);}
             }else{
                 if(month<10){
                     if(day<10){
-                        dateText.setText("0"+String.valueOf(dayOfMonth) + "-" + "0"+String.valueOf(monthOfYear+1)
-                                + "-" + String.valueOf(year));
+                        dateString="0"+String.valueOf(dayOfMonth) + "-" + "0"+String.valueOf(monthOfYear+1)
+                                + "-" + String.valueOf(year);
+                        dateText.setText(dateString);
                     }
                     else{
-                        dateText.setText(String.valueOf(dayOfMonth) + "-" +"0"+String.valueOf(monthOfYear+1)
-                                + "-" + String.valueOf(year));}
+                        dateString=String.valueOf(dayOfMonth) + "-" +"0"+String.valueOf(monthOfYear+1)
+                                + "-" + String.valueOf(year);
+                        dateText.setText(dateString);}
                 }
                 else if(day<10){
-                    dateText.setText("0"+String.valueOf(dayOfMonth) + "-" +String.valueOf(monthOfYear+1)
-                            + "-" + String.valueOf(year));}
+                    dateString="0"+String.valueOf(dayOfMonth) + "-" +String.valueOf(monthOfYear+1)
+                            + "-" + String.valueOf(year);
+                    dateText.setText(dateString);}
                 else{
-                dateText.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear+1)
-                        + "-" + String.valueOf(year));}
+                    dateString=String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear+1)
+                            + "-" + String.valueOf(year);
+                dateText.setText(dateString);}
         }
         }
     };
     private void showTimePicker() {
         TimePickerFragment time = new TimePickerFragment();
-        /**
-         * Set Up Current Time Into dialog
-         */
+        //Set Up Current Time Into dialog
+
         Calendar calender = Calendar.getInstance();
         Bundle args = new Bundle();
         args.putInt("hour", calender.get(Calendar.HOUR_OF_DAY));
         args.putInt("minute", calender.get(Calendar.MINUTE));
         time.setArguments(args);
-        /**
-         * Set Call back to capture selected time
-         */
+        //Set Call back to capture selected time
         time.setCallBack(ontime);
         time.show(getFragmentManager(), "Time Picker");
     }
     TimePickerDialog.OnTimeSetListener ontime = new TimePickerDialog.OnTimeSetListener() {
 
         public void onTimeSet(TimePicker view, int hour, int minute) {
+            String timeString;
             if (hour < 10) {
                 if (minute < 10) {
-                    tvTime.setText("0" + String.valueOf(hour) + ":0" + String.valueOf(minute));
+                    timeString="0" + String.valueOf(hour) + ":0" + String.valueOf(minute);
+                    tvTime.setText(timeString);
                 } else {
-                    tvTime.setText("0" + String.valueOf(hour) + ":" + String.valueOf(minute));
+                    timeString="0" + String.valueOf(hour) + ":" + String.valueOf(minute);
+                    tvTime.setText(timeString);
                 }
             } else if (minute<10) {
-                tvTime.setText(String.valueOf(hour) + ":0" + String.valueOf(minute));
+                timeString=String.valueOf(hour) + ":0" + String.valueOf(minute);
+                tvTime.setText(timeString);
             }else{
-                tvTime.setText(String.valueOf(hour) + ":" + String.valueOf(minute));
+                timeString=String.valueOf(hour) + ":" + String.valueOf(minute);
+                tvTime.setText(timeString);
             }
         }
 

@@ -6,14 +6,11 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,17 +20,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,7 +32,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static android.content.ContentValues.TAG;
 
 
 public class OfferRideFragment extends Fragment {
@@ -52,13 +42,11 @@ public class OfferRideFragment extends Fragment {
     }
 
 
-    TextView dateText,tvTime,dayOfWeek;
+    TextView dateText,tvTime,dayOfWeek,mWork,mHome,posti,errorDate,errorTime;
     ImageButton btnInvert;
-    TextView mWork;
-    TextView mHome;
-    TextView posti;
+    String postiString;
     int postiIns;
-    ImageView btnPlus,btnMinus;
+    ImageView btnPlus,btnMinus,img_date,img_time;
     Button offer;
 
 
@@ -74,12 +62,16 @@ public class OfferRideFragment extends Fragment {
         dateText=(TextView)view.findViewById(R.id.textData);
         tvTime = (TextView) view.findViewById(R.id.tvTime);
         btnInvert = (ImageButton) view.findViewById(R.id.Invert);
+        errorDate = (TextView) view.findViewById(R.id.errorDate);
+        errorTime = (TextView) view.findViewById(R.id.errorTime);
         mHome = (TextView) view.findViewById(R.id.casa);
         mWork = (TextView) view.findViewById(R.id.lavoro);
         posti=(TextView) view.findViewById(R.id.textPostiInseriti);
         postiIns= Integer.parseInt(posti.getText().toString());
         offer = (Button)view.findViewById(R.id.btnOffri);
         dayOfWeek=(TextView) view.findViewById(R.id.day) ;
+        img_date=(ImageView)view.findViewById(R.id.img_error_date) ;
+        img_time=(ImageView)view.findViewById(R.id.img_error_time) ;
 
 
 
@@ -161,7 +153,8 @@ public class OfferRideFragment extends Fragment {
         @Override
         public void onClick(View view) {
             if(postiIns>1){
-                posti.setText((Integer.parseInt(posti.getText().toString())-1)+"");
+                postiString=(Integer.parseInt(posti.getText().toString())-1)+"";
+                posti.setText(postiString);
                 postiIns= Integer.parseInt(posti.getText().toString());
                btnPlus.setVisibility(View.VISIBLE);
             }else if (postiIns<=1 ) {
@@ -174,7 +167,8 @@ public class OfferRideFragment extends Fragment {
         @Override
         public void onClick(View view) {
             if(postiIns<8) {
-                posti.setText((Integer.parseInt(posti.getText().toString()) + 1) + "");
+                postiString=(Integer.parseInt(posti.getText().toString()) + 1) + "";
+                posti.setText(postiString);
                 postiIns = Integer.parseInt(posti.getText().toString());
                 btnMinus.setVisibility(View.VISIBLE);
             } else if(postiIns>=8){
@@ -184,18 +178,14 @@ public class OfferRideFragment extends Fragment {
     };
     private void showDatePicker() {
         DatePickerFragment date = new DatePickerFragment();
-        /**
-         * Set Up Current Date Into dialog
-         */
+        //Set Up Current Date Into dialog
         Calendar calender = Calendar.getInstance();
         Bundle args = new Bundle();
         args.putInt("year", calender.get(Calendar.YEAR));
         args.putInt("month", calender.get(Calendar.MONTH));
         args.putInt("day", calender.get(Calendar.DAY_OF_MONTH));
         date.setArguments(args);
-        /**
-         * Set Call back to capture selected date
-         */
+        //Set Call back to capture selected date
         date.setCallBack(ondate);
         date.show(getFragmentManager(), "Date Picker");
     }
@@ -208,74 +198,88 @@ public class OfferRideFragment extends Fragment {
             Date pick= new Date(year,monthOfYear,dayOfMonth-1);
             int month = Integer.parseInt(String.valueOf(monthOfYear+1));
             int day = Integer.parseInt(String.valueOf(dayOfMonth));
-            Toast.makeText(getActivity(),""+month,Toast.LENGTH_LONG).show();
+            String dateString;
             if (Locale.getDefault().getLanguage().equals("en") ){
                 if(month<10){
                     if(day<10){
-                        dateText.setText("0"+String.valueOf(monthOfYear+1) + "-" + "0"+String.valueOf(dayOfMonth)
-                                + "-" + String.valueOf(year));}
+                        dateString="0"+String.valueOf(monthOfYear+1) + "-" + "0"+String.valueOf(dayOfMonth)
+                                + "-" + String.valueOf(year);
+                        dateText.setText(dateString);}
                     else{
-                        dateText.setText("0"+String.valueOf(monthOfYear+1) + "-" +String.valueOf(dayOfMonth)
-                                + "-" + String.valueOf(year));}
+                        dateString="0"+String.valueOf(monthOfYear+1) + "-" +String.valueOf(dayOfMonth)
+                                + "-" + String.valueOf(year);
+                        dateText.setText(dateString);}
                 }
                 else if(day<10){
-                    dateText.setText(String.valueOf(monthOfYear+1) + "-" + "0"+String.valueOf(dayOfMonth)
-                            + "-" + String.valueOf(year));}
+                    dateString=String.valueOf(monthOfYear+1) + "-" + "0"+String.valueOf(dayOfMonth)
+                            + "-" + String.valueOf(year);
+                    dateText.setText(dateString);}
                 else{
-                dateText.setText(String.valueOf(monthOfYear+1) + "-" + String.valueOf(dayOfMonth)
-                        + "-" + String.valueOf(year));}
+                    dateString=String.valueOf(monthOfYear+1) + "-" + String.valueOf(dayOfMonth)
+                            + "-" + String.valueOf(year);
+                dateText.setText(dateString);}
                 dayOfWeek.setText(sdf.format(pick));
 
 
             }else{
                 if(month<10){
                     if(day<10){
-                        dateText.setText("0"+String.valueOf(dayOfMonth) + "-" + "0"+String.valueOf(monthOfYear+1)
-                                + "-" + String.valueOf(year));
+                        dateString="0"+String.valueOf(dayOfMonth) + "-" + "0"+String.valueOf(monthOfYear+1)
+                                + "-" + String.valueOf(year);
+                        dateText.setText(dateString);
                     }
                     else{
-                        dateText.setText(String.valueOf(dayOfMonth) + "-" +"0"+String.valueOf(monthOfYear+1)
-                                + "-" + String.valueOf(year));}
+                        dateString=String.valueOf(dayOfMonth) + "-" +"0"+String.valueOf(monthOfYear+1)
+                                + "-" + String.valueOf(year);
+                        dateText.setText(dateString);}
                 }
                 else if(day<10){
-                    dateText.setText("0"+String.valueOf(dayOfMonth) + "-" +String.valueOf(monthOfYear+1)
-                            + "-" + String.valueOf(year));}
+                    dateString="0"+String.valueOf(dayOfMonth) + "-" +String.valueOf(monthOfYear+1)
+                            + "-" + String.valueOf(year);
+                    dateText.setText(dateString);}
                 else{
-                  dateText.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear+1)
-                    + "-" + String.valueOf(year));}
+                    dateString=String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear+1)
+                            + "-" + String.valueOf(year);
+                  dateText.setText(dateString);}
                 dayOfWeek.setText(sdf.format(pick));
             }
         }
     };
+
+
     private void showTimePicker() {
         TimePickerFragment time = new TimePickerFragment();
-        /**
-         * Set Up Current Time Into dialog
-         */
+        //Set Up Current Time Into dialog
         Calendar calender = Calendar.getInstance();
         Bundle args = new Bundle();
         args.putInt("hour", calender.get(Calendar.HOUR_OF_DAY));
         args.putInt("minute", calender.get(Calendar.MINUTE));
         time.setArguments(args);
-        /**
-         * Set Call back to capture selected time
-         */
+        //Set Call back to capture selected time
+
         time.setCallBack(ontime);
         time.show(getFragmentManager(), "Time Picker");
     }
+
+
     TimePickerDialog.OnTimeSetListener ontime = new TimePickerDialog.OnTimeSetListener() {
 
         public void onTimeSet(TimePicker view, int hour, int minute) {
+            String timeString;
             if (hour < 10) {
                 if (minute < 10) {
-                    tvTime.setText("0" + String.valueOf(hour) + ":0" + String.valueOf(minute));
+                    timeString="0" + String.valueOf(hour) + ":0" + String.valueOf(minute);
+                    tvTime.setText(timeString);
                 } else {
-                    tvTime.setText("0" + String.valueOf(hour) + ":" + String.valueOf(minute));
+                    timeString="0" + String.valueOf(hour) + ":" + String.valueOf(minute);
+                    tvTime.setText(timeString);
                 }
             } else if (minute<10) {
-                tvTime.setText(String.valueOf(hour) + ":0" + String.valueOf(minute));
+                timeString=String.valueOf(hour) + ":0" + String.valueOf(minute);
+                tvTime.setText(timeString);
             }else{
-                tvTime.setText(String.valueOf(hour) + ":" + String.valueOf(minute));
+                timeString=String.valueOf(hour) + ":" + String.valueOf(minute);
+                tvTime.setText(timeString);
             }
         }
 
@@ -291,13 +295,31 @@ public class OfferRideFragment extends Fragment {
         String campo1 = mHome.getText().toString().trim();
 
         if(dataPassaggio.isEmpty()){
-            dateText.setError(getResources().getString(R.string.EntDate));
+            errorDate.setVisibility(View.VISIBLE);
+            img_date.setVisibility(View.VISIBLE);
             dateText.requestFocus();
+            dateText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    errorDate.setVisibility(View.GONE);
+                    img_date.setVisibility(View.GONE);
+                    showDatePicker();
+                }
+            });
             return;
         }
         if(ora.isEmpty()){
-            tvTime.setError(getResources().getString(R.string.EntTime));
+            errorTime.setVisibility(View.VISIBLE);
+            img_time.setVisibility(View.VISIBLE);
             tvTime.requestFocus();
+            tvTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    errorTime.setVisibility(View.GONE);
+                    img_time.setVisibility(View.GONE);
+                    showTimePicker();
+                }
+            });
             return;
         }
 
