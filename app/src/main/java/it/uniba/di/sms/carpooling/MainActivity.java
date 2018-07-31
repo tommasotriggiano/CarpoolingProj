@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,12 +48,13 @@ import static it.uniba.di.sms.carpooling.R.drawable.badge_background;
 import static it.uniba.di.sms.carpooling.R.drawable.ic_homewhite;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        OfferRideFragment.OnShowRideOfferedListener, MyRidesFragment.OnAddRideOfferedListener{
+        OfferRideFragment.OnShowRideOfferedListener, MyRidesFragment.OnAddRideOfferedListener,OfferRideFragment.GoToProfileListener{
     private ImageView profile;
     private TextView hello;
     private TextView affiliation;
     private TextView affiliation2;
     private String urlImageProfile;
+    private ProgressBar progressBar;
     private FirebaseAuth authInstance = FirebaseAuth.getInstance();
     private DocumentReference rfUser;
     DocumentReference adminrf;
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         affiliation2 = (TextView)  findViewById(R.id.hamburger_count);
-
+        progressBar=(ProgressBar)header.findViewById(R.id.progressBar);
         navigationView.setNavigationItemSelectedListener(this);
         startService(new Intent(getBaseContext(),ServiceReceiver.class));
 
@@ -100,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()){
                     initializeBadge();
+                    progressBar.setVisibility(View.INVISIBLE);
+                    navigationView.setCheckedItem(R.id.nav_home);
                     navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
                     navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(true);
                     navigationView.getMenu().findItem(R.id.nav_searchride).setVisible(true);
@@ -115,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                             if (!(documentSnapshot.exists())) {
+                                progressBar.setVisibility(View.INVISIBLE);
                                 navigationView.getMenu().findItem(R.id.nav_registration).setVisible(true);
                                 navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
                                 navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
@@ -125,10 +130,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 hello.setText(name);
                                 boolean ap = (boolean) user.get("approved");
                                 if (!ap) {
+                                    progressBar.setVisibility(View.INVISIBLE);
                                     navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
                                 } else {
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    navigationView.setCheckedItem(R.id.nav_home);
                                     navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_myrides).setVisible(true);
@@ -323,6 +331,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
         ft2.replace(R.id.content_frame,myRidesFragment);
         ft2.commit();
+        navigationView.setCheckedItem(R.id.nav_myrides);
     }
 
     @Override
@@ -332,32 +341,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ft3.replace(R.id.content_frame,offerRideFragment,null);
         ft3.addToBackStack(null);
         ft3.commit();
+        navigationView.setCheckedItem(R.id.nav_offeraride);
     }
 
 
-
-
-
+    @Override
+    public void goToProfile() {
+        EditProfile editProfileFragment = new EditProfile();
+        FragmentTransaction ft4 = getSupportFragmentManager().beginTransaction();
+        ft4.replace(R.id.content_frame, editProfileFragment, null);
+        ft4.addToBackStack(null);
+        ft4.commit();
+        navigationView.setCheckedItem(R.id.nav_profile);
+    }
 }
 
-/*public class TaskCaricamentoDatabase extends AsyncTask<Void, Void, Boolean> {
-
-    @Override
-    protected Boolean doInBackground(Void...params) {
-        String responseString = "";
-        try {
-            responseString = requestDirection(strings[0]);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return  true;
-    }
-
-    @Override
-    protected void onPostExecute(final Boolean success) {
-        super.onPostExecute(s);
-        //Parse json here
-        MapsActivity.TaskParser taskParser = new MapsActivity.TaskParser();
-        taskParser.execute(s);
-    }
-}*/

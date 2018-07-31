@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,10 @@ import java.util.Map;
 public class OfferRideFragment extends Fragment {
 
     OnShowRideOfferedListener onShowRideOfferedListener;
+    GoToProfileListener goToProfileListener;
+    public interface GoToProfileListener{
+        void goToProfile();
+    }
     public interface OnShowRideOfferedListener{
        void onShowRideOffered();
     }
@@ -93,9 +99,10 @@ public class OfferRideFragment extends Fragment {
         Activity activity=(Activity)context;
         try{
             onShowRideOfferedListener= (OnShowRideOfferedListener) activity;
+            goToProfileListener=(GoToProfileListener)activity;
         }
         catch(ClassCastException e){
-            throw new ClassCastException(activity.toString()+"must implement onShowRideOfferedListener");
+            throw new ClassCastException(activity.toString()+"must implement listener");
         }
 
     }
@@ -376,9 +383,15 @@ public class OfferRideFragment extends Fragment {
 
             }
             else{
-                    //da far apparire come un alert dialog con bottone modifica che porta alla sezione del profilo
-                    //portare l'attività al fragment profilo per inserire la macchina
-                    Toast.makeText(getActivity(),getResources().getString(R.string.EntCar),Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder= new AlertDialog.Builder(getActivity());
+                    builder.setTitle(R.string.EntCar);
+                    builder.setNeutralButton(R.string.GoProfile, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            goToProfileListener.goToProfile();
+                        }
+                    });
+                    builder.show();
                 }
             }
 

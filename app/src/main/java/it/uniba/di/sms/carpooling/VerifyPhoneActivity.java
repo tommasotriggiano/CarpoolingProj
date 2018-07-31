@@ -32,6 +32,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_phone);
+        getActionBar().setTitle(R.string.VerifyPhone);
         mAuth = FirebaseAuth.getInstance();
         mAuth.useAppLanguage();
 

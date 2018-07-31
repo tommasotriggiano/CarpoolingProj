@@ -13,6 +13,7 @@
     <string name="Driver">Name and surname driver</string>
     <string name="posti">N. available seats</string>
     <string name="Offer">Offer</string>
+    <string name="GoProfile">Go to Profile</string>
     <string name="dayOfWeek">Day of week</string>
     <string name="EntDate">Enter date</string>
     <string name="EntTime">Enter departure\'s hour </string>
@@ -35,6 +36,7 @@
     <string name="Welcome2">Let\'s get started!</string>
     <string name="tvUserLogin">Login</string>
     <string name="Register">Aren\'t you registered?</string>
+
     <string name="Login">Are you registered yet?</string>
     <string name="Register2">Sign up now</string>
     <string name="Messaggio">By clicking "Create New Account", it will send you a verification email</string>
@@ -62,11 +64,14 @@
     <string name="Name">Name *</string>
     <string name="Surname">Surname *</string>
     <string name="Address">Home Address *</string>
+    <string name="Company">Company *</string>
+    <string name="Nation">Nation *</string>
     <array name="Companies">
         <item>Grifo srl</item>
         <item>Exprivia srl</item>
     </array>
     <string name="Phone">Phone Number *</string>
+    <string name="VerifyPhone">Verify phone number</string>
     <string name="Car">Your car </string>
     <string name="Conferma">Account Confirmation</string>
     <!--message-->

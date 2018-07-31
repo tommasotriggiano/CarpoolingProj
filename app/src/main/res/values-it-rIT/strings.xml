@@ -14,6 +14,7 @@
     <string name="Driver">Nome e Cognome autista</string>
     <string name="posti">N. posti disponibili</string>
     <string name="Offer">Offri</string>
+    <string name="GoProfile">Vai a profilo</string>
     <string name="dayOfWeek">Giorno</string>
     <string name="EntDate">Inserire la data</string>
     <string name="EntTime">Inserire l\' ora di partenza</string>
@@ -26,7 +27,7 @@
     <string name="dateTime">"Data e ora \: "</string>
     <string name="driver">"Automobilista : "</string>
 
-    <!-- login and registration acitivity-->
+    <!-- login and registration activity-->
     <string name="etUserEmail">E-mail</string>
     <string name="etUserPassword">Password</string>
     <string name="registrazione">REGISTRAZIONE</string>
@@ -37,6 +38,7 @@
     <string name="Register">Non sei registrato?</string>
     <string name="Login">Sei già registrato?</string>
     <string name="Register2">Crea nuovo account</string>
+
     <string name="Messaggio">Cliccando su Crea nuovo account le verrà inviata un\'email di verifica</string>
     <string name="Toast1">Inserire email!</string>
     <string name="Toast2">Inserire password!</string>
@@ -60,11 +62,14 @@
     <string name="Name">Nome *</string>
     <string name="Surname">Cognome *</string>
     <string name="Address">Indirizzo di casa *</string>
+    <string name="Company">Azienda *</string>
+    <string name="Nation">Nazione *</string>
     <array name="Companies">
         <item>Grifo srl</item>
         <item>Exprivia srl</item>
     </array>
     <string name="Phone">Numero di telefono *</string>
+    <string name="VerifyPhone">Verifica numero di telefono</string>
     <string name="Conferma">Conferma account</string>
     <string name="Car">La tua auto</string>
     <!--message-->
