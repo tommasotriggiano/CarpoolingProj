@@ -86,11 +86,9 @@ public class TodayMyRidesAdapter extends RecyclerView.Adapter<TodayMyRidesViewHo
     private void datiPasseggeri(int position, final ListView listView) {
         passenger = new ArrayList<Passeggero>();
         if(itemTodayRide.get(position).get("passeggeri") != null){
-        final ArrayList<String> passeggeri = (ArrayList<String>) itemTodayRide.get(position).get("passeggeri");
-        int i;
-            for(i = 0;i <passeggeri.size();i++){
-            String id = passeggeri.get(i);
-            DocumentReference pass = FirebaseFirestore.getInstance().collection("Users").document(id);
+        final Map<String,Object> passeggeri = (Map<String,Object>) itemTodayRide.get(position).get("passeggeri");
+            for(String key: passeggeri.keySet()){
+            DocumentReference pass = FirebaseFirestore.getInstance().collection("Users").document(key);
                 pass.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {

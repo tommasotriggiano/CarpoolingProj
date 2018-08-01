@@ -41,7 +41,6 @@ public class TodayMyRidesViewHolder  extends RecyclerView.ViewHolder implements 
         listaPasseggeri=(RelativeLayout) itemView.findViewById(R.id.relativeToday);
         linearLayout1 = (LinearLayout) itemView.findViewById(R.id.LinearToday);
         linearLayout2 = (LinearLayout) itemView.findViewById(R.id.LinearToday2);
-        lin = (LinearLayout) itemView.findViewById(R.id.lin);
         linear = (RelativeLayout) itemView.findViewById(R.id.linear);
         rel2 = (RelativeLayout) itemView.findViewById(R.id.rel2);
         cardView= (CardView) itemView.findViewById(R.id.cardviewToday);

@@ -60,8 +60,9 @@ public class TodayMyRidesFragment extends Fragment {
         passaggiOggiRecycler.setHasFixedSize(true);
         user = FirebaseAuth.getInstance().getCurrentUser();
         initializeDataPassaggi();
-        RecyclerView.LayoutManager passaggiOggiLayoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager  passaggiOggiLayoutManager = new LinearLayoutManager(getActivity());
         passaggiOggiRecycler.setLayoutManager(passaggiOggiLayoutManager);
+        passaggiOggiLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         return view;
     }
 
@@ -110,15 +111,15 @@ public class TodayMyRidesFragment extends Fragment {
                     DocumentSnapshot document = dc.getDocument();
                     Map<String, Object> map = document.getData();
                     if (map.get("passeggeri") != null) {
-                        ArrayList<String> passeggeri = (ArrayList<String>) map.get("passeggeri");
+                        Map<String,Object> passeggeri = (Map<String, Object>) map.get("passeggeri");
                         switch (dc.getType()) {
                             case ADDED:
-                                if (passeggeri.contains(user.getUid())) {
+                                if (passeggeri.containsKey(user.getUid())) {
                                     resultPassaggi.add(map);
                                 }
                                 break;
                             case MODIFIED:
-                                if (passeggeri.contains(user.getUid())) {
+                                if (passeggeri.containsKey(user.getUid())) {
                                     resultPassaggi.set(dc.getNewIndex(), map);
                                 }
                                 break;

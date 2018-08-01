@@ -1,23 +1,16 @@
 package it.uniba.di.sms.carpooling;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +18,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -43,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -214,17 +207,16 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                                     Marker marker = mMap.addMarker(new MarkerOptions().position(indirizzoPasseggero));
                                     switch (status) {
                                         case "IN ATTESA":
-                                            if(accept.getVisibility() != View.VISIBLE){
-                                            accept.setVisibility(View.VISIBLE);}
+                                            //accept.setVisibility(View.VISIBLE);
                                             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrichiedi));
                                             break;
                                         case "CONFERMATO":
-                                            accept.setVisibility(View.INVISIBLE);
+                                            //accept.setVisibility(View.INVISIBLE);
                                             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerconfirmed));
                                             break;
                                         case "RIFIUTATO":
-                                            accept.setVisibility(View.INVISIBLE);
-                                            reject.setVisibility(View.INVISIBLE);
+                                            //accept.setVisibility(View.INVISIBLE);
+                                            //reject.setVisibility(View.INVISIBLE);
                                             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.markerrefused));
                                             break;
                                     }
@@ -365,10 +357,12 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
         //2)
-        ArrayList passeggeri = new ArrayList<String>();
+        Map<String,Object> passeggeri = new HashMap<>();
+        Map<String,Object> passeggeri2 = new HashMap<>();
         String idPasseggero = passeggero.get("id").toString();
-        passeggeri.add(idPasseggero);
-        passaggioRf.update("passeggeri",passeggeri);
+        passeggeri.put(idPasseggero,true);
+        passeggeri2.put("passeggeri",passeggeri);
+        passaggioRf.set(passeggeri2, SetOptions.merge());
 
         //3)
         final DocumentReference passaggioRf = FirebaseFirestore.getInstance().collection("Rides").document(idPassaggio);
