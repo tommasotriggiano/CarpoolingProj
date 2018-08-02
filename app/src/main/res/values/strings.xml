@@ -120,6 +120,10 @@
     <!-- myrides -->
     <string name="offered">OFFERED</string>
     <string name="required">REQUIRED</string>
+    <string name="request">Request</string>
+    <string name="rideRequest">Ride Request from </string>
+    <string name="requestAccepted">Your request has been accepted </string>
+    <string name="requestRefused">Your request has been refused </string>
     <string name="delete">Delete</string>
     <string name="Removed">It is removed</string>
     <string name="UNDO">UNDO</string>
@@ -131,6 +135,8 @@
     <string name="approve">Approve</string>
     <string name="reject">Reject</string>
     <string name="accept">Accept</string>
+    <string name="notifyaccept">You are accepted, now you can use all services</string>
+    <string name="notifyreject">Sorry, you aren\'t accepted</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_required_maps">Map</string>

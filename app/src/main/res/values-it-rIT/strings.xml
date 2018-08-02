@@ -111,7 +111,11 @@
     <string name="offered">OFFERTI</string>
     <string name="required">RICHIESTI</string>
     <string name="delete">Cancella</string>
+    <string name="request">Richiesta</string>
+    <string name="requestAccepted">La tua richiesta di passaggio è stata accettata</string>
+    <string name="requestRefused">La tua richiesta di passaggio è stata rifiutata</string>
     <string name="Removed">E\' stato rimosso</string>
+    <string name="rideRequest">Richiesta di passaggio da  </string>
     <string name="UNDO">ANNULLA</string>
     <string name="accepted">ACCETTATO</string>
     <string name="refused">RIFIUTATO</string>
@@ -120,6 +124,8 @@
     <string name="accept">Accetta</string>
     <string name="approve">Accetta</string>
     <string name="reject">Rifiuta</string>
+    <string name="notifyaccept">Sei stato accettato, puoi usufruire dei servizi</string>
+    <string name="notifyreject">Spiacente,non sei stato accettato</string>
     <!-- OfferedMapActivity-->
     <string name="error_seats">I posti sono tutti occupati, impossibile accettare altre richieste</string>
     <!--VerifyNumberActivity-->

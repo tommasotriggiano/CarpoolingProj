@@ -80,7 +80,7 @@ public class ServiceReceiver extends IntentService {
                 //.setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle(Title)
                 .setContentText(Text)
-                .setSmallIcon(android.R.drawable.ic_dialog_email)
+                .setSmallIcon(R.mipmap.ic_launcher3_round)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntentNoti)
                 .setSound(sound)
@@ -101,7 +101,7 @@ public class ServiceReceiver extends IntentService {
                 //.setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle(Title)
                 .setContentText(Text)
-                .setSmallIcon(android.R.drawable.ic_dialog_email)
+                .setSmallIcon(R.mipmap.ic_launcher3_round)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntentNoti)
                 .setSound(sound)
@@ -126,13 +126,13 @@ public class ServiceReceiver extends IntentService {
             for (NotificaAltervista matchFound:founderArray ) {
                 if(matchFound.toString().compareTo(ACCETTATO)==0){        //SE IN UNA NOTA C'E' "Accettato"
                     Toast.makeText(getApplicationContext(), "Founded a note", Toast.LENGTH_LONG).show();
-                    sendNotify("Carpooling","Sei stato accettato, puoi usufruire dei servizi",0);
+                    sendNotify("Carpooling",getResources().getString(R.string.notifyaccept).toString(),0);
                     Log.i(TAG,"nota inviata");
                     deleteNote(ACCETTATO,userUid);
                 }
-                if(matchFound.toString().compareTo(RIFIUTATO)==0){        //SE IN UNA NOTA C'E' "Accettato"
+                if(matchFound.toString().compareTo(RIFIUTATO)==0){        //SE IN UNA NOTA C'E' "Rifiutato"
                     Toast.makeText(getApplicationContext(), "Founded a note", Toast.LENGTH_LONG).show();
-                    sendNotify("Carpooling","Non sei stato accettato, spiacente",0);
+                    sendNotify("Carpooling",getResources().getString(R.string.notifyreject).toString(),0);
                     Log.i(TAG,"nota non accettato inviata");
                     deleteNote(ACCETTATO,userUid);
                 }
@@ -140,19 +140,19 @@ public class ServiceReceiver extends IntentService {
                     Toast.makeText(getApplicationContext(), "Founded a note", Toast.LENGTH_LONG).show();
                     String richiedente=matchFound.toString();
                     String nomeRichiedente = richiedente.substring(richiedente.indexOf(';')+1);
-                    sendNotify("Richiesta da " + nomeRichiedente.trim() ,"Vuoi dargli un passaggio?",1,true);
+                    sendNotify( getResources().getString(R.string.rideRequest).toString(), nomeRichiedente.trim(),1,true);
                     Log.i(TAG,REQUEST+nomeRichiedente);
                     deleteNote(richiedente,userUid);
                 }
                 if(matchFound.toString().compareTo(PASSAGGIOACCETTATO)==0){
                     Toast.makeText(getApplicationContext(), "Founded a note", Toast.LENGTH_LONG).show();
-                    sendNotify("Richiesta","La tua richiesta di passaggio è stata accettata",2);
+                    sendNotify("Carpooling",getResources().getString(R.string.requestAccepted).toString(),2);
                     Log.i(TAG,"nota passaggio accettato ricevuta");
                     deleteNote(PASSAGGIOACCETTATO,userUid);
                 }
                 if(matchFound.toString().compareTo(PASSAGGIORIFIUTATO)==0){
                     Toast.makeText(getApplicationContext(), "Founded a note", Toast.LENGTH_LONG).show();
-                    sendNotify("Richiesta","La tua richiesta di passaggio è stata rifiutata",2);
+                    sendNotify("Carpooling",getResources().getString(R.string.requestRefused).toString(),2);
                     Log.i(TAG,"nota passaggio rifiutato ricevuta");
                     deleteNote(PASSAGGIORIFIUTATO,userUid);
                 }
