@@ -53,10 +53,14 @@ import static android.content.ContentValues.TAG;
  */
 public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelperListener {
     OnAddRideOfferedListener onAddRideOfferedListener;
+    ShowRideRequiredListener showRideRequiredListener;
 
 
     public interface OnAddRideOfferedListener{
         void onAddRideOffered();
+    }
+    public interface ShowRideRequiredListener{
+        void showRideRequired();
     }
 
     CoordinatorLayout rootLayout;
@@ -122,6 +126,12 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
         passaggiRecycler.setLayoutManager(passaggiLayoutManager);
         requiredRecycler.setLayoutManager(requiredLayoutManager);
 
+        if (getArguments()!= null && getArguments().getString("REQUIRED").equals("REQUIRED")){
+            radioGroup.check(R.id.required);
+            passaggiRecycler.setVisibility(View.INVISIBLE);
+            requiredRecycler.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.GONE);
+        }
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -199,9 +209,10 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
         Activity activity=(Activity)context;
         try{
             onAddRideOfferedListener= (MyRidesFragment.OnAddRideOfferedListener) activity;
+            showRideRequiredListener=(MyRidesFragment.ShowRideRequiredListener)activity;
         }
         catch(ClassCastException e){
-            throw new ClassCastException(activity.toString()+"must implement onAddRideOfferedListener");
+            throw new ClassCastException(activity.toString()+"must implement listener");
         }
 
     }

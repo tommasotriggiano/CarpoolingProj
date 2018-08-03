@@ -48,7 +48,8 @@ import static it.uniba.di.sms.carpooling.R.drawable.badge_background;
 import static it.uniba.di.sms.carpooling.R.drawable.ic_homewhite;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        OfferRideFragment.OnShowRideOfferedListener, MyRidesFragment.OnAddRideOfferedListener,OfferRideFragment.GoToProfileListener{
+        OfferRideFragment.OnShowRideOfferedListener, MyRidesFragment.OnAddRideOfferedListener,OfferRideFragment.GoToProfileListener,
+        MyRidesFragment.ShowRideRequiredListener{
     private ImageView profile;
     private TextView hello;
     private TextView affiliation;
@@ -90,8 +91,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profile = (CircleImageView) header.findViewById(R.id.imageProfile);
         hello = (TextView)header.findViewById(R.id.hello);
         affiliation = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_approvazione));
-
-
+        if(getIntent() != null && getIntent().getExtras() != null) {
+            String required = getIntent().getExtras().getString("REQUIRED");
+            showRideRequired();
+        }
         if (userAuth != null) {
             rfUser = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
             adminrf = FirebaseFirestore.getInstance().collection("Admin").document(userAuth.getUid());
@@ -353,6 +356,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ft4.addToBackStack(null);
         ft4.commit();
         navigationView.setCheckedItem(R.id.nav_profile);
+    }
+
+    @Override
+    public void showRideRequired() {
+        MyRidesFragment myRidesFragment = new MyRidesFragment();
+        String required= getIntent().getStringExtra("REQUIRED");
+        Bundle data= new Bundle();
+        data.putString("REQUIRED",required);
+        myRidesFragment.setArguments(data);
+        FragmentTransaction ft5 = getSupportFragmentManager().beginTransaction();
+        ft5.replace(R.id.content_frame, myRidesFragment, null);
+        ft5.commit();
+        navigationView.setCheckedItem(R.id.nav_myrides);
     }
 }
 

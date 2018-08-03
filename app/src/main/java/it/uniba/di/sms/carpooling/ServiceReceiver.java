@@ -159,7 +159,7 @@ public class ServiceReceiver extends IntentService {
             }
         }
         else{
-            Toast.makeText(getApplicationContext(), "Nessuna nota trovata", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Nessuna nota trovata", Toast.LENGTH_SHORT).show();
             Log.i(TAG,"nota non trovata");
         }
 

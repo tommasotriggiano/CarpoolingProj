@@ -481,11 +481,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 rideRequest.add(requestMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Snackbar snackbar= Snackbar.make(rootLayout,getResources().getString(R.string.requestSend),Snackbar.LENGTH_SHORT);
-                        snackbar.show();
-                        /*dopo che lo snackbar esce può comparire un dialog che dice "Vuoi vedere la tua richiesta?"
-                        e manda l'utente nella sezione dei passaggi richiesti
-                         */
+                        Intent intent = new Intent(MapsActivity.this,MainActivity.class);
+                        intent.putExtra("REQUIRED","REQUIRED");
+                        startActivity(intent);
 
 
                     }
