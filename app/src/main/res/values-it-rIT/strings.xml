@@ -6,8 +6,8 @@
     <string name="Date">Data *</string>
     <string name="Home">Casa </string>
     <string name="Work">Lavoro</string>
-    <string name="WorkHome">Lavoro-Casa</string>
-    <string name="HomeWork">Casa-Lavoro</string>
+    <string name="WorkHome">Lavoro -> Casa</string>
+    <string name="HomeWork">Casa -> Lavoro</string>
     <string name="Departure">Ora di partenza *</string>
     <string name="giorno">Giorno della settimana</string>
     <string name="Search">Cerca</string>

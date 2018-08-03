@@ -3,6 +3,7 @@ package it.uniba.di.sms.carpooling.rideOffered;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.transition.Transition;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

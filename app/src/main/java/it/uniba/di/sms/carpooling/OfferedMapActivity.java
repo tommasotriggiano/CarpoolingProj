@@ -81,6 +81,7 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offered_map);
+        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
         rootLayout= (CoordinatorLayout)findViewById((R.id.root)) ;
         bottomSheetDialog =findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetDialog);
@@ -149,6 +150,11 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 
     /**
      * Manipulates the map once available.
