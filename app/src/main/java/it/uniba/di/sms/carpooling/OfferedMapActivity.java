@@ -92,8 +92,8 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
         cognomePass = (TextView) bottomSheetDialog.findViewById(R.id.cognomePass);
         telefono = (TextView) bottomSheetDialog.findViewById(R.id.telefono);
         address1 =(TextView) bottomSheetDialog.findViewById(R.id.indirizzo);
-        accept=(Button)bottomSheetDialog.findViewById(R.id.accept);
-        reject=(ImageButton)bottomSheetDialog.findViewById(R.id.reject);
+        accept=(Button)bottomSheetDialog.findViewById(R.id.accetta);
+        reject=(ImageButton)bottomSheetDialog.findViewById(R.id.rifiuta);
 
         //CardView
         direzione=(TextView) findViewById(R.id.casa) ;

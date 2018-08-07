@@ -72,23 +72,22 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
        android:gravity="end" >
-    <Button
-        android:id="@+id/accept"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="@string/accept"
-        android:background="@android:color/transparent"
-        android:textColor="@color/text_color"
-        android:textSize="20dp"/>
+        <Button
+            android:id="@+id/accetta"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:text="@string/accept"
+            android:textColor="@color/white"
+            android:background="@drawable/button_rectangle_blue"/>
 
-    <ImageButton
-        android:id="@+id/reject"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="5dp"
-        android:src="@drawable/ic_rejectride"
-        android:background="@android:color/transparent" />
+        <Button
+            android:id="@+id/rifiuta"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/button_rectangle_white"
+            android:text="@string/reject"
+            android:textColor="@color/colorPrimaryDark"/>
+
     </LinearLayout>
 </LinearLayout>

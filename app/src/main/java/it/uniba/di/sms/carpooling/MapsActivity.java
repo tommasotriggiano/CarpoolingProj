@@ -320,7 +320,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         for (DocumentSnapshot document : task.getResult()) {
                             Map<String, Object> passaggio = document.getData();
                             Map<String, Object> autista = (Map<String, Object>) passaggio.get("autista");
-
                             Map<String, Object> address = (Map<String, Object>) autista.get("userAddress");
                             Double latitude = (Double) address.get("latitude");
                             Double longitude = (Double) address.get("longitude");

@@ -127,9 +127,9 @@
     <string name="delete">Delete</string>
     <string name="Removed">It is removed</string>
     <string name="UNDO">UNDO</string>
-    <string name="accepted">ACCEPTED</string>
-    <string name="refused">REFUSED</string>
-    <string name="wait">PENDING</string>
+    <string name="accepted">Accepted</string>
+    <string name="refused">Refused</string>
+    <string name="wait">Pending</string>
 
     <!-- approved affiliation-->
     <string name="approve">Approve</string>

@@ -51,7 +51,7 @@
 
         <EditText
             android:id="@+id/editTextCode"
-            android:layout_width="290dp"
+            android:layout_width="335dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/progressbar"
             android:layout_centerHorizontal="true"
@@ -70,7 +70,7 @@
             android:layout_below="@id/editTextCode"
             android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/button_shape"
+            android:background="@drawable/button_rectangle_blue"
             android:text="@string/confirm"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
             android:textColor="@color/cardview_light_background" />

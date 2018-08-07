@@ -46,7 +46,7 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
     public LinearLayout richiesti2;
     public RelativeLayout rich;
     public CircleImageView immagine;
-    public TextView data,giorno,ora,casa,telefono,nome,cognome,status;
+    public TextView data,giorno,ora,casa,telefono,nome,cognome,status,auto;
     private DocumentReference user;
     private FirebaseUser userAuth;
 
@@ -55,6 +55,7 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_required_maps);
+        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -75,6 +76,7 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
         ora = (TextView) findViewById(R.id.Ora);
         casa = (TextView) findViewById(R.id.Casa);
         telefono = (TextView) findViewById(R.id.Telefono);
+        auto=(TextView) findViewById(R.id.Auto);
         nome = (TextView) findViewById(R.id.nomeAut);
         cognome = (TextView) findViewById(R.id.cognomeAut);
         immagine = (CircleImageView) findViewById(R.id.immagineProfilo);
@@ -95,15 +97,23 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
                 telefono.setText((String) autista.get("phone"));
                 cognome.setText((String) autista.get("surname"));
                 nome.setText((String) autista.get("name"));
+                auto.setText((String) autista.get("car"));
 
                 if (autista.get("urlProfileImage") != null) {
                     Picasso.with(RequiredMapsActivity.this).load(autista.get("urlProfileImage").toString()).into(immagine);
+                }else {
+                    immagine.setImageDrawable(getResources().getDrawable(R.drawable.ic_image_profile));
                 }
             }
         });
 
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 
     /**
      * Manipulates the map once available.

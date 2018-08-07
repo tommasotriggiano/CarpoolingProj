@@ -117,9 +117,10 @@
     <string name="Removed">E\' stato rimosso</string>
     <string name="rideRequest">Richiesta di passaggio da  </string>
     <string name="UNDO">ANNULLA</string>
-    <string name="accepted">ACCETTATO</string>
-    <string name="refused">RIFIUTATO</string>
-    <string name="wait">IN ATTESA</string>
+    <string name="accepted">Accettato</string>
+    <string name="refused">Rifiutato</string>
+    <string name="wait">In attesa</string>
+
     <!-- approved affiliation-->
     <string name="accept">Accetta</string>
     <string name="approve">Accetta</string>

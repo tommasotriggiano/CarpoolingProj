@@ -28,6 +28,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_location"
                     android:text="@string/Home"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
@@ -42,6 +43,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Giorno"
+                        android:drawableStart="@drawable/ic_today_black"
                         android:textColor="@color/black"
                         android:textSize="20sp" />
                     <TextView
@@ -57,6 +59,7 @@
                 <TextView
                     android:layout_marginStart="10dp"
                     android:id="@+id/Ora"
+                    android:drawableStart="@drawable/ic_access_time_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ora"
@@ -71,6 +74,7 @@
                         android:id="@+id/textpostiOcc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_people"
                         android:textColor="@color/black"
                         android:text="@string/Occupied"
                         android:textSize="20sp" />

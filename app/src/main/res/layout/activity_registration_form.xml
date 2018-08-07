@@ -206,15 +206,17 @@
 
             <Button
                 android:id="@+id/confirm"
-                android:background="@drawable/button_shape"
-                android:layout_width="186dp"
+                android:background="@drawable/button_rectangle_blue"
+                android:layout_width="216dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
                 android:text="@string/Conferma"
                 android:textColor="@android:color/white"
                 android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layout_auto"
                 tools:text="@string/Conferma" />
         </android.support.constraint.ConstraintLayout>

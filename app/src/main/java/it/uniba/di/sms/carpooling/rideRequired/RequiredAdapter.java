@@ -86,6 +86,8 @@ public class RequiredAdapter extends RecyclerView.Adapter<RequiredViewHolder>{
 
                     if(autista.get("urlProfileImage") != null){
                         Picasso.with(context1).load(autista.get("urlProfileImage").toString()).into(holder.immagine);
+                    }else {
+                        holder.immagine.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_image_profile));
                     }
                 }
             }

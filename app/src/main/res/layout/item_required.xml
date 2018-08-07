@@ -57,10 +57,12 @@
                     android:id="@+id/Status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="7dp"
+                    android:layout_marginTop="7dp"
+                  android:layout_alignParentEnd="true"
                     android:text="Status"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textColor="@color/colorAccent"
+                    android:textSize="17sp" />
             </RelativeLayout>
 
             <TextView
@@ -95,6 +97,13 @@
                     android:text="Data"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
+                <ImageView
+                    android:id="@+id/freccia"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="200dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/ic_arrow_right" />
 
             </LinearLayout>
 
