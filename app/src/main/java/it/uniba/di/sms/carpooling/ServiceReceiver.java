@@ -92,13 +92,12 @@ public class ServiceReceiver extends IntentService {
     public void sendNotify(String Title, String Text, int identifier,boolean sendToMyRides) {
         Intent intentNoti=new Intent(this,MainActivity.class);
         if(sendToMyRides) {
-            intentNoti=new Intent(this,MyRidesFragment.class);
+            intentNoti=new Intent(this,MainActivity.class);
         }
         PendingIntent pendingIntentNoti=PendingIntent.getActivity(this, 0, intentNoti, 0);
 
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder n  = new NotificationCompat.Builder(this)
-                //.setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle(Title)
                 .setContentText(Text)
                 .setSmallIcon(R.mipmap.ic_launcher3_round)

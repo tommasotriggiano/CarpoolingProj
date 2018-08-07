@@ -81,15 +81,25 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
         cognome = (TextView) findViewById(R.id.cognomeAut);
         immagine = (CircleImageView) findViewById(R.id.immagineProfilo);
         status = (TextView) findViewById(R.id.Status);
-
-        status.setText((String) richiesta.get("status"));
+        String statusString =richiesta.get("status").toString();
+        switch (statusString) {
+            case "IN ATTESA":
+               status.setText(getResources().getString(R.string.wait));
+                break;
+            case "CONFERMATO":
+               status.setText(getResources().getString(R.string.accepted));
+                break;
+            case "RIFIUTATO":
+                status.setText(getResources().getString(R.string.refused));
+                break;
+        }
         String idPassaggio = richiesta.get("idPassaggio").toString();
         DocumentReference passaggio = FirebaseFirestore.getInstance().collection("Rides").document(idPassaggio);
         passaggio.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Map<String, Object> passaggio = documentSnapshot.getData();
-                data.setText((String) passaggio.get("data"));
+                data.setText((String) passaggio.get("dataPassaggio"));
                 giorno.setText((String) passaggio.get("giorno"));
                 ora.setText((String) passaggio.get("ora"));
                 casa.setText((String) passaggio.get("tipoViaggio"));

@@ -67,8 +67,7 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
     private  CoordinatorLayout rootLayout;
     private String idPassaggio;
     private View bottomSheetDialog;
-    private Button accept;
-    private ImageButton reject;
+    private Button accept,reject;
     private TextView direzione,data,ora,posti,giorno,nomePass,cognomePass,telefono,address1;
     private CircleImageView imgPass;
     private HashMap<String,Object> passaggio;
@@ -93,7 +92,7 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
         telefono = (TextView) bottomSheetDialog.findViewById(R.id.telefono);
         address1 =(TextView) bottomSheetDialog.findViewById(R.id.indirizzo);
         accept=(Button)bottomSheetDialog.findViewById(R.id.accetta);
-        reject=(ImageButton)bottomSheetDialog.findViewById(R.id.rifiuta);
+        reject=(Button)bottomSheetDialog.findViewById(R.id.rifiuta);
 
         //CardView
         direzione=(TextView) findViewById(R.id.casa) ;
@@ -271,6 +270,8 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                                 if(passeggero.get("urlProfileImage") != null){
                                     String urlProfileImage = passeggero.get("urlProfileImage").toString();
                                     Picasso.with(OfferedMapActivity.this).load(urlProfileImage).into(imgPass);
+                                }else {
+                                    imgPass.setImageDrawable(getResources().getDrawable(R.drawable.ic_image_profile));
                                 }
 
                                 nomePass.setText(passeggero.get("name").toString());

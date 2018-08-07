@@ -92,9 +92,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         hello = (TextView)header.findViewById(R.id.hello);
         affiliation = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_approvazione));
         if(getIntent() != null && getIntent().getExtras() != null) {
-            String required = getIntent().getExtras().getString("REQUIRED");
-            showRideRequired();
+            String required=getIntent().getExtras().getString("REQUIRED");
+                showRideRequired();
         }
+
         if (userAuth != null) {
             rfUser = FirebaseFirestore.getInstance().collection("Users").document(userAuth.getUid());
             adminrf = FirebaseFirestore.getInstance().collection("Admin").document(userAuth.getUid());

@@ -120,7 +120,9 @@
     <string name="accepted">Accettato</string>
     <string name="refused">Rifiutato</string>
     <string name="wait">In attesa</string>
-
+    <string name="Car2">Auto \: </string>
+    <string name="NotOfferedRide">Non ci sono passaggi offerti</string>
+    <string name="NotRequiredRide">Non ci sono passaggi richiesti</string>
     <!-- approved affiliation-->
     <string name="accept">Accetta</string>
     <string name="approve">Accetta</string>

@@ -75,7 +75,18 @@ public class RequiredAdapter extends RecyclerView.Adapter<RequiredViewHolder>{
                     }
                     else{
                         holder.data.setText((String)passaggio.get("dataPassaggio"));
-                        holder.status.setText((String)itemRideRequired.get(position).get("status"));
+                       String status= itemRideRequired.get(position).get("status").toString();
+                        switch (status) {
+                            case "IN ATTESA":
+                                holder.status.setText(context.getResources().getString(R.string.wait));
+                                break;
+                            case "CONFERMATO":
+                                holder.status.setText(context.getResources().getString(R.string.accepted));
+                                break;
+                            case "RIFIUTATO":
+                                holder.status.setText(context.getResources().getString(R.string.refused));
+                                break;
+                        }
                         holder.casa.setText(passaggio.get("tipoViaggio").toString());}
                     holder.giorno.setText((String)passaggio.get("giorno"));
                     holder.ora.setText((String)passaggio.get("ora"));

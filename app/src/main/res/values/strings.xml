@@ -130,6 +130,9 @@
     <string name="accepted">Accepted</string>
     <string name="refused">Refused</string>
     <string name="wait">Pending</string>
+    <string name="Car2">Car \: </string>
+    <string name="NotOfferedRide">There aren\'t offered rides</string>
+    <string name="NotRequiredRide">There aren\'t required rides</string>
 
     <!-- approved affiliation-->
     <string name="approve">Approve</string>

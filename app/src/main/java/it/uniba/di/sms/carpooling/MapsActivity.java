@@ -173,7 +173,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private String tipoViaggio,data,ora,nome,cognome;
-    private TextView direzione, dataOra,automobilista,labelAut,nomeAutista,cognomeAutista,dataP,oraP,posti,message;
+    private TextView direzione, dataOra,automobilista,labelAut,nomeAutista,cognomeAutista,dataP,oraP,posti,message,auto;
     private CircleImageView profile;
     private Button required;
     private String idAutista;
@@ -228,6 +228,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         oraP = (TextView)  bottomSheetDialog.findViewById(R.id.Ora);
         posti = (TextView)  bottomSheetDialog.findViewById(R.id.postiDisp);
         message = (TextView) bottomSheetDialog.findViewById(R.id.message);
+        auto = (TextView) bottomSheetDialog.findViewById(R.id.AutoText);
         required = (Button)  bottomSheetDialog.findViewById(R.id.requiredRide);
 
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
@@ -424,7 +425,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     dataP.setText(data);}
                     oraP.setText(pass.get("ora").toString());
                     posti.setText(pass.get("postiDisponibili").toString());
-
+                    auto.setText(pass.get("car").toString());
 
 
                 required.setOnClickListener(new View.OnClickListener() {

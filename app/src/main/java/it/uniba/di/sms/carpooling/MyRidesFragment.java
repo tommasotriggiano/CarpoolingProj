@@ -77,6 +77,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
     CollectionReference passaggiRichiesti;
     private ArrayList resultPassaggi;
     private ArrayList resultRequired;
+    private TextView messageNotFound;
 
     public MyRidesFragment() {
         // Required empty public constructor
@@ -91,9 +92,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
         getActivity().setTitle(R.string.myrides);
         rootLayout= (CoordinatorLayout) view.findViewById(R.id.coordinator);
         RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
-        RadioButton offered = (RadioButton) view.findViewById(R.id.offered);
-        RadioButton required = (RadioButton) view.findViewById(R.id.required);
-        TextView messageNotFound = (TextView) view.findViewById(R.id.message);
+        messageNotFound = (TextView) view.findViewById(R.id.message);
 
         passaggiRecycler = (RecyclerView) view.findViewById(R.id.rvPassaggiOfferti);
         passaggiRecycler.setNestedScrollingEnabled(false);
@@ -244,7 +243,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                 */
                 public void onDismissed(Snackbar snackbar1,int event){
                     if(event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT){
-                        Toast.makeText(getContext(),deletePassaggio.toString(),Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(),deletePassaggio.toString(),Toast.LENGTH_LONG).show();
                     Query findRideToDelete = passaggi
                             .whereEqualTo("autista.id",user.getUid())
                             .whereEqualTo("dataPassaggio",deletePassaggio.get("dataPassaggio"))
@@ -289,7 +288,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
         passaggi = FirebaseFirestore.getInstance().collection("Rides");
         //prendo solamente i passaggi che ha offerto l'utente autenticato
 
-        Query offered = passaggi.whereEqualTo("autista.id",user.getUid());
+        Query offered = passaggi.whereEqualTo("autista.id",user.getUid()).orderBy("dataPassaggio").orderBy("ora");
 
         offered.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
