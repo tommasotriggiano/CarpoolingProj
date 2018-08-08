@@ -425,7 +425,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     dataP.setText(data);}
                     oraP.setText(pass.get("ora").toString());
                     posti.setText(pass.get("postiDisponibili").toString());
-                    auto.setText(pass.get("car").toString());
+                    auto.setText(autista1.get("car").toString());
 
 
                 required.setOnClickListener(new View.OnClickListener() {

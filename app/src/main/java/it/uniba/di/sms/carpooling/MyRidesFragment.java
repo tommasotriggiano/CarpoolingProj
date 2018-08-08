@@ -125,7 +125,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
         passaggiRecycler.setLayoutManager(passaggiLayoutManager);
         requiredRecycler.setLayoutManager(requiredLayoutManager);
 
-        if (getArguments()!= null && getArguments().getString("REQUIRED").equals("REQUIRED")){
+        if (getArguments()!= null && getArguments().getString("REQUIRED")!= null){
             radioGroup.check(R.id.required);
             passaggiRecycler.setVisibility(View.INVISIBLE);
             requiredRecycler.setVisibility(View.VISIBLE);

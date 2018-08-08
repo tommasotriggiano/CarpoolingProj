@@ -93,7 +93,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         affiliation = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_approvazione));
         if(getIntent() != null && getIntent().getExtras() != null) {
             String required=getIntent().getExtras().getString("REQUIRED");
-                showRideRequired();
+            if (getIntent().getExtras().getString("REQUIRED")!= null){
+                showRideRequired();}
+            /*if (getIntent().getExtras().getString("sendToMyRides")!= null){
+                onShowRideOffered();}*/
         }
 
         if (userAuth != null) {

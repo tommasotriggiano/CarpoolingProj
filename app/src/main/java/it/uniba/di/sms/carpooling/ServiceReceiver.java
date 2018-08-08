@@ -93,6 +93,7 @@ public class ServiceReceiver extends IntentService {
         Intent intentNoti=new Intent(this,MainActivity.class);
         if(sendToMyRides) {
             intentNoti=new Intent(this,MainActivity.class);
+            //intentNoti.putExtra("sendToMyRides","openMyRides");
         }
         PendingIntent pendingIntentNoti=PendingIntent.getActivity(this, 0, intentNoti, 0);
 

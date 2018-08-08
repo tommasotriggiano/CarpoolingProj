@@ -10,7 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="it.uniba.di.sms.carpooling.RegistrationFormActivity"
+        tools:context="it.uniba.di.sms.carpooling.MainActivity"
         android:background="#fff"
         android:theme="@style/ColoredHandleTheme">
 
