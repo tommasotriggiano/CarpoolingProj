@@ -1,6 +1,10 @@
 package it.uniba.di.sms.carpooling;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -277,6 +281,22 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
                                 nomePass.setText(passeggero.get("name").toString());
                                 cognomePass.setText(passeggero.get("surname").toString());
                                 telefono.setText(passeggero.get("phone").toString());
+                                telefono.setPaintFlags(telefono.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                                telefono.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        AlertDialog.Builder builder= new AlertDialog.Builder(OfferedMapActivity.this);
+                                        builder.setNeutralButton(getResources().getString(R.string.callPhone),new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+                                                dialIntent.setData(Uri.parse("tel:" + telefono.getText()));
+                                                startActivity(dialIntent);
+                                            }
+                                        });
+                                        builder.show();}
+
+                                });
                                 Map<String,Object> address = (Map<String, Object>) passeggero.get("userAddress");
                                 address1.setText(address.get("address").toString());
 

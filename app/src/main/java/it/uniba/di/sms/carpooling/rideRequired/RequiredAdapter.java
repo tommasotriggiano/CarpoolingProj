@@ -1,11 +1,16 @@
 package it.uniba.di.sms.carpooling.rideRequired;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -23,7 +28,7 @@ import it.uniba.di.sms.carpooling.RequiredMapsActivity;
 public class RequiredAdapter extends RecyclerView.Adapter<RequiredViewHolder>{
     private ArrayList<Map<String,Object>> itemRideRequired;
     private Context context;
-
+    private String telefono;
     public RequiredAdapter(ArrayList<Map<String,Object>> itemRideRequired, Context context){
         this.itemRideRequired = itemRideRequired;
         this.context = context;
@@ -92,6 +97,8 @@ public class RequiredAdapter extends RecyclerView.Adapter<RequiredViewHolder>{
                     holder.ora.setText((String)passaggio.get("ora"));
                     Map<String,Object> autista = (Map<String, Object>) passaggio.get("autista");
                     holder.telefono.setText((String)autista.get("phone"));
+                    holder.telefono.setPaintFlags(holder.telefono.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                    telefono=autista.get("phone").toString();
                     holder.cognome.setText((String)autista.get("surname"));
                     holder.nome.setText((String)autista.get("name"));
 
@@ -114,9 +121,25 @@ public class RequiredAdapter extends RecyclerView.Adapter<RequiredViewHolder>{
 
             }
         });
+
+
+            holder.telefono.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                  AlertDialog.Builder builder= new AlertDialog.Builder(context);
+                  builder.setNeutralButton(context.getResources().getString(R.string.callPhone),new DialogInterface.OnClickListener() {
+                              @Override
+                              public void onClick(DialogInterface dialogInterface, int i) {
+                                  Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+                                  dialIntent.setData(Uri.parse("tel:" + telefono));
+                                  context.startActivity(dialIntent);
+                              }
+                  });
+                  builder.show();}
+
+            });
+
     }
-
-
 
 
 

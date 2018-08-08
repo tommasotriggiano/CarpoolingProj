@@ -123,6 +123,8 @@
     <string name="Car2">Auto \: </string>
     <string name="NotOfferedRide">Non ci sono passaggi offerti</string>
     <string name="NotRequiredRide">Non ci sono passaggi richiesti</string>
+    <string name="callPhone">Chiama</string>
+
     <!-- approved affiliation-->
     <string name="accept">Accetta</string>
     <string name="approve">Accetta</string>

@@ -1,6 +1,10 @@
 package it.uniba.di.sms.carpooling;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -105,6 +109,22 @@ public class RequiredMapsActivity extends FragmentActivity implements OnMapReady
                 casa.setText((String) passaggio.get("tipoViaggio"));
                 Map<String, Object> autista = (Map<String, Object>) passaggio.get("autista");
                 telefono.setText((String) autista.get("phone"));
+                telefono.setPaintFlags(telefono.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                telefono.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog.Builder builder= new AlertDialog.Builder(RequiredMapsActivity.this);
+                        builder.setNeutralButton(getResources().getString(R.string.callPhone),new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+                                dialIntent.setData(Uri.parse("tel:" + telefono.getText()));
+                                startActivity(dialIntent);
+                            }
+                        });
+                        builder.show();}
+
+                });
                 cognome.setText((String) autista.get("surname"));
                 nome.setText((String) autista.get("name"));
                 auto.setText((String) autista.get("car"));
