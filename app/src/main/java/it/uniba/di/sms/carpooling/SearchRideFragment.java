@@ -307,6 +307,22 @@ public class SearchRideFragment extends Fragment {
                 timeString=String.valueOf(hour) + ":" + String.valueOf(minute);
                 tvTime.setText(timeString);
             }
+
+            Calendar cal=Calendar.getInstance();
+            if (hour < cal.get(Calendar.HOUR_OF_DAY)|| minute< cal.get(Calendar.MINUTE) ){
+                errorTime.setVisibility(View.VISIBLE);
+                errorTime.setText(getResources().getString(R.string.hourNotValid));
+                img_time.setVisibility(View.VISIBLE);
+                tvTime.requestFocus();
+                tvTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        errorTime.setVisibility(View.GONE);
+                        img_time.setVisibility(View.GONE);
+                        showTimePicker();
+                    }
+                });
+            }
         }
 
     };

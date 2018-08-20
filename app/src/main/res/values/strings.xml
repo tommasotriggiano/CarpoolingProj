@@ -15,6 +15,7 @@
     <string name="Offer">Offer</string>
     <string name="GoProfile">Go to Profile</string>
     <string name="dayOfWeek">Day of week</string>
+    <string name="hourNotValid">The time must be after the current one</string>
     <string name="EntDate">Enter date</string>
     <string name="EntTime">Enter departure\'s hour </string>
     <string name="EntNameSurname">Enter name and surname of the driver </string>
