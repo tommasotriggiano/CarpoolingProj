@@ -289,7 +289,20 @@ public class OfferRideFragment extends Fragment {
                 tvTime.setText(timeString);
             }
             Calendar cal=Calendar.getInstance();
-            if (hour < cal.get(Calendar.HOUR_OF_DAY)|| minute< cal.get(Calendar.MINUTE) ){
+            if (hour < cal.get(Calendar.HOUR_OF_DAY)){
+                errorTime.setVisibility(View.VISIBLE);
+                errorTime.setText(getResources().getString(R.string.hourNotValid));
+                img_time.setVisibility(View.VISIBLE);
+                tvTime.requestFocus();
+                tvTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        errorTime.setVisibility(View.GONE);
+                        img_time.setVisibility(View.GONE);
+                        showTimePicker();
+                    }
+                });
+            } else if(hour==cal.get(Calendar.HOUR_OF_DAY) && minute < cal.get(Calendar.MINUTE)){
                 errorTime.setVisibility(View.VISIBLE);
                 errorTime.setText(getResources().getString(R.string.hourNotValid));
                 img_time.setVisibility(View.VISIBLE);

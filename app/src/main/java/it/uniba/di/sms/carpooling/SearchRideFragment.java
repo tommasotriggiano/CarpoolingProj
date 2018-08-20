@@ -294,22 +294,35 @@ public class SearchRideFragment extends Fragment {
             String timeString;
             if (hour < 10) {
                 if (minute < 10) {
-                    timeString="0" + String.valueOf(hour) + ":0" + String.valueOf(minute);
+                    timeString = "0" + String.valueOf(hour) + ":0" + String.valueOf(minute);
                     tvTime.setText(timeString);
                 } else {
-                    timeString="0" + String.valueOf(hour) + ":" + String.valueOf(minute);
+                    timeString = "0" + String.valueOf(hour) + ":" + String.valueOf(minute);
                     tvTime.setText(timeString);
                 }
-            } else if (minute<10) {
-                timeString=String.valueOf(hour) + ":0" + String.valueOf(minute);
+            } else if (minute < 10) {
+                timeString = String.valueOf(hour) + ":0" + String.valueOf(minute);
                 tvTime.setText(timeString);
-            }else{
-                timeString=String.valueOf(hour) + ":" + String.valueOf(minute);
+            } else {
+                timeString = String.valueOf(hour) + ":" + String.valueOf(minute);
                 tvTime.setText(timeString);
             }
 
-            Calendar cal=Calendar.getInstance();
-            if (hour < cal.get(Calendar.HOUR_OF_DAY)|| minute< cal.get(Calendar.MINUTE) ){
+            Calendar cal = Calendar.getInstance();
+            if (hour < cal.get(Calendar.HOUR_OF_DAY)) {
+                errorTime.setVisibility(View.VISIBLE);
+                errorTime.setText(getResources().getString(R.string.hourNotValid));
+                img_time.setVisibility(View.VISIBLE);
+                tvTime.requestFocus();
+                tvTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        errorTime.setVisibility(View.GONE);
+                        img_time.setVisibility(View.GONE);
+                        showTimePicker();
+                    }
+                });
+            } else if(hour==cal.get(Calendar.HOUR_OF_DAY) && minute < cal.get(Calendar.MINUTE)){
                 errorTime.setVisibility(View.VISIBLE);
                 errorTime.setText(getResources().getString(R.string.hourNotValid));
                 img_time.setVisibility(View.VISIBLE);
@@ -323,6 +336,7 @@ public class SearchRideFragment extends Fragment {
                     }
                 });
             }
+
         }
 
     };
