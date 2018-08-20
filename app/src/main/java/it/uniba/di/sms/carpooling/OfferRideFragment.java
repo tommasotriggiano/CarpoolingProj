@@ -289,33 +289,38 @@ public class OfferRideFragment extends Fragment {
                 tvTime.setText(timeString);
             }
             Calendar cal=Calendar.getInstance();
-            if (hour < cal.get(Calendar.HOUR_OF_DAY)){
-                errorTime.setVisibility(View.VISIBLE);
-                errorTime.setText(getResources().getString(R.string.hourNotValid));
-                img_time.setVisibility(View.VISIBLE);
-                tvTime.requestFocus();
-                tvTime.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        errorTime.setVisibility(View.GONE);
-                        img_time.setVisibility(View.GONE);
-                        showTimePicker();
+            String [] date= dateText.getText().toString().split("-");
+               if ((Integer.parseInt(date[0])==(cal.get(Calendar.DAY_OF_MONTH))|| (Integer.parseInt(date[0])-1) ==(cal.get(Calendar.MONTH)) ) &&
+                       (((Integer.parseInt(date[1]))-1) ==(cal.get(Calendar.MONTH))|| Integer.parseInt(date[1])==(cal.get(Calendar.DAY_OF_MONTH)))&&
+                         Integer.parseInt(date[2]) ==(cal.get(Calendar.YEAR))){
+                    if (hour < cal.get(Calendar.HOUR_OF_DAY)){
+                        errorTime.setVisibility(View.VISIBLE);
+                        errorTime.setText(getResources().getString(R.string.hourNotValid));
+                        img_time.setVisibility(View.VISIBLE);
+                        tvTime.requestFocus();
+                        tvTime.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                errorTime.setVisibility(View.GONE);
+                                img_time.setVisibility(View.GONE);
+                                showTimePicker();
+                            }
+                        });
+                    } else if(hour==cal.get(Calendar.HOUR_OF_DAY) && minute < cal.get(Calendar.MINUTE)) {
+                        errorTime.setVisibility(View.VISIBLE);
+                        errorTime.setText(getResources().getString(R.string.hourNotValid));
+                        img_time.setVisibility(View.VISIBLE);
+                        tvTime.requestFocus();
+                        tvTime.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                errorTime.setVisibility(View.GONE);
+                                img_time.setVisibility(View.GONE);
+                                showTimePicker();
+                            }
+                        });
                     }
-                });
-            } else if(hour==cal.get(Calendar.HOUR_OF_DAY) && minute < cal.get(Calendar.MINUTE)){
-                errorTime.setVisibility(View.VISIBLE);
-                errorTime.setText(getResources().getString(R.string.hourNotValid));
-                img_time.setVisibility(View.VISIBLE);
-                tvTime.requestFocus();
-                tvTime.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        errorTime.setVisibility(View.GONE);
-                        img_time.setVisibility(View.GONE);
-                        showTimePicker();
-                    }
-                });
-            }
+                }
         }
 
     };
