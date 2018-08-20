@@ -57,10 +57,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:layout_below="@+id/layout_casaLavoro"
+            android:layout_marginEnd="30dp"
             android:layout_alignStart="@+id/layout_casaLavoro">
             <TextView
                 android:id="@+id/textData"
-                android:layout_width="293dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="@string/Date"
                 android:drawableEnd="@drawable/ic_arrow2"
@@ -97,10 +98,11 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/layout_data"
             android:layout_below="@+id/layout_data"
-            android:layout_marginTop="25dp">
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="30dp">
         <TextView
             android:id="@+id/tvTime"
-            android:layout_width="293dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:drawableEnd="@drawable/ic_arrow2"
             android:background="?attr/editTextBackground"
@@ -132,7 +134,7 @@
 
             <AutoCompleteTextView
                 android:id="@+id/autista"
-                android:layout_width="293dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/layout_time"
                 android:hint="@string/Driver"
@@ -140,7 +142,8 @@
                 android:layout_alignStart="@+id/layout_time"
                 android:dropDownHeight="wrap_content"
                 android:dropDownWidth="293dp"
-                android:completionThreshold="1"/>
+                android:completionThreshold="1"
+                android:layout_marginEnd="30dp"/>
 
 
         <ImageView
@@ -166,7 +169,7 @@
 
         <Button
             android:id="@+id/btnSearch"
-            android:layout_width="200dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="@string/Search"
             android:background="@drawable/button_rectangle_blue"
