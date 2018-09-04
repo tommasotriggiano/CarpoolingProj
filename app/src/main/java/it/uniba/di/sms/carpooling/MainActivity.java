@@ -49,7 +49,7 @@ import static it.uniba.di.sms.carpooling.R.drawable.ic_homewhite;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         OfferRideFragment.OnShowRideOfferedListener, MyRidesFragment.OnAddRideOfferedListener,OfferRideFragment.GoToProfileListener,
-        MyRidesFragment.ShowRideRequiredListener{
+        MyRidesFragment.ShowRideRequiredListener, UserNotRegister.OpenProfileListener{
     private ImageView profile;
     private TextView hello;
     private TextView affiliation;
@@ -104,6 +104,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             adminrf = FirebaseFirestore.getInstance().collection("Admin").document(userAuth.getUid());
         }
 
+
+
+
         listenerRegistrationAdmin = adminrf.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
@@ -126,6 +129,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                             if (!(documentSnapshot.exists())) {
+                                UserNotRegister userNotRegisterFragment= new UserNotRegister();
+                                FragmentTransaction userNotRegisterFT = getSupportFragmentManager().beginTransaction();
+                                userNotRegisterFT.replace(R.id.content_frame,userNotRegisterFragment);
+                                userNotRegisterFT.commit();
+
                                 progressBar.setVisibility(View.INVISIBLE);
                                 navigationView.getMenu().findItem(R.id.nav_registration).setVisible(true);
                                 navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
@@ -373,6 +381,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ft5.replace(R.id.content_frame, myRidesFragment, null);
         ft5.commit();
         navigationView.setCheckedItem(R.id.nav_myrides);
+    }
+
+    @Override
+    public void openProfile() {
+        RegistrationForm registrationForm= new RegistrationForm();
+        FragmentTransaction ft6 = getSupportFragmentManager().beginTransaction();
+        ft6.replace(R.id.content_frame, registrationForm, null);
+        ft6.commit();
+        navigationView.setCheckedItem(R.id.nav_profile);
     }
 }
 

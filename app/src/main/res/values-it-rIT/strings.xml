@@ -40,7 +40,7 @@
     <string name="Register">Non sei registrato?</string>
     <string name="Login">Sei già registrato?</string>
     <string name="Register2">Crea nuovo account</string>
-
+    <string name="CompleteRegistration">  Completa la tua registrazione  </string>
     <string name="Messaggio">Cliccando su Crea nuovo account le verrà inviata un\'email di verifica</string>
     <string name="Toast1">Inserire email!</string>
     <string name="Toast2">Inserire password!</string>
