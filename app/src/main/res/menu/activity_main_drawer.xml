@@ -59,8 +59,6 @@
             android:visible="false"
             />
 
-        <group android:checkableBehavior="single"
-           android:id="@+id/group2" >
             <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_settings_black"
@@ -73,7 +71,6 @@
                 android:title="@string/logout"
                 android:visible="false"
                />
-        </group>
     </group>
 
 

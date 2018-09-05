@@ -117,7 +117,12 @@
     <string name="settings">Settings</string>
     <string name="logout">Log Out</string>
     <string name="welcome">Welcome</string>
-
+    <!--HOME-->
+    <string name="text_slide1">The easiest way to offer ride</string>
+    <string name="text_slide2">It\'s simple and fast to search ride </string>
+    <string name="text_slide3">You can require ride </string>
+    <string name="text_slide4">You can accumulate points at each ride made</string>
+    <string name= "text_generic">Wait\.\.\. Soon you can use all services of Carpooling </string>
     <!-- myrides -->
     <string name="offered">OFFERED</string>
     <string name="required">REQUIRED</string>

@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         userAuth = authInstance.getCurrentUser();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.HomePage);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         //instanzio l'oggetto per l'header della navigation view
         View header = navigationView.getHeaderView(0);
@@ -112,6 +113,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()){
                     initializeBadge();
+                    TodayMyRidesFragment todayMyRidesFragment= new TodayMyRidesFragment();
+                    FragmentTransaction homeFT = getSupportFragmentManager().beginTransaction();
+                    homeFT.replace(R.id.content_frame,todayMyRidesFragment);
+                    homeFT.commit();
                     progressBar.setVisibility(View.INVISIBLE);
                     navigationView.setCheckedItem(R.id.nav_home);
                     navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
@@ -120,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     navigationView.getMenu().findItem(R.id.nav_offeraride).setVisible(true);
                     navigationView.getMenu().findItem(R.id.nav_points).setVisible(true);
                     navigationView.getMenu().findItem(R.id.nav_approvazione).setVisible(true);
-                    navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
                     navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
 
                 }
@@ -136,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                                 progressBar.setVisibility(View.INVISIBLE);
                                 navigationView.getMenu().findItem(R.id.nav_registration).setVisible(true);
-                                navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
                                 navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
 
                             } else {
@@ -145,11 +148,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 hello.setText(name);
                                 boolean ap = (boolean) user.get("approved");
                                 if (!ap) {
+                                    UserNotApprovedFragment userNotApprovedFragment= new UserNotApprovedFragment();
+                                    FragmentTransaction userNotApprovedFT = getSupportFragmentManager().beginTransaction();
+                                    userNotApprovedFT.replace(R.id.content_frame,userNotApprovedFragment);
+                                    userNotApprovedFT.commit();
                                     progressBar.setVisibility(View.INVISIBLE);
                                     navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
-                                    navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
                                 } else {
+                                    TodayMyRidesFragment todayMyRidesFragment= new TodayMyRidesFragment();
+                                    FragmentTransaction homeFT = getSupportFragmentManager().beginTransaction();
+                                    homeFT.replace(R.id.content_frame,todayMyRidesFragment);
+                                    homeFT.commit();
                                     progressBar.setVisibility(View.INVISIBLE);
                                     navigationView.setCheckedItem(R.id.nav_home);
                                     navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
@@ -158,7 +168,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     navigationView.getMenu().findItem(R.id.nav_searchride).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_offeraride).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_points).setVisible(true);
-                                    navigationView.getMenu().findItem(R.id.nav_settings).setVisible(true);
                                     navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
                                 }
                             }
@@ -239,11 +248,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+       // getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -256,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

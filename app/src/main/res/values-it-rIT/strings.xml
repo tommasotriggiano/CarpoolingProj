@@ -108,6 +108,12 @@
     <string name="settings">Impostazioni</string>
     <string name="logout">Esci</string>
     <string name="welcome">Benvenuto</string>
+    <!--home-->
+    <string name="text_slide1">Il modo più facile per offrire passaggi</string>
+    <string name="text_slide2">E\' semplice e veloce cercare passaggi  </string>
+    <string name="text_slide3">Puoi richiedere i passaggi </string>
+    <string name="text_slide4">Puoi accumulare punti ad ogni passaggio effettuato </string>
+    <string name= "text_generic">Attendi\.\.\. Presto potrai usufruire di tutti i servizi dell\'app </string>
     <!-- myrides -->
     <string name="offered">OFFERTI</string>
     <string name="required">RICHIESTI</string>
