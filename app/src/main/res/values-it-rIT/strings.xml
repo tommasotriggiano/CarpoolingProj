@@ -131,7 +131,7 @@
     <string name="NotOfferedRide">Non ci sono passaggi offerti</string>
     <string name="NotRequiredRide">Non ci sono passaggi richiesti</string>
     <string name="callPhone">Chiama</string>
-
+    <string name="todayRides">I PASSAGGI DI OGGI </string>
     <!-- approved affiliation-->
     <string name="accept">Accetta</string>
     <string name="approve">Accetta</string>
