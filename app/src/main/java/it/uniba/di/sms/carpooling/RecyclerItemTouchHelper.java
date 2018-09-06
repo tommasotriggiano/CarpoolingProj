@@ -6,6 +6,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import it.uniba.di.sms.carpooling.rideOffered.PassaggiViewHolder;
+import it.uniba.di.sms.carpooling.rideRequired.RequiredViewHolder;
 
 /**
  * Created by loiodice on 18/06/2018.
@@ -39,26 +40,49 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback{
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
        if (viewHolder!=null){
-           View viewForeground= ((PassaggiViewHolder)viewHolder).viewForeground;
-           getDefaultUIUtil().onSelected(viewForeground);
+           if(viewHolder instanceof PassaggiViewHolder){
+              View  viewForeground= ((PassaggiViewHolder)viewHolder).viewForeground;
+               getDefaultUIUtil().onSelected(viewForeground);
+           }else if (viewHolder instanceof RequiredViewHolder) {
+               View viewForeground =((RequiredViewHolder)viewHolder).viewForeground;
+               getDefaultUIUtil().onSelected(viewForeground);
+           }
+
        }
     }
 
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        View viewForeground= ((PassaggiViewHolder)viewHolder).viewForeground;
-        getDefaultUIUtil().clearView(viewForeground);
+        if(viewHolder instanceof PassaggiViewHolder) {
+            View viewForeground = ((PassaggiViewHolder) viewHolder).viewForeground;
+            getDefaultUIUtil().clearView(viewForeground);
+        }else if (viewHolder instanceof RequiredViewHolder) {
+            View viewForeground = ((RequiredViewHolder) viewHolder).viewForeground;
+            getDefaultUIUtil().clearView(viewForeground);
+        }
     }
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        View viewForeground= ((PassaggiViewHolder)viewHolder).viewForeground;
-        getDefaultUIUtil().onDraw(c,recyclerView,viewForeground,dX,dY,actionState,isCurrentlyActive);
+
+        if(viewHolder instanceof PassaggiViewHolder) {
+            View viewForeground= ((PassaggiViewHolder)viewHolder).viewForeground;
+            getDefaultUIUtil().onDraw(c,recyclerView,viewForeground,dX,dY,actionState,isCurrentlyActive);
+        }else if (viewHolder instanceof RequiredViewHolder) {
+            View viewForeground= ((RequiredViewHolder)viewHolder).viewForeground;
+            getDefaultUIUtil().onDraw(c,recyclerView,viewForeground,dX,dY,actionState,isCurrentlyActive);
+        }
+
     }
 
     @Override
     public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        View viewForeground= ((PassaggiViewHolder)viewHolder).viewForeground;
-        getDefaultUIUtil().onDrawOver(c,recyclerView,viewForeground,dX,dY,actionState,isCurrentlyActive);
+        if(viewHolder instanceof PassaggiViewHolder) {
+            View viewForeground = ((PassaggiViewHolder) viewHolder).viewForeground;
+            getDefaultUIUtil().onDrawOver(c, recyclerView, viewForeground, dX, dY, actionState, isCurrentlyActive);
+        }else if (viewHolder instanceof RequiredViewHolder) {
+            View viewForeground = ((RequiredViewHolder) viewHolder).viewForeground;
+            getDefaultUIUtil().onDrawOver(c, recyclerView, viewForeground, dX, dY, actionState, isCurrentlyActive);
+        }
     }
 }

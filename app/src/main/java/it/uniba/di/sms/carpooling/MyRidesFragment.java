@@ -17,19 +17,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -39,12 +35,12 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import it.uniba.di.sms.carpooling.rideOffered.PassaggiAdapter;
 import it.uniba.di.sms.carpooling.rideOffered.PassaggiViewHolder;
 import it.uniba.di.sms.carpooling.rideRequired.RequiredAdapter;
+import it.uniba.di.sms.carpooling.rideRequired.RequiredViewHolder;
 
 import static android.content.ContentValues.TAG;
 
@@ -118,6 +114,8 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
 
         ItemTouchHelper.SimpleCallback itemTouchHelper= new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT,this);
         new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(passaggiRecycler);
+        ItemTouchHelper.SimpleCallback requiredItemTouchHelper= new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT,this);
+        new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(requiredRecycler);
 
         RecyclerView.LayoutManager passaggiLayoutManager = new LinearLayoutManager(getActivity());
         RecyclerView.LayoutManager requiredLayoutManager = new LinearLayoutManager(getActivity());
@@ -195,7 +193,7 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                 requiredRecycler.setAdapter(requiredAdapter);
             }
         });
-        requiredRecycler.scrollToPosition(resultPassaggi.size() - 1);
+        requiredRecycler.scrollToPosition(resultRequired.size() - 1);
     }
 
 
@@ -270,6 +268,25 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                     }
                 }
             });
+        }
+        if (viewHolder instanceof RequiredViewHolder){
+            final Map<String,Object> deleteRequest= (Map<String,Object>) resultRequired.get(viewHolder.getAdapterPosition());
+            final int deleteIndex= viewHolder.getAdapterPosition();
+            requiredAdapter.removeItem(deleteIndex);
+
+            String message= getResources().getString(R.string.Removed);
+            Snackbar snackbar= Snackbar.make(rootLayout,message,Snackbar.LENGTH_LONG);
+
+            snackbar.setAction(getString(R.string.UNDO), new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                   requiredAdapter.restoreItem(deleteRequest,deleteIndex);
+                }
+            });
+            snackbar.setActionTextColor(Color.CYAN);
+            snackbar.show();
+
+            // tommaso inserisci la cancellazione  della richiesta da firebase
         }
     }
 

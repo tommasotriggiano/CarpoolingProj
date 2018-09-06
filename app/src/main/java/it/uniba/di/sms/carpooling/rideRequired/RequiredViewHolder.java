@@ -32,7 +32,7 @@ import it.uniba.di.sms.carpooling.RequiredMapsActivity;
 public class RequiredViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     public CardView cardView;
-    public LinearLayout richiesti;
+    public LinearLayout viewForeground;
     public LinearLayout richiesti2;
     public RelativeLayout rich;
     public CircleImageView immagine;
@@ -49,7 +49,7 @@ public class RequiredViewHolder extends RecyclerView.ViewHolder implements View.
         itemView.setOnClickListener(this);
 
         cardView= (CardView) itemView.findViewById(R.id.cardviewRichiesti);
-        richiesti = (LinearLayout) itemView.findViewById(R.id.LinearRichiesti);
+        viewForeground = (LinearLayout) itemView.findViewById(R.id.LinearRichiesti);
         richiesti2 = (LinearLayout) itemView.findViewById(R.id.LinearRichiesti2);
         rich = (RelativeLayout) itemView.findViewById(R.id.relativeRichiesti);
 

@@ -11,11 +11,39 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp">
 
+        <RelativeLayout
+            android:id="@+id/viewBackground"
+            android:background="#c1fd0202"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/delete"
+                android:src="@drawable/ic_delete_white"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/delete_text"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:layout_toLeftOf="@id/delete"
+                android:textColor="@color/white"
+                android:text="@string/delete"
+                android:textSize="17sp"/>
+
+        </RelativeLayout>
+
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/LinearRichiesti"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -27,6 +55,7 @@
                     android:id="@+id/immagineProfilo"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:layout_marginStart="10dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignTop="@+id/nomeAut"
                     android:src="@drawable/ic_image_profile" />
@@ -70,7 +99,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_location"
-                android:text="@string/Home"
+                android:text="@string/HomeWork"
+                android:layout_marginStart="10dp"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -79,7 +109,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="4">
+                android:weightSum="4"
+                android:layout_marginStart="10dp">
 
                 <TextView
                     android:id="@+id/Giorno"
@@ -87,7 +118,6 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_today_black"
                     android:text="Giorno"
-
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
@@ -113,6 +143,7 @@
                 android:id="@+id/Ora"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:drawableLeft="@drawable/ic_access_time_black"
                 android:text="Ora"
                 android:textColor="@color/black"
@@ -121,6 +152,7 @@
 
             <TextView
                 android:id="@+id/Telefono"
+                android:layout_marginStart="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_phone"
