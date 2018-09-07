@@ -17,75 +17,108 @@
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             >
             <LinearLayout
-                android:id="@+id/viewForeground"
-                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/casa"
-                    android:layout_marginStart="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_location"
-                    android:text="@string/Home"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
+                android:orientation="horizontal"
+                android:weightSum="4">
                 <LinearLayout
+                    android:id="@+id/viewForeground"
+                    android:background="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginStart="10dp">
-                    <TextView
-                        android:id="@+id/Giorno"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Giorno"
-                        android:drawableStart="@drawable/ic_today_black"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-                    <TextView
-                        android:id="@+id/Data"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="3dp"
-                        android:text="Data"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"/>
+                    android:orientation="vertical"
+                    android:layout_weight="4">
 
+                    <TextView
+                        android:id="@+id/casa"
+                        android:layout_marginStart="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_location"
+                        android:text="@string/Home"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginStart="10dp">
+                        <TextView
+                            android:id="@+id/Giorno"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Giorno"
+                            android:drawableStart="@drawable/ic_today_black"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+                        <TextView
+                            android:id="@+id/Data"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:text="Data"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"/>
+
+                    </LinearLayout>
+
+                        <TextView
+                            android:layout_marginStart="10dp"
+                            android:id="@+id/Ora"
+                            android:layout_weight="4"
+                            android:drawableStart="@drawable/ic_access_time_black"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ora"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            />
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp">
+                        <TextView
+                            android:id="@+id/textpostiOcc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_people"
+                            android:textColor="@color/black"
+                            android:text="@string/Occupied"
+                            android:textSize="20sp" />
+                        <TextView
+                            android:id="@+id/postiOcc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+                    </LinearLayout>
                 </LinearLayout>
-                <TextView
-                    android:layout_marginStart="10dp"
-                    android:id="@+id/Ora"
-                    android:drawableStart="@drawable/ic_access_time_black"
+                <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ora"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp">
-                    <TextView
-                        android:id="@+id/textpostiOcc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_people"
-                        android:textColor="@color/black"
-                        android:text="@string/Occupied"
-                        android:textSize="20sp" />
-                    <TextView
-                        android:id="@+id/postiOcc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-                </LinearLayout>
+                    android:layout_height="match_parent">
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:alpha=".5"
+                    android:background="@color/black_overlay" />
+
+                    <ImageView
+                        android:id="@+id/editRide"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginStart="15dp"
+                        android:src="@drawable/ic_edit_pink" />
+                </RelativeLayout>
             </LinearLayout>
+
         </android.support.v7.widget.CardView>
 
         <fragment

@@ -48,12 +48,12 @@ public class OfferRideFragment extends Fragment {
     }
 
 
-    TextView dateText,tvTime,dayOfWeek,mWork,mHome,posti,errorDate,errorTime;
-    ImageButton btnInvert;
-    String postiString;
-    int postiIns;
-    ImageView btnPlus,btnMinus,img_date,img_time;
-    Button offer;
+    private TextView dateText,tvTime,dayOfWeek,mWork,mHome,posti,errorDate,errorTime;
+    private ImageButton btnInvert;
+    private String postiString;
+    private  int postiIns;
+    private ImageView btnPlus,btnMinus,img_date,img_time;
+    private  Button offer;
 
 
     CollectionReference passaggioRf;

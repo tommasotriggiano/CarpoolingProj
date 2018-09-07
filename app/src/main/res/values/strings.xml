@@ -6,8 +6,8 @@
     <string name="Home">Home</string>
     <string name="Departure">Departure\'s Hour *</string>
     <string name="Work">Work</string>
-    <string name="WorkHome">Work -> Home</string>
-    <string name="HomeWork">Home -> Work</string>
+    <string name="WorkHome">Work-Home</string>
+    <string name="HomeWork">Home-Work</string>
     <string name="giorno">Day of week</string>
     <string name="Search">Search</string>
     <string name="Driver">Name and surname driver</string>
@@ -27,6 +27,8 @@
     <string name="dateTime">"Date and time \: "</string>
     <string name="driver">"Driver : "</string>
     <string name="passengers">Passengers :</string>
+    <string name="editRide">Edit ride</string>
+    <string name="edit">Edit</string>
 
     <!-- login and registration activity-->
     <string name="etUsername">Username</string>

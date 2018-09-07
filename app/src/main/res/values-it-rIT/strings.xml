@@ -6,8 +6,8 @@
     <string name="Date">Data *</string>
     <string name="Home">Casa </string>
     <string name="Work">Lavoro</string>
-    <string name="WorkHome">Lavoro -> Casa</string>
-    <string name="HomeWork">Casa -> Lavoro</string>
+    <string name="WorkHome">Lavoro-Casa</string>
+    <string name="HomeWork">Casa-Lavoro</string>
     <string name="Departure">Ora di partenza *</string>
     <string name="giorno">Giorno della settimana</string>
     <string name="Search">Cerca</string>
@@ -28,7 +28,8 @@
     <string name="dateTime">"Data e ora \: "</string>
     <string name="driver">"Automobilista : "</string>
     <string name="passengers">Passeggeri :</string>
-
+    <string name="editRide">Modifica passaggio</string>
+    <string name="edit">Modifica</string>
     <!-- login and registration activity-->
     <string name="etUserEmail">E-mail</string>
     <string name="etUserPassword">Password</string>

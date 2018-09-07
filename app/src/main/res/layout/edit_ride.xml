@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:theme="@style/ColoredHandleTheme">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:id="@+id/layout_casaLavoro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="30dp">
+            <TextView
+                android:id="@+id/casa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Home"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_arrow_forward" />
+
+            <TextView
+                android:id="@+id/lavoro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Work"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <ImageButton
+                android:id="@+id/Invert"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="18dp"
+                android:background="@drawable/button_shape"
+                android:src="@drawable/ic_invert"/>
+
+        </LinearLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/layout_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_below="@+id/layout_casaLavoro"
+            android:layout_alignStart="@+id/layout_casaLavoro"
+            android:layout_marginEnd="30dp">
+            <TextView
+                android:id="@+id/textData"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/Date"
+                android:drawableEnd="@drawable/ic_arrow2"
+                android:background="?attr/editTextBackground"
+                android:gravity="center_vertical"
+                android:textColor="?attr/editTextColor"
+                android:textSize="20sp"/>
+            <ImageView
+                android:id="@+id/img_error_date"
+                android:layout_width="28dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_error_red"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toBottomOf="@id/textData"
+                app:layout_constraintEnd_toEndOf="@id/textData"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/errorDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/EntDate"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/textData" />
+
+        </android.support.constraint.ConstraintLayout>
+
+
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/layout_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/layout_data"
+            android:layout_below="@+id/layout_data"
+            android:layout_marginTop="25dp"
+            android:layout_alignEnd="@+id/layout_data">
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableEnd="@drawable/ic_arrow2"
+                android:background="?attr/editTextBackground"
+                android:gravity="center_vertical"
+                android:hint="@string/Departure"
+                android:textColor="?attr/editTextColor"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/img_error_time"
+                android:layout_width="28dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_error_red"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/tvTime"
+                app:layout_constraintEnd_toEndOf="@id/tvTime" />
+
+            <TextView
+                android:id="@+id/errorTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/EntTime"
+                android:layout_below="@+id/tvTime"
+                app:layout_constraintTop_toBottomOf="@+id/tvTime"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="gone"
+                />
+        </android.support.constraint.ConstraintLayout>
+
+
+
+
+        <TextView
+            android:id="@+id/day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/dayOfWeek"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:background="?attr/editTextBackground"
+            android:layout_alignStart="@+id/layout_time"
+            android:layout_marginEnd="30dp"
+            android:layout_below="@+id/layout_time"
+            android:layout_marginTop="25dp"/>
+
+
+        <LinearLayout
+            android:id="@+id/layout_posti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/day"
+            android:layout_marginEnd="30dp"
+            android:layout_below="@+id/day"
+            android:orientation="horizontal"
+            android:layout_marginTop="35dp">
+            <TextView
+                android:id="@+id/textPosti"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/posti"
+                android:textSize="20sp"
+                android:textColor="@color/black"/>
+
+            <ImageView
+                android:id="@+id/btnMinus"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/ic_minus" />
+
+
+            <TextView
+                android:id="@+id/textPostiInseriti"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:background="?attr/editTextBackground"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:ems="10"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/btnPlus"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_plus" />
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btnEdit"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_posti"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="31dp"
+            android:background="@drawable/button_rectangle_blue"
+            android:text="@string/edit"
+            android:textColor="@color/white" />
+
+
+
+
+    </RelativeLayout>
+</ScrollView>
+
+

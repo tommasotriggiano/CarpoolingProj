@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,7 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,6 +76,7 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
     private Button accept,reject;
     private TextView direzione,data,ora,posti,giorno,nomePass,cognomePass,telefono,address1;
     private CircleImageView imgPass;
+    private ImageView editRide;
     private HashMap<String,Object> passaggio;
     BottomSheetBehavior bottomSheetBehavior;
     CollectionReference passeggeri;
@@ -104,12 +107,21 @@ public class OfferedMapActivity extends FragmentActivity implements OnMapReadyCa
         ora=(TextView)findViewById(R.id.Ora) ;
         giorno=(TextView)findViewById(R.id.Giorno);
         posti=(TextView)findViewById(R.id.postiOcc);
+        editRide=(ImageView) findViewById(R.id.editRide);
 
         Intent receive = getIntent();
          passaggio= (HashMap<String, Object>) receive.getSerializableExtra("passaggio");
          idPassaggio = passaggio.get("idPassaggio").toString();
 
-
+        editRide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent edit= new Intent(OfferedMapActivity.this,EditRide.class);
+                Serializable psg= (Serializable)passaggio;
+                edit.putExtra("passaggio",psg);
+                startActivity(edit);
+            }
+        });
          direzione.setText((String)passaggio.get("tipoViaggio"));
          giorno.setText((String)passaggio.get("giorno"));
          data.setText((String)passaggio.get("dataPassaggio"));

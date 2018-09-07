@@ -74,6 +74,7 @@
             android:name=".OfferedMapActivity"
             android:label="@string/title_activity_offered_map" />
         <activity android:name=".VerifyPhoneActivity"></activity>
+        <activity android:name=".EditRide"/>
     </application>
 
 </manifest>
