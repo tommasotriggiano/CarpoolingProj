@@ -36,7 +36,7 @@ public class EditRide  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_ride);
 
-        //getActionBar().setTitle(R.string.editRide);
+        getSupportActionBar().setTitle(R.string.editRide);
         dateText=(TextView)findViewById(R.id.textData);
         tvTime = (TextView) findViewById(R.id.tvTime);
         btnInvert = (ImageButton)findViewById(R.id.Invert);
@@ -58,8 +58,8 @@ public class EditRide  extends AppCompatActivity {
         idPassaggio = passaggio.get("idPassaggio").toString();
 
         tvTime.setText((String)passaggio.get("ora"));
-        //dayOfWeek.setText((String)passaggio.get("giorno"));
-        posti.setText((String)passaggio.get("postiDisponibili"));
+        dayOfWeek.setText((String)passaggio.get("giorno"));
+        posti.setText(((Long)passaggio.get("postiDisponibili")).toString());
         direzione= passaggio.get("tipoViaggio").toString();
          if (direzione.equals("Home-Work")||direzione.equals("Casa-Lavoro")){
              mHome.setText(getResources().getString(R.string.Home));
@@ -161,7 +161,7 @@ public class EditRide  extends AppCompatActivity {
         date.setArguments(args);
         //Set Call back to capture selected date
         date.setCallBack(ondate);
-        date.show(date.getFragmentManager(), "Date Picker");
+        date.show(getSupportFragmentManager(), "Date Picker");
     }
 
     SimpleDateFormat sdf= new SimpleDateFormat("EEEE");
@@ -232,7 +232,7 @@ public class EditRide  extends AppCompatActivity {
         //Set Call back to capture selected time
 
         time.setCallBack(ontime);
-        time.show(time.getFragmentManager(), "Time Picker");
+        time.show(getSupportFragmentManager(), "Time Picker");
     }
 
 
