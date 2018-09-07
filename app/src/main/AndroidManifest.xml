@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:name="android.support.multidex.MultiDexApplication"
@@ -44,6 +46,9 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".PassengerActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".PasswordActivity"
             android:parentActivityName=".LoginActivity" />
         <!--
@@ -73,8 +78,8 @@
         <activity
             android:name=".OfferedMapActivity"
             android:label="@string/title_activity_offered_map" />
-        <activity android:name=".VerifyPhoneActivity"></activity>
-        <activity android:name=".EditRide"/>
+        <activity android:name=".VerifyPhoneActivity" />
+        <activity android:name=".PrepareToTrackingActivity"></activity>
     </application>
 
 </manifest>
