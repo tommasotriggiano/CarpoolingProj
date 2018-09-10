@@ -18,6 +18,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
 public class PrepareToTrackingActivity extends AppCompatActivity {
 
     //TODO DA SOSTITUIRE CON POSIZIONE DESTINAZIONE
@@ -25,24 +29,15 @@ public class PrepareToTrackingActivity extends AppCompatActivity {
     private final double DESTINAZIONE_LONGITUDE = 16.2838207f;
     private final String LATITUDE = "LAT_DEST";
     private final String LONGITUDE = "LON_DEST";
+    boolean GpsStatus = false;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-
-        Button btn_Im_passenger = (Button) findViewById(R.id.btn_passenger);
-        btn_Im_passenger.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(PrepareToTrackingActivity.this, PassengerActivity.class);
-                intent.putExtra(LATITUDE,DESTINAZIONE_LATITUDE);
-                intent.putExtra(LONGITUDE,DESTINAZIONE_LONGITUDE);
-                startActivity(intent);
-            }
-        });
+        setContentView(R.layout.activity_prepare_to_tracking);
 
 
         checkLocationPermission();
@@ -52,16 +47,25 @@ public class PrepareToTrackingActivity extends AppCompatActivity {
             Intent intentReqGPS = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intentReqGPS);
         }
-/*
+
+
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (!mBluetoothAdapter.isEnabled()) {
             mBluetoothAdapter.enable();
         }
-*/
 
-    }
+        Button button = (Button) findViewById(R.id.btn_passenger);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PrepareToTrackingActivity.this, PassengerActivity.class);
+                intent.putExtra(LATITUDE,DESTINAZIONE_LATITUDE);
+                intent.putExtra(LONGITUDE,DESTINAZIONE_LONGITUDE);
+                startActivity(intent);
+            }
+        });
 
-
+}
 
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -123,6 +127,18 @@ public class PrepareToTrackingActivity extends AppCompatActivity {
         }
     }
 
+public boolean checkGPS (){
+    LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+    boolean gpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    return gpsStatus;
+}
+
+public void startTrackingIntent(){
+        Intent intent2 = new Intent(PrepareToTrackingActivity.this, PassengerActivity.class);
+        intent2.putExtra(LATITUDE,DESTINAZIONE_LATITUDE);
+        intent2.putExtra(LONGITUDE,DESTINAZIONE_LONGITUDE);
+        startActivity(intent2);
+}
 
 
 

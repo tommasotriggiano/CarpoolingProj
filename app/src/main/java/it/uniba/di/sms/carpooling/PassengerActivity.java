@@ -11,16 +11,17 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -50,14 +51,9 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
     private Location start_location;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
-
-   // private final double DESTINATION_LAT = 41.3196635f;
-   // private final double DESTINATION_LON = 16.2838207f;
-    private final String LATITUDE = "LAT_DEST";
-    private final String LONGITUDE = "LON_DEST";
-    private final String VALIDITY_TRACKING = "VALIDITY_TRACKING";
-    private final String TRAVEL_COMPLETE = "TRAVEL_COMPLETE";
-
+    private GoogleApiClient googleApiClient;
+    private final double BARLETTA_LAT = 41.3196635f;
+    private final double BARLETTA_LON = 16.2838207f;
     private LocationCallback mLocationCallback;
     protected Location mLocationToConvert; //object containing the latitude and longitude that you want to convert to an address.
     private final String TAG = "TAG";
@@ -68,15 +64,13 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
     float distanzaIniziale ;
     float distanzaRimanente ;
     float ultimaDistanza = Float.MAX_VALUE ;
-    float percentuale=0;
-
 
     static TextView txt_driver_dist ;
     TextView txt_luogo ;
     TextView txt_distanza ;
     ProgressBar progressBar ;
     Marker markerPosition;
-    boolean is_valid_track = false;//TODO possibilità di modifica per avviare o no tracking, oppure avviso
+    boolean isNear = false;
     String IMEIDriver="";//TODO IMEI da ricevere da firebase
 
     private final BroadcastReceiver deviceReceiver = new BroadcastReceiver() {
@@ -89,10 +83,10 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                 Log.i("TAG","Device name: "+device.getName()+" IMEI: "+device.getAddress());
                 if(device.getAddress().compareTo(IMEIDriver)==0)
                 {
-                    is_valid_track=true;
+                    isNear=true;
                 }
                 else {
-                    is_valid_track=false;//TODO vedi se va bene un toast o va bloccata l'activity
+                    isNear=false;//TODO vedi se va bene un toast o va bloccata l'activity
                     Toast.makeText(PassengerActivity.this,"IMEI conducente non rilevato",Toast.LENGTH_LONG).show();
                     Log.i("TAG","IMEI conducente non rilevato");
                 }
@@ -109,11 +103,6 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passenger);
-
-
-        final Double DESTINATION_LAT = getIntent().getExtras().getDouble(LATITUDE);
-        final Double DESTINATION_LON = getIntent().getExtras().getDouble(LONGITUDE);
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_passenger);
@@ -123,13 +112,13 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
         txt_luogo = (TextView) findViewById(R.id.txt_location);
         txt_distanza = (TextView) findViewById(R.id.txt_distance);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        progressBar.setProgress(0);
 
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
+                Log.i("TAG","onLocationUpdate");
                 if (locationResult == null) {
                     return;
                 }//all'update fa questo....
@@ -142,15 +131,15 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                     retriveAddress(mLocationToConvert);
 
                     Location.distanceBetween(mLocationToConvert.getLatitude(),mLocationToConvert.getLongitude(),
-                            DESTINATION_LAT, DESTINATION_LON, resultArray);
+                            BARLETTA_LAT, BARLETTA_LON, resultArray);
                     Log.i(TAG, "Distance"+String.valueOf(resultArray[0]) );
                     txt_distanza.setText( "Distance"+String.valueOf(resultArray[0]) );
 
 
-                    distanzaRimanente = resultArray[0]-1000;
+                    distanzaRimanente = resultArray[0];
                     if (ultimaDistanza >= distanzaRimanente){
                         ultimaDistanza = distanzaRimanente;
-                        percentuale =  (1-((distanzaRimanente) / (distanzaIniziale)))*100;
+                        float percentuale =  (1-(distanzaRimanente / (distanzaIniziale)))*100;
                         Log.i(TAG,"UltimaDist "+ (ultimaDistanza));
                         Log.i(TAG,"distanzaRima "+ (distanzaRimanente));
                         Log.i(TAG,"Percentuale "+ (percentuale));
@@ -158,19 +147,17 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                     }
 
 
-                    if(percentuale>=100){
+                    if(ultimaDistanza<1000){
                         Log.i(TAG, "Sei arrivato" );
                         Toast.makeText(PassengerActivity.this,
                                 "Sei arrivato, controlla il tuo punteggio",
                                 Toast.LENGTH_SHORT  );
                         //TODO ricevere in activity a scelta l'intent
                         Intent intent = new Intent(PassengerActivity.this, MainActivity.class);
-                        intent.putExtra(VALIDITY_TRACKING,is_valid_track);
-                        intent.putExtra(TRAVEL_COMPLETE,true);
+                        intent.putExtra("VIAGGIO_COMPLETATO",true);
                         startActivity(intent);
                     }
-
-
+                    launchCheckDriverNear();
                 }
             };
         };
@@ -186,10 +173,8 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        final Double DESTINATION_LAT = getIntent().getExtras().getDouble(LATITUDE);
-        final Double DESTINATION_LON = getIntent().getExtras().getDouble(LONGITUDE);
         //startService(new Intent(this,LocationService.class));
-        LatLng barletta = new LatLng(DESTINATION_LAT, DESTINATION_LON);
+        LatLng barletta = new LatLng(BARLETTA_LAT, BARLETTA_LON);
         mMap.addMarker(new MarkerOptions().position(barletta).title("Marker in Barletta"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(barletta));
 
@@ -200,7 +185,7 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
         startLocationUpdates();
-        //launchCheckDriverNear();//TODO
+
     }
 
     private void startLocationUpdates() {
@@ -290,26 +275,27 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                 public void onComplete(@NonNull Task task) {
                     if(task.isSuccessful()){
                         Location currentLocation = (Location) task.getResult();
-                        LatLng pos= new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
-                        //Aggiounge la posizione attuale
-                        MarkerOptions markerOptions = new MarkerOptions()
-                                .position(pos)
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                                .snippet("Tua posizione")
-                                .title("YOU");
-                        markerPosition = mMap.addMarker(markerOptions);
-                        currentPosition=pos;
-                        start_location=currentLocation;
-
-                        final Double DESTINATION_LAT = getIntent().getExtras().getDouble(LATITUDE);
-                        final Double DESTINATION_LON = getIntent().getExtras().getDouble(LONGITUDE);
-                        Location.distanceBetween(start_location.getLatitude(),start_location.getLongitude(),
-                                DESTINATION_LAT, DESTINATION_LON, resultArray);
-                        distanzaIniziale=resultArray[0]-1000;
-                        Log.i(TAG, "DistIniziale="+distanzaIniziale);
-                        //distanzaIniziale=resultArray[0];
-                        //Log.i(TAG, "DistIniziale="+distanzaIniziale);
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 14));
+                        if(currentLocation==null){
+                            Log.i("TAG","task.getResult ha dato null");
+                            Toast.makeText(PassengerActivity.this, "task.getResult ha dato null", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            LatLng pos = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            //Aggiounge la posizione attuale
+                            MarkerOptions markerOptions = new MarkerOptions()
+                                    .position(pos)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                                    .snippet("Tua posizione")
+                                    .title("YOU");
+                            markerPosition = mMap.addMarker(markerOptions);
+                            currentPosition = pos;
+                            start_location = currentLocation;
+                            Location.distanceBetween(start_location.getLatitude(), start_location.getLongitude(),
+                                    BARLETTA_LAT, BARLETTA_LON, resultArray);
+                            distanzaIniziale = resultArray[0];
+                            Log.i(TAG, "DistIniziale=" + distanzaIniziale);
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 14));
+                        }
                     }else{
                         Toast.makeText(PassengerActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                     }
