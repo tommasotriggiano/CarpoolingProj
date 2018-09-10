@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
@@ -72,6 +73,9 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
     Marker markerPosition;
     boolean isNear = false;
     String IMEIDriver="";//TODO IMEI da ricevere da firebase
+
+
+
 
     private final BroadcastReceiver deviceReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -114,6 +118,61 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                Log.i("TAG","onLocationUpdate");
+                if (locationResult == null) {
+                    Log.i("TAG","locRes null");
+                }//all'update fa questo....
+                for (Location location : locationResult.getLocations()) {
+                    if(location==null)
+                        continue;
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
+                    Log.i("TAG","Lat:"+location.getLatitude()+" Log:"+location.getLongitude());
+                    currentPosition = new LatLng(location.getLatitude(),location.getLongitude());
+                    if (markerPosition!=null){
+                        markerPosition.setPosition( currentPosition );
+                    }
+                    mLocationToConvert=new Location("");//provider name is unnecessary
+                    mLocationToConvert.setLatitude(location.getLatitude());//your coords of course
+                    mLocationToConvert.setLongitude(location.getLongitude());
+                    retriveAddress(mLocationToConvert);
+
+                    Location.distanceBetween(mLocationToConvert.getLatitude(),mLocationToConvert.getLongitude(),
+                            BARLETTA_LAT, BARLETTA_LON, resultArray);
+                    Log.i(TAG, "Distance"+String.valueOf(resultArray[0]) );
+                    txt_distanza.setText( "Distance"+String.valueOf(resultArray[0]) );
+
+
+                    distanzaRimanente = resultArray[0];
+                    if (ultimaDistanza >= distanzaRimanente){
+                        ultimaDistanza = distanzaRimanente;
+                        float percentuale =  (1-(distanzaRimanente / (distanzaIniziale)))*100;
+                        Log.i(TAG,"UltimaDist "+ (ultimaDistanza));
+                        Log.i(TAG,"distanzaRima "+ (distanzaRimanente));
+                        Log.i(TAG,"Percentuale "+ (percentuale));
+                        progressBar.setProgress(  (int)(percentuale) );
+                    }
+
+
+                    if(ultimaDistanza<1000){
+                        Log.i(TAG, "Sei arrivato" );
+                        Toast.makeText(PassengerActivity.this,
+                                "Sei arrivato, controlla il tuo punteggio",
+                                Toast.LENGTH_SHORT  );
+                        //TODO ricevere in activity a scelta l'intent
+                        Intent intent = new Intent(PassengerActivity.this, MainActivity.class);
+                        intent.putExtra("VIAGGIO_COMPLETATO",true);
+                        startActivity(intent);
+                    }
+                    launchCheckDriverNear();
+                }
+            };
+        };
+
+/*
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {
             @Override
@@ -163,7 +222,7 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
         };
 
 
-
+*/
 
 
     }
@@ -178,6 +237,64 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
         mMap.addMarker(new MarkerOptions().position(barletta).title("Marker in Barletta"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(barletta));
 
+
+/*
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                Log.i("TAG","onLocationUpdate");
+                if (locationResult == null) {
+                    Log.i("TAG","locRes null");
+                }//all'update fa questo....
+                for (Location location : locationResult.getLocations()) {
+                    if(location==null)
+                       continue;
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
+                    Log.i("TAG","Lat:"+location.getLatitude()+" Log:"+location.getLongitude());
+                    currentPosition = new LatLng(location.getLatitude(),location.getLongitude());
+                    markerPosition.setPosition( currentPosition );
+                    mLocationToConvert=new Location("");//provider name is unnecessary
+                    mLocationToConvert.setLatitude(location.getLatitude());//your coords of course
+                    mLocationToConvert.setLongitude(location.getLongitude());
+                    retriveAddress(mLocationToConvert);
+
+                    Location.distanceBetween(mLocationToConvert.getLatitude(),mLocationToConvert.getLongitude(),
+                            BARLETTA_LAT, BARLETTA_LON, resultArray);
+                    Log.i(TAG, "Distance"+String.valueOf(resultArray[0]) );
+                    txt_distanza.setText( "Distance"+String.valueOf(resultArray[0]) );
+
+
+                    distanzaRimanente = resultArray[0];
+                    if (ultimaDistanza >= distanzaRimanente){
+                        ultimaDistanza = distanzaRimanente;
+                        float percentuale =  (1-(distanzaRimanente / (distanzaIniziale)))*100;
+                        Log.i(TAG,"UltimaDist "+ (ultimaDistanza));
+                        Log.i(TAG,"distanzaRima "+ (distanzaRimanente));
+                        Log.i(TAG,"Percentuale "+ (percentuale));
+                        progressBar.setProgress(  (int)(percentuale) );
+                    }
+
+
+                    if(ultimaDistanza<1000){
+                        Log.i(TAG, "Sei arrivato" );
+                        Toast.makeText(PassengerActivity.this,
+                                "Sei arrivato, controlla il tuo punteggio",
+                                Toast.LENGTH_SHORT  );
+                        //TODO ricevere in activity a scelta l'intent
+                        Intent intent = new Intent(PassengerActivity.this, MainActivity.class);
+                        intent.putExtra("VIAGGIO_COMPLETATO",true);
+                        startActivity(intent);
+                    }
+                    launchCheckDriverNear();
+                }
+            };
+        };
+
+*/
+
+
+
         if( checkLocationPermission() ){
             getDeviceLocation();
         }
@@ -185,6 +302,7 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
         startLocationUpdates();
+
 
     }
 
@@ -269,8 +387,39 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
         Log.d(TAG, "getDeviceLocation()");
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         try{
-            final Task location = mFusedLocationClient.getLastLocation();
-            location.addOnCompleteListener(new OnCompleteListener() {
+
+           Task task = mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                Log.i("TAG","task.getResult ha dato null");
+                                Toast.makeText(PassengerActivity.this, "task.getResult ha dato null", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Location currentLocation = location;
+                                LatLng pos = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                                //Aggiounge la posizione attuale
+                                MarkerOptions markerOptions = new MarkerOptions()
+                                        .position(pos)
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                                        .snippet("Tua posizione")
+                                        .title("YOU");
+                                markerPosition = mMap.addMarker(markerOptions);
+                                currentPosition = pos;
+                                start_location = currentLocation;
+                                Location.distanceBetween(start_location.getLatitude(), start_location.getLongitude(),
+                                        BARLETTA_LAT, BARLETTA_LON, resultArray);
+                                distanzaIniziale = resultArray[0];
+                                Log.i(TAG, "DistIniziale=" + distanzaIniziale);
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 14));
+                            }
+
+                        }
+                    });
+            /*
+            mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener() {
                 @Override
                 public void onComplete(@NonNull Task task) {
                     if(task.isSuccessful()){
@@ -301,6 +450,7 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                     }
                 }
             });
+            */
         }catch (SecurityException e){
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }

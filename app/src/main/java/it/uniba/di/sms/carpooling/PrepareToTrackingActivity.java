@@ -32,6 +32,7 @@ public class PrepareToTrackingActivity extends AppCompatActivity {
     boolean GpsStatus = false;
 
 
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
 
     @Override
@@ -39,14 +40,6 @@ public class PrepareToTrackingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prepare_to_tracking);
 
-
-        checkLocationPermission();
-        LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        boolean GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        if(!GpsStatus){
-            Intent intentReqGPS = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intentReqGPS);
-        }
 
 
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -58,17 +51,26 @@ public class PrepareToTrackingActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PrepareToTrackingActivity.this, PassengerActivity.class);
-                intent.putExtra(LATITUDE,DESTINAZIONE_LATITUDE);
-                intent.putExtra(LONGITUDE,DESTINAZIONE_LONGITUDE);
-                startActivity(intent);
+
+                checkLocationPermission();
+                LocationManager locationManager = (LocationManager)PrepareToTrackingActivity.this.getSystemService(Context.LOCATION_SERVICE);
+                boolean GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                if(!GpsStatus){
+                    Intent intentReqGPS = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intentReqGPS);
+                }
+                if(GpsStatus) {
+                    Intent intent = new Intent(PrepareToTrackingActivity.this, PassengerActivity.class);
+                    intent.putExtra(LATITUDE, DESTINAZIONE_LATITUDE);
+                    intent.putExtra(LONGITUDE, DESTINAZIONE_LONGITUDE);
+                    startActivity(intent);
+                }
             }
         });
 
 }
 
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     public boolean checkLocationPermission(){
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
