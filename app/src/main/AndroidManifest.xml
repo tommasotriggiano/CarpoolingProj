@@ -79,7 +79,10 @@
             android:name=".OfferedMapActivity"
             android:label="@string/title_activity_offered_map" />
         <activity android:name=".VerifyPhoneActivity" />
-        <activity android:name=".PrepareToTrackingActivity"></activity>
+        <activity android:name=".PrepareToTrackingActivity" />
+        <activity
+            android:name=".DriverTrackingActivity"
+            android:label="@string/title_activity_driver_tracking"></activity>
     </application>
 
 </manifest>

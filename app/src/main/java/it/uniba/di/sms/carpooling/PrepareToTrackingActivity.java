@@ -47,6 +47,23 @@ public class PrepareToTrackingActivity extends AppCompatActivity {
             mBluetoothAdapter.enable();
         }
 
+        Button button_driver = (Button) findViewById(R.id.btn_driver);
+        button_driver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PrepareToTrackingActivity.this, DriverTrackingActivity.class);
+                double[] array_lat={41.31967836,41.31907836,41.31767836,41.315678};
+                double[] array_lon={16.20799458,16.27799458,16.15799458,16.151994};
+                int nPerson = array_lat.length+1;
+                intent.putExtra("STRING_ARRAY_DOUBLE_LAT",array_lat);
+                intent.putExtra("STRING_ARRAY_DOUBLE_LON",array_lon);
+                intent.putExtra("STRING_NPERSON",nPerson);
+                String[] IMEIPasseggeri={"","","",""};//TODO IMEI da ricevere da firebase
+                intent.putExtra("STRING_ARRAY_IMEI",IMEIPasseggeri);
+                startActivity(intent);
+            }
+        });
+
         Button button = (Button) findViewById(R.id.btn_passenger);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
