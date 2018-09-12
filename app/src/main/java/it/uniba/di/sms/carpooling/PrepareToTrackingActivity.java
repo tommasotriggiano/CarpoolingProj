@@ -52,8 +52,8 @@ public class PrepareToTrackingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(PrepareToTrackingActivity.this, DriverTrackingActivity.class);
-                double[] array_lat={41.31967836,41.31907836,41.31767836,41.315678};
-                double[] array_lon={16.20799458,16.27799458,16.15799458,16.151994};
+                double[] array_lat={41.3196783,41.3235747,41.3170325};
+                double[] array_lon={16.2079945,16.2667135,16.2870641};
                 int nPerson = array_lat.length+1;
                 intent.putExtra("STRING_ARRAY_DOUBLE_LAT",array_lat);
                 intent.putExtra("STRING_ARRAY_DOUBLE_LON",array_lon);
