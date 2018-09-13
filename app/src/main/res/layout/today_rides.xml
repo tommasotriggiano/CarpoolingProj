@@ -22,13 +22,22 @@
         app:layout_constraintTop_toBottomOf="@id/title"
         android:background="@color/colorPrimaryDark" />
 
+    <ProgressBar
+        android:id="@+id/progressToday"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvTodayRides"
         android:layout_width="match_parent"
-        android:layout_height="506dp"
+        android:layout_height="700dp"
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
         android:background="#6da7a7a7"/>
+
 </android.support.constraint.ConstraintLayout>

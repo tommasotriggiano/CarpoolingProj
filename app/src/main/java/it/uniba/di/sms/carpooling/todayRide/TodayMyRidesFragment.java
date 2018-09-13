@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class TodayMyRidesFragment extends Fragment {
     private ArrayList resultPassaggi;
     CollectionReference passaggi;
     private TodayMyRidesAdapter passaggiOggiAdapter;
+    private ProgressBar progressBar;
     FirebaseUser user;
 
     public TodayMyRidesFragment() {
@@ -58,6 +60,7 @@ public class TodayMyRidesFragment extends Fragment {
         passaggiOggiRecycler = (RecyclerView) view.findViewById(R.id.rvTodayRides);
         passaggiOggiRecycler.setNestedScrollingEnabled(false);
         passaggiOggiRecycler.setHasFixedSize(true);
+        progressBar=(ProgressBar) view.findViewById(R.id.progressToday);
         user = FirebaseAuth.getInstance().getCurrentUser();
         initializeDataPassaggi();
         LinearLayoutManager  passaggiOggiLayoutManager = new LinearLayoutManager(getActivity());
@@ -87,6 +90,7 @@ public class TodayMyRidesFragment extends Fragment {
         todayRides.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
+                progressBar.setVisibility(View.GONE);
                 for(DocumentChange dc : documentSnapshots.getDocumentChanges()){
                     DocumentSnapshot document = dc.getDocument();
                     Map<String,Object> map = document.getData();
@@ -107,6 +111,7 @@ public class TodayMyRidesFragment extends Fragment {
         todayRides2.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
+                progressBar.setVisibility(View.GONE);
                 for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
                     DocumentSnapshot document = dc.getDocument();
                     Map<String, Object> map = document.getData();
