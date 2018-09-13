@@ -69,14 +69,18 @@ public class TodayMyRidesAdapter extends RecyclerView.Adapter<TodayMyRidesViewHo
                     if(itemTodayRide.get(position).get("passeggeri") != null){
                     datiPasseggeri(position,holder.listView);
                     holder.passengers.setVisibility(View.VISIBLE);
-                    holder.listView.setVisibility(View.VISIBLE);}
-                    }
+                    holder.listView.setVisibility(View.VISIBLE);
+                   }
+                    holder.startTracking.setVisibility(View.VISIBLE);
+                }
                 else if(holder.cardView2.getVisibility() == View.VISIBLE && holder.listView.getVisibility() == View.VISIBLE){
                     TransitionManager.beginDelayedTransition(holder.cardView2);
                     holder.cardView2.setVisibility(View.GONE);
                     if(itemTodayRide.get(position).get("passeggeri") != null){
                         holder.passengers.setVisibility(View.GONE);
-                    holder.listView.setVisibility(View.GONE);}
+                        holder.listView.setVisibility(View.GONE);
+                    }
+                    holder.startTracking.setVisibility(View.GONE);
                 }
             }
         });

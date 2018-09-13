@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -30,6 +31,7 @@ public class TodayMyRidesViewHolder  extends RecyclerView.ViewHolder implements 
     public LinearLayout linearLayout1,linearLayout2,lin;
     public RelativeLayout linear;
     public ListView listView;
+    public Button startTracking;
 
     public TodayMyRidesViewHolder(View itemView, Context ctx, ArrayList<Map<String,Object>> todayRides){
         super(itemView);
@@ -45,6 +47,7 @@ public class TodayMyRidesViewHolder  extends RecyclerView.ViewHolder implements 
         rel2 = (RelativeLayout) itemView.findViewById(R.id.rel2);
         cardView= (CardView) itemView.findViewById(R.id.cardviewToday);
         cardView2= (CardView) itemView.findViewById(R.id.card2);
+        startTracking=(Button) itemView.findViewById(R.id.startTracking);
 
         data = (TextView) itemView.findViewById(R.id.Data);
         giorno = (TextView) itemView.findViewById(R.id.Giorno);
