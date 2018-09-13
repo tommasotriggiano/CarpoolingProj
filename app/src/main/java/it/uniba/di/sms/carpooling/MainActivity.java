@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         userAuth = authInstance.getCurrentUser();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.HomePage);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         //instanzio l'oggetto per l'header della navigation view
         View header = navigationView.getHeaderView(0);
