@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         MyRidesFragment.ShowRideRequiredListener, UserNotRegister.OpenProfileListener{
     private ImageView profile;
     private TextView hello;
-    private TextView affiliation;
+    private TextView affiliation,notify;
     private TextView affiliation2;
     private String urlImageProfile;
     private ProgressBar progressBar;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ListenerRegistration listenerRegistrationAdmin;
     private ListenerRegistration listenerRegistrationUser;
     private ListenerRegistration listenerRegistrationImage;
-    private ListenerRegistration listenerRegistrationUserCount;
+    private ListenerRegistration listenerRegistrationUserCount,listenerRequestCount;
     FirebaseUser userAuth;
     private static final String TAG = MainActivity.class.getName();
 
@@ -92,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profile = (CircleImageView) header.findViewById(R.id.imageProfile);
         hello = (TextView)header.findViewById(R.id.hello);
         affiliation = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_approvazione));
+
+        notify = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_myrides));
         if(getIntent() != null && getIntent().getExtras() != null) {
             String required=getIntent().getExtras().getString("REQUIRED");
             if (getIntent().getExtras().getString("REQUIRED")!= null){
@@ -105,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             adminrf = FirebaseFirestore.getInstance().collection("Admin").document(userAuth.getUid());
         }
 
+        initializeBadgeRideRequests();
+
 
 
 
@@ -112,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()){
-                    initializeBadge();
+                    initializeBadgeAffiliation();
                     TodayMyRidesFragment todayMyRidesFragment= new TodayMyRidesFragment();
                     FragmentTransaction homeFT = getSupportFragmentManager().beginTransaction();
                     homeFT.replace(R.id.content_frame,todayMyRidesFragment);
@@ -197,7 +202,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }});
     }
 
-    private void initializeBadge() {
+    private void initializeBadgeRideRequests() {
+        CollectionReference request = FirebaseFirestore.getInstance().collection("RideRequests");
+        Query numberRequest = request.whereEqualTo("idAutista",userAuth.getUid()).whereEqualTo("status","IN ATTESA");
+        listenerRequestCount = numberRequest.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.e(TAG,e.toString());
+                }
+                int count = 0;
+                for(DocumentSnapshot d : documentSnapshots.getDocuments()){
+                    count++;
+                }
+                if(count != 0){
+                    affiliation2.setVisibility(View.VISIBLE);
+                    affiliation2.setText(String.valueOf(count));
+                    notify.setVisibility(View.VISIBLE);
+                    notify.setText(String.valueOf(count));
+                    notify.setTextColor(getResources().getColor(R.color.colorAccent));
+                    notify.setTypeface(null,Typeface.BOLD);
+                    notify.setTextSize(16);
+                    notify.setGravity(Gravity.CENTER_VERTICAL);
+                }
+                else{
+                    notify.setVisibility(View.GONE);
+                    affiliation2.setVisibility(View.GONE);
+                }
+
+            }
+        });}
+        /*new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                int count = 0;
+                for(DocumentSnapshot d : documentSnapshots.getDocuments()){
+                    count++;
+                }
+                if(count != 0){
+                    affiliation2.setVisibility(View.VISIBLE);
+                    affiliation2.setText(String.valueOf(count));
+                    notify.setVisibility(View.VISIBLE);
+                    notify.setText(String.valueOf(count));
+                    notify.setTextColor(getResources().getColor(R.color.colorAccent));
+                    notify.setTypeface(null,Typeface.BOLD);
+                    notify.setTextSize(16);
+                    notify.setGravity(Gravity.CENTER_VERTICAL);
+                }
+                else{
+                    notify.setVisibility(View.GONE);
+                    affiliation2.setVisibility(View.GONE);
+                }
+
+    }});
+    }*/
+
+    private void initializeBadgeAffiliation() {
         CollectionReference user = FirebaseFirestore.getInstance().collection("Users");
         listenerRegistrationUserCount = user.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -323,6 +383,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 listenerRegistrationImage.remove();}
                 if(listenerRegistrationUserCount != null){
                     listenerRegistrationUserCount.remove();
+                }
+                if(listenerRequestCount != null){
+                    listenerRequestCount.remove();
                 }
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
 

@@ -153,7 +153,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_required_maps">Map</string>
-
+    <string name="title_activity_driver_tracking">Map</string>
     <string name="title_activity_offered_map">Map</string>
     <!-- OfferedMapActivity-->
     <string name="error_seats">Seats are all occupied. It\'s impossible to accept new requests</string>
