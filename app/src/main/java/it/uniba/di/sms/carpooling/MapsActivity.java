@@ -296,18 +296,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     data = data2;
 
                 }
-                String orario[]=ora.split(":");
-                Integer  minute =Integer.parseInt(orario[1]);
-                int minMinute= rangeMinMinute(minute);
-                int maxMinute=rangeMaxMinute(minute);
-                String timeMin;
-                if (minMinute<10){
-                    timeMin=orario[0]+":0"+minMinute;
-                }else {timeMin= orario[0]+":"+ minMinute;}
-                String timeMax;
-                if(maxMinute<10){
-                    timeMax=orario[0]+":0"+maxMinute;
-                }else {timeMax= orario[0]+":"+ maxMinute;}
 
                 if (nome == null && cognome == null) {
                     findRides = passaggi
@@ -473,145 +461,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    private int rangeMinMinute(Integer minute){
-        int minMinute=0;
-        switch (minute){
-            case 0: {
-                minMinute=45;
-                break;
-            }
-            case 1: {
-                minMinute=46;
-                break;
-            }
-            case 2:{
-                minMinute=47;
-                break;
-            }
-            case 3:{
-                minMinute=48;
-                break;
-            }
-            case 4:{
-                minMinute=49;
-                break;
-            }
-            case 5:{
-                minMinute=50;
-                break;
-            }
-            case 6:{
-                minMinute=51;
-                break;
-            }
-            case 7:{
-                minMinute=52;
-                break;
-            }
-            case 8:{
-                minMinute=53;
-                break;
-            }
-            case 9:{
-                minMinute=54;
-                break;
-            }
-            case 10: {
-                minMinute=55;
-                break;
-            }
-            case 11:{
-                minMinute=56;
-                break;
-            } case 12:{
-                minMinute=57;
-                break;
-            } case 13:{
-                minMinute=58;
-                break;
-            } case 14: {
-                minMinute = 59;
-                break;
-            }
-            default:{
-                minMinute= minute-15;
-                break;
-            }
-        }
-        return minMinute;
-    }
 
-    private int rangeMaxMinute(Integer minute){
-        int maxMinute=0;
-        switch (minute){
-            case 45:{
-                maxMinute=0;
-                break;
-            }
-            case 46:{
-                maxMinute=1;
-                break;
-            }
-            case 47:{
-                maxMinute=2;
-                break;
-            }
-            case 48:{
-                maxMinute=3;
-                break;
-            }
-            case 49:{
-                maxMinute=4;
-                break;
-            }
-
-            case 50: {
-                maxMinute=5;
-                break;
-            }
-            case 51: {
-                maxMinute=6;
-                break;
-            }
-            case 52:{
-                maxMinute=7;
-                break;
-            }
-            case 53:{
-                maxMinute=8;
-                break;
-            }
-            case 54:{
-                maxMinute=9;
-                break;
-            }
-            case 55:{
-                maxMinute=10;
-                break;
-            }
-            case 56:{
-                maxMinute=11;
-                break;
-            }
-            case 57:{
-                maxMinute=12;
-                break;
-            }
-            case 58:{
-                maxMinute=13;
-                break;
-            }
-            case 59:{
-                maxMinute=14;
-                break;
-            }
-            default:{
-                maxMinute= minute+15;
-                break;
-            }
-        }
-        return maxMinute;
-    }
     private void requiredRide(String key){
             //prendo il passaggio che è collegato alla chiave del marker selezionato
             if(markerMap.get(key) != null){
@@ -636,8 +486,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 rideRequest.add(requestMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Intent intent = new Intent(MapsActivity.this,MainActivity.class);
-                        intent.putExtra("REQUIRED","REQUIRED");
+                       Intent intent = new Intent(MapsActivity.this,MainActivity.class);
+                        //intent.putExtra("REQUIRED","REQUIRED");
                         startActivity(intent);
 
 

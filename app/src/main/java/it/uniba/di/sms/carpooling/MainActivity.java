@@ -13,6 +13,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ContentFrameLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View header = navigationView.getHeaderView(0);
 
         setSupportActionBar(toolbar);
+        setTitle(R.string.HomePage);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(getIntent() != null && getIntent().getExtras() != null) {
             String required=getIntent().getExtras().getString("REQUIRED");
             if (getIntent().getExtras().getString("REQUIRED")!= null){
+                Toast.makeText(this,"go",Toast.LENGTH_SHORT).show();
                 showRideRequired();}
             /*if (getIntent().getExtras().getString("sendToMyRides")!= null){
                 onShowRideOffered();}*/
@@ -107,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             adminrf = FirebaseFirestore.getInstance().collection("Admin").document(userAuth.getUid());
         }
 
-        initializeBadgeRideRequests();
+        //initializeBadgeRideRequests();
 
 
 
