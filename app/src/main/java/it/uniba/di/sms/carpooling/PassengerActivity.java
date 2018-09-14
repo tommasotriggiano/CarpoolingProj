@@ -65,7 +65,6 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
     float distanzaIniziale ;
     float distanzaRimanente ;
     float ultimaDistanza = Float.MAX_VALUE ;
-
     static TextView txt_driver_dist ;
     TextView txt_luogo ;
     TextView txt_distanza ;
@@ -73,8 +72,9 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
     Marker markerPosition;
     boolean isNear = false;
     String IMEIDriver="";//TODO IMEI da ricevere da firebase
-
-
+    BluetoothAdapter mBluetoothAdapter;
+    IntentFilter intentFilter;
+    static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
 
     private final BroadcastReceiver deviceReceiver = new BroadcastReceiver() {
@@ -94,13 +94,13 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                     Toast.makeText(PassengerActivity.this,"IMEI conducente non rilevato",Toast.LENGTH_LONG).show();
                     Log.i("TAG","IMEI conducente non rilevato");
                 }
-                setTxt_driver_dist("Connected to "+device.getName());
+                setTxt_driver_dist( getString(R.string.tracking_valid) );
+                //setTxt_driver_dist( "Connected to " + device.getName() );
             }
         }
     };
 
-    BluetoothAdapter mBluetoothAdapter;
-    IntentFilter intentFilter;
+
 
 
     @Override
@@ -145,7 +145,6 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                     Log.i(TAG, "Distance"+String.valueOf(resultArray[0]) );
                     txt_distanza.setText( "Distance"+String.valueOf(resultArray[0]) );
 
-
                     distanzaRimanente = resultArray[0];
                     if (ultimaDistanza >= distanzaRimanente){
                         ultimaDistanza = distanzaRimanente;
@@ -172,57 +171,6 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
             };
         };
 
-/*
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                Log.i("TAG","onLocationUpdate");
-                if (locationResult == null) {
-                    return;
-                }//all'update fa questo....
-                for (Location location : locationResult.getLocations()) {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
-                    markerPosition.setPosition( new LatLng(location.getLatitude(),location.getLongitude()) );
-                    mLocationToConvert=new Location("");//provider name is unnecessary
-                    mLocationToConvert.setLatitude(location.getLatitude());//your coords of course
-                    mLocationToConvert.setLongitude(location.getLongitude());
-                    retriveAddress(mLocationToConvert);
-
-                    Location.distanceBetween(mLocationToConvert.getLatitude(),mLocationToConvert.getLongitude(),
-                            BARLETTA_LAT, BARLETTA_LON, resultArray);
-                    Log.i(TAG, "Distance"+String.valueOf(resultArray[0]) );
-                    txt_distanza.setText( "Distance"+String.valueOf(resultArray[0]) );
-
-
-                    distanzaRimanente = resultArray[0];
-                    if (ultimaDistanza >= distanzaRimanente){
-                        ultimaDistanza = distanzaRimanente;
-                        float percentuale =  (1-(distanzaRimanente / (distanzaIniziale)))*100;
-                        Log.i(TAG,"UltimaDist "+ (ultimaDistanza));
-                        Log.i(TAG,"distanzaRima "+ (distanzaRimanente));
-                        Log.i(TAG,"Percentuale "+ (percentuale));
-                        progressBar.setProgress(  (int)(percentuale) );
-                    }
-
-
-                    if(ultimaDistanza<1000){
-                        Log.i(TAG, "Sei arrivato" );
-                        Toast.makeText(PassengerActivity.this,
-                                "Sei arrivato, controlla il tuo punteggio",
-                                Toast.LENGTH_SHORT  );
-                        //TODO ricevere in activity a scelta l'intent
-                        Intent intent = new Intent(PassengerActivity.this, MainActivity.class);
-                        intent.putExtra("VIAGGIO_COMPLETATO",true);
-                        startActivity(intent);
-                    }
-                    launchCheckDriverNear();
-                }
-            };
-        };
-
-
-*/
 
 
     }
@@ -231,70 +179,10 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         //startService(new Intent(this,LocationService.class));
         LatLng barletta = new LatLng(BARLETTA_LAT, BARLETTA_LON);
         mMap.addMarker(new MarkerOptions().position(barletta).title("Marker in Barletta"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(barletta));
-
-
-/*
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                Log.i("TAG","onLocationUpdate");
-                if (locationResult == null) {
-                    Log.i("TAG","locRes null");
-                }//all'update fa questo....
-                for (Location location : locationResult.getLocations()) {
-                    if(location==null)
-                       continue;
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
-                    Log.i("TAG","Lat:"+location.getLatitude()+" Log:"+location.getLongitude());
-                    currentPosition = new LatLng(location.getLatitude(),location.getLongitude());
-                    markerPosition.setPosition( currentPosition );
-                    mLocationToConvert=new Location("");//provider name is unnecessary
-                    mLocationToConvert.setLatitude(location.getLatitude());//your coords of course
-                    mLocationToConvert.setLongitude(location.getLongitude());
-                    retriveAddress(mLocationToConvert);
-
-                    Location.distanceBetween(mLocationToConvert.getLatitude(),mLocationToConvert.getLongitude(),
-                            BARLETTA_LAT, BARLETTA_LON, resultArray);
-                    Log.i(TAG, "Distance"+String.valueOf(resultArray[0]) );
-                    txt_distanza.setText( "Distance"+String.valueOf(resultArray[0]) );
-
-
-                    distanzaRimanente = resultArray[0];
-                    if (ultimaDistanza >= distanzaRimanente){
-                        ultimaDistanza = distanzaRimanente;
-                        float percentuale =  (1-(distanzaRimanente / (distanzaIniziale)))*100;
-                        Log.i(TAG,"UltimaDist "+ (ultimaDistanza));
-                        Log.i(TAG,"distanzaRima "+ (distanzaRimanente));
-                        Log.i(TAG,"Percentuale "+ (percentuale));
-                        progressBar.setProgress(  (int)(percentuale) );
-                    }
-
-
-                    if(ultimaDistanza<1000){
-                        Log.i(TAG, "Sei arrivato" );
-                        Toast.makeText(PassengerActivity.this,
-                                "Sei arrivato, controlla il tuo punteggio",
-                                Toast.LENGTH_SHORT  );
-                        //TODO ricevere in activity a scelta l'intent
-                        Intent intent = new Intent(PassengerActivity.this, MainActivity.class);
-                        intent.putExtra("VIAGGIO_COMPLETATO",true);
-                        startActivity(intent);
-                    }
-                    launchCheckDriverNear();
-                }
-            };
-        };
-
-*/
-
-
-
         if( checkLocationPermission() ){
             getDeviceLocation();
         }
@@ -302,8 +190,6 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
         startLocationUpdates();
-
-
     }
 
     private void startLocationUpdates() {
@@ -319,7 +205,6 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                 null /* Looper */);
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     public boolean checkLocationPermission(){
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -393,7 +278,7 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                         @Override
                         public void onSuccess(Location location) {
                             // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
+                            if (location == null) {
                                 Log.i("TAG","task.getResult ha dato null");
                                 Toast.makeText(PassengerActivity.this, "task.getResult ha dato null", Toast.LENGTH_SHORT).show();
                             }
@@ -418,39 +303,7 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
 
                         }
                     });
-            /*
-            mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if(task.isSuccessful()){
-                        Location currentLocation = (Location) task.getResult();
-                        if(currentLocation==null){
-                            Log.i("TAG","task.getResult ha dato null");
-                            Toast.makeText(PassengerActivity.this, "task.getResult ha dato null", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            LatLng pos = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                            //Aggiounge la posizione attuale
-                            MarkerOptions markerOptions = new MarkerOptions()
-                                    .position(pos)
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                                    .snippet("Tua posizione")
-                                    .title("YOU");
-                            markerPosition = mMap.addMarker(markerOptions);
-                            currentPosition = pos;
-                            start_location = currentLocation;
-                            Location.distanceBetween(start_location.getLatitude(), start_location.getLongitude(),
-                                    BARLETTA_LAT, BARLETTA_LON, resultArray);
-                            distanzaIniziale = resultArray[0];
-                            Log.i(TAG, "DistIniziale=" + distanzaIniziale);
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 14));
-                        }
-                    }else{
-                        Toast.makeText(PassengerActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-            */
+
         }catch (SecurityException e){
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }
@@ -544,4 +397,13 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
     static public void setTxt_driver_dist(String txt) {
         txt_driver_dist.setText(txt);
     }
+
+    @Override
+    protected void onStop() {
+        if (deviceReceiver != null) {
+            unregisterReceiver(deviceReceiver);
+        }
+        super.onStop();
+    }
+
 }

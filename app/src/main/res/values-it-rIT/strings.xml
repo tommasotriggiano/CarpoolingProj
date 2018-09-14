@@ -145,4 +145,12 @@
     <string name="waitForVerification">Attendi il codice di verifica via SMS</string>
     <string name="enterCode">Inserisci codice di verifica</string>
     <string name="confirm">Conferma</string>
+    <!-- Map -->
+    <string name="tracking_valid">Il tracking è valido</string>
+    <string name="tracking_not_valid">Il tracking non è valido</string>
+    <string name="start_tracking">Inizia Tracking</string>
+    <string name="imei_driver_not_found">IMEI conducente non rilevato </string>
+    <string name="explanation_tracking">Finchè non avrai passeggeri\nnon potrai guadagnare punti \n riprova </string>
+    <string name="explanation_preview">Impossibile trovare un anteprima,\nRiprova altrove </string>
+
 </resources>

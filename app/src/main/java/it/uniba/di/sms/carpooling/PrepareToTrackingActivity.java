@@ -41,26 +41,47 @@ public class PrepareToTrackingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_prepare_to_tracking);
 
 
-
+/*
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (!mBluetoothAdapter.isEnabled()) {
             mBluetoothAdapter.enable();
         }
-
+*/
         Button button_driver = (Button) findViewById(R.id.btn_driver);
         button_driver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PrepareToTrackingActivity.this, DriverTrackingActivity.class);
-                double[] array_lat={41.3196783,41.3235747,41.3170325};
-                double[] array_lon={16.2079945,16.2667135,16.2870641};
-                int nPerson = array_lat.length+1;
-                intent.putExtra("STRING_ARRAY_DOUBLE_LAT",array_lat);
-                intent.putExtra("STRING_ARRAY_DOUBLE_LON",array_lon);
-                intent.putExtra("STRING_NPERSON",nPerson);
-                String[] IMEIPasseggeri={"","","",""};//TODO IMEI da ricevere da firebase
-                intent.putExtra("STRING_ARRAY_IMEI",IMEIPasseggeri);
-                startActivity(intent);
+                checkLocationPermission();
+                LocationManager locationManager = (LocationManager)PrepareToTrackingActivity.this.getSystemService(Context.LOCATION_SERVICE);
+                boolean GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                if(!GpsStatus){
+                    Intent intentReqGPS = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intentReqGPS);
+                }
+                if(GpsStatus) {
+                    Intent intent = new Intent(PrepareToTrackingActivity.this, DriverTrackingActivity.class);
+                    double[] array_lat={41.3296783,41.3235747,41.3170325,41.3070325,41.3138608};
+                    double[] array_lon={16.2079945,16.2667135,16.2870641,16.2470641,16.2559796};
+                    //double[] array_lat={41.3296783,41.3235747,41.3170325,41.3070325};
+                    //double[] array_lon={16.2079945,16.2667135,16.2870641,16.2470641};
+                    //double[] array_lat={41.3296783,41.3235747,41.3170325};//usati per testarla
+                    //double[] array_lon={16.2079945,16.2667135,16.2870641};
+                    //double[] array_lat={41.3296783,41.3235747};
+                    //double[] array_lon={16.2079945,16.2667135};
+                    //double[] array_lat={41.3296783};
+                    //double[] array_lon={16.2079945};
+                    //double[] array_lat={};
+                    //double[] array_lon={};
+                    int nPerson = array_lat.length+1;
+                    intent.putExtra("STRING_ARRAY_DOUBLE_LAT",array_lat);
+                    intent.putExtra("STRING_ARRAY_DOUBLE_LON",array_lon);
+                    intent.putExtra("STRING_NPERSON",nPerson);
+                    intent.putExtra("STRING_STREAT_ADDRESS","Via Roma 1");
+                    intent.putExtra("STRING_STREAT_CITY","Barletta");
+                    String[] IMEIPasseggeri={"","","",""};//TODO IMEI da ricevere da firebase
+                    intent.putExtra("STRING_ARRAY_IMEI",IMEIPasseggeri);
+                    startActivity(intent);
+                }
             }
         });
 

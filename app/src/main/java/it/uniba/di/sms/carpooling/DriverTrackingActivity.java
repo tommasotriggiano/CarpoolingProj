@@ -113,13 +113,17 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
     Button btnStart;
     ArrayList<LatLng> listPoints;
     LatLng yourPosition;
-    public int nPerson=9;//Persone a bordo, Almeno 2
+    public int nPerson=1;
     double[] latitude_array;
     double[] longitude_array;
     String[] array_IMEI;
     boolean isNear=false;
     TextView textView;
+    String via ;
+    String citta ;
 
+    private  final int REQUEST_MAPS_CODE=697;
+    private  final int REQUEST_MAPS_CODE_ALONE=698;
 
     BluetoothAdapter mBluetoothAdapter;
     IntentFilter intentFilter;
@@ -136,15 +140,15 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
                     if(device.getAddress().compareTo(IMEI)==0)
                     {
                         isNear=true;
-                        textView.setText("Connected to "+device.getName());
+                        textView.setText(getString(R.string.tracking_valid));
                         textView.setVisibility(View.VISIBLE);
                     }
                 }
             }
             if( !isNear) {
-                Toast.makeText(DriverTrackingActivity.this,"IMEI conducente non rilevato",Toast.LENGTH_LONG).show();
+                Toast.makeText(DriverTrackingActivity.this,getString(R.string.imei_driver_not_found),Toast.LENGTH_LONG).show();
                 Log.i("TAG","nessun IMEI rilevato");
-                textView.setText("Finchè non avrai passeggeri\n non potrai avviare il tracking\nriprova");
+                textView.setText(getString(R.string.explanation_tracking));
                 textView.setVisibility(View.VISIBLE);
             }
         }
@@ -159,20 +163,6 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         boolean isNear = savedInstanceState.getBoolean("CHECK");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(isNear==true){
-          /*//TODO decidi dove ricevere il valore del tracking
-
-                Intent intent = new Intent(DriverTrackingActivity.this,RatingActivity.class);
-                intent.putExtra("CHECK",isNear);
-                startActivity(intent);
-
-           */
-        }
     }
 
     @Override
@@ -194,24 +184,42 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
         array_IMEI = getIntent().getStringArrayExtra("STRING_ARRAY_IMEI");
         listPoints = new ArrayList<>();
         listPoints.clear();
-        yourPosition=new LatLng(0,0);
+        yourPosition=new LatLng(41,16);
         getDeviceLocation();
+
+
+        latitude_array = getIntent().getDoubleArrayExtra("STRING_ARRAY_DOUBLE_LAT");
+        longitude_array = getIntent().getDoubleArrayExtra("STRING_ARRAY_DOUBLE_LON");
+        nPerson = getIntent().getIntExtra("STRING_NPERSON",5);
+
+
+
+
 
         btnStart = (Button) findViewById(R.id.btnStart);
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchCheckDriverNear();//TODO togli e metti check per emulatore
+                //launchCheckDriverNear();//TODO togli e metti check per emulatore
                 //isNear=true;
-                //                if(nPerson==listPoints.size()+1 && isNear)
-                if(nPerson==listPoints.size() )
+                if(nPerson==1)
+                {
+                     via = getIntent().getStringExtra("STRING_STREAT_ADDRESS");
+                     citta = getIntent().getStringExtra("STRING_STREAT_CITY");
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+via+","+citta));
+                    startActivityForResult(intent, REQUEST_MAPS_CODE_ALONE);
+                }
+                //else if(isNear)//TODO decommenta prima di mandarlo al prof,
+                else
+                {
                     StartTravel();
+                }
             }
         });
 
         latitude_array = getIntent().getDoubleArrayExtra("STRING_ARRAY_DOUBLE_LAT");
         longitude_array = getIntent().getDoubleArrayExtra("STRING_ARRAY_DOUBLE_LON");
-        nPerson = getIntent().getIntExtra("STRING_NPERSON",5);
+        nPerson = getIntent().getIntExtra("STRING_NPERSON",1);
 
         try {
             for (int k = 0; k<latitude_array.length; k++){
@@ -232,38 +240,42 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
             return;
         }
         mMap.setMyLocationEnabled(true);
-        if (listPoints.size() == nPerson) {
-            btnStart.setBackgroundColor(5);
-        }
+
         for (LatLng point:listPoints) {
             mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)).position(point));
         }
-        //Create the URL to get request from first marker to second marker
-        String url = getRequestUrl();
-        TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-        taskRequestDirections.execute(url);
+
+
+
+        if (nPerson>1){
+            String url = getRequestUrl();
+            TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+            taskRequestDirections.execute(url);
+
+        }
 
     }
 
     private String getRequestUrl(  ) {
+        via = getIntent().getStringExtra("STRING_STREAT_ADDRESS");
+        citta = getIntent().getStringExtra("STRING_STREAT_CITY");
         //Value of origin
-        String str_org = "origin=" + listPoints.get(0).latitude +","+listPoints.get(0).longitude;
+        String str_org = "origin=" + yourPosition.latitude +","+yourPosition.longitude;
         //Value of destination
-        String str_dest = "destination=" + listPoints.get(listPoints.size()-1).latitude+","+listPoints.get(listPoints.size()-1).longitude;
+        String str_dest = "destination=" + via + "," + citta;
         //Set value enable the sensor
         String sensor = "sensor=false";
         //Mode for find direction
         String mode = "mode=driving";
         //Set waypont
-
         String str_way = "";
-        if (listPoints.size()>2){
+        if (listPoints.size()>1){
             str_way = "waypoints=";
-            for (int i=1; i<nPerson-2; i++){
+            for (int i=0; i<listPoints.size()-1; i++){
                 str_way = str_way + listPoints.get(i).latitude + "," + listPoints.get(i).longitude + "|";
                 // str_way.concat(listPoints.get(i).latitude + "," + listPoints.get(i).longitude + "|");
             }
-            str_way = str_way + listPoints.get(nPerson-2).latitude + "," + listPoints.get(nPerson-2).longitude;
+            str_way = str_way + listPoints.get(listPoints.size()-1).latitude + "," + listPoints.get(listPoints.size()-1).longitude;
         }
         //Build the full param
         String param = str_org +"&" + str_dest + "&" + str_way + "&" + sensor+"&" +mode;
@@ -271,46 +283,26 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
         String output = "json";
         //Create url to request
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param;
+        Log.i("TAG",url);
         return url;
     }
 
-    private  final int REQUEST_MAPS_CODE=697;
     private void StartTravel(){
-
-        for (LatLng p: listPoints        ) {
-            Log.i("TAG","\nListPoint at StartTravel: "+p.latitude+" "+p.longitude);
-        }
-
-        //Value of origin
-        String str_org = "origin=" + listPoints.get(listPoints.size()-1).latitude +","+listPoints.get(listPoints.size()-1).longitude;
-        //Value of destination
-        String str_dest = "destination=" + listPoints.get(listPoints.size()-2).latitude+","+listPoints.get(listPoints.size()-1).longitude;
-        //Set value enable the sensor
-        String sensor = "sensor=false";
-        //Mode for find direction
-        String mode = "mode=driving";
-        //Set waypont
-
+        String str_org = "origin=" + yourPosition.latitude +","+yourPosition.longitude;
+        String str_dest = "destination=" + via+","+citta;
         String str_way = "";
-        if (listPoints.size()>2){
+        if (nPerson>=2){
             str_way = "waypoints=";
-            Log.i("TAG","you:"+yourPosition.latitude+" "+yourPosition.longitude);
-            for (int i=0; i<listPoints.size()-3; i++){
+            for (int i=0; i<listPoints.size()-1; i++){
                 str_way = str_way + listPoints.get(i).latitude + "," + listPoints.get(i).longitude + "|";
                 Log.i("TAG","Inside waypoint "+i+" "+listPoints.get(i).latitude + "," + listPoints.get(i).longitude);
-                // str_way.concat(listPoints.get(i).latitude + "," + listPoints.get(i).longitude + "|");
             }
-            str_way = str_way + listPoints.get(listPoints.size()-3).latitude + "," + listPoints.get(listPoints.size()-3).longitude;
+            str_way = str_way + listPoints.get(listPoints.size()-1).latitude + "," + listPoints.get(listPoints.size()-1).longitude;
         }
-        //Build the full param
-        String param = str_org + "&" + str_dest + "&" + str_way + "&"  + mode;
-        //Output format
-        String output = "json";
         //Create url to request
-        String url = "https://www.google.com/maps/dir/?api=1&" + output + "?" + param;
+        String url = "https://www.google.com/maps/dir/?api=1&json?" + str_org + "&" + str_dest + "&" + str_way + "&mode=driving";
         Log.i("TAG","\n"+url+"\n");
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url)).setPackage("com.google.android.apps.maps");
-        //startActivity(intent);
         startActivityForResult(intent, REQUEST_MAPS_CODE);
     }
 
@@ -321,11 +313,23 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
         if (REQUEST_MAPS_CODE==requestCode){
             if (resultCode==0)
                 Log.i("TAG","Result finish maps track");
-
            /*//TODO decidi dove ricevere il valore del tracking
            if(isNear){
                 Intent intent = new Intent(DriverTrackingActivity.this,RatingActivity.class);
                 intent.putExtra("CHECK",isNear);
+                intent.putExtra("ALONE","false");
+                startActivity(intent);
+            }
+           */
+        }
+        if (REQUEST_MAPS_CODE_ALONE==requestCode){
+            if (resultCode==0)
+                Log.i("TAG","Result finish maps track but alone");
+           /*//TODO decidi dove ricevere il valore del tracking
+           if(isNear){
+                Intent intent = new Intent(DriverTrackingActivity.this,RatingActivity.class);
+                intent.putExtra("CHECK",isNear);
+                intent.putExtra("ALONE","true");
                 startActivity(intent);
             }
            */
@@ -340,22 +344,18 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
             URL url = new URL(reqUrl);
             httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.connect();
-
             //Get the response result
             inputStream = httpURLConnection.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
             StringBuffer stringBuffer = new StringBuffer();
             String line = "";
             while ((line = bufferedReader.readLine()) != null) {
                 stringBuffer.append(line);
             }
-
             responseString = stringBuffer.toString();
             bufferedReader.close();
             inputStreamReader.close();
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -422,42 +422,44 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
             //Get list route and display it into the map
 
             ArrayList points = null;
-
             PolylineOptions polylineOptions = null;
 
-            for (List<HashMap<String, String>> path : lists) {
-                points = new ArrayList();
-                points.add(yourPosition);
-                polylineOptions = new PolylineOptions();
+            if(lists != null) {
+                for (List<HashMap<String, String>> path : lists) {
+                    points = new ArrayList();
+                    if (yourPosition.latitude == 41 && yourPosition.longitude == 16) {
+                        Log.i("TAG", "posizione non aggiornata in tempo");
+                    } else {
+                        points.add(yourPosition);
+                    }
+                    polylineOptions = new PolylineOptions();
 
-                for (HashMap<String, String> point : path) {
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lon = Double.parseDouble(point.get("lon"));
+                    for (HashMap<String, String> point : path) {
+                        double lat = Double.parseDouble(point.get("lat"));
+                        double lon = Double.parseDouble(point.get("lon"));
 
-                    points.add(new LatLng(lat,lon));
+                        points.add(new LatLng(lat, lon));
+                    }
+                    polylineOptions.addAll(points);
+                    polylineOptions.width(15);
+                    polylineOptions.color(Color.BLUE);
+                    polylineOptions.geodesic(true);
                 }
-
-                polylineOptions.addAll(points);
-                polylineOptions.width(15);
-                polylineOptions.color(Color.BLUE);
-                polylineOptions.geodesic(true);
             }
+            else Log.i("TAG","<<<lista nulla>>>");
 
-            if (polylineOptions!=null) {
+
+            if (polylineOptions!=null && nPerson>2) {
                 mMap.addPolyline(polylineOptions);
-            } else {
-                Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
             }
 
         }
     }
 
-
     private void getDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
         try{
             final Task location = mFusedLocationProviderClient.getLastLocation();
             location.addOnCompleteListener(new OnCompleteListener() {
@@ -465,13 +467,14 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
                 public void onComplete(@NonNull Task task) {
                     if(task.isSuccessful()){
                         Log.d(TAG, "onComplete: found location!");
-                        Location currentLocation = (Location) task.getResult();;
-                        moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                DEFAULT_ZOOM);
-                        LatLng pos= new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
-                        listPoints.add(pos);
-
-
+                        if (location==null){
+                            Log.i("TAG","getDeviceLoc ha dato null");
+                        }
+                        else {
+                            Location currentLocation = (Location) task.getResult();
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),DEFAULT_ZOOM);
+                            yourPosition = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                        }
                     }else{
                         Log.d(TAG, "onComplete: current location is null");
                         Toast.makeText(DriverTrackingActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
@@ -490,17 +493,14 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
 
     private void launchCheckDriverNear(){
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        Log.i("TAG", "Mio mac: "+mBluetoothAdapter.getAddress());
         intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        //intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        //intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
         intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
         registerReceiver(deviceReceiver, intentFilter);
         if (mBluetoothAdapter.isDiscovering()) {
-            Log.i("TAG", "Stava cercando, cancello");
             mBluetoothAdapter.cancelDiscovery();
         }
-        Log.i("TAG", "Avvio ricerca");
         mBluetoothAdapter.startDiscovery();
     }
 
