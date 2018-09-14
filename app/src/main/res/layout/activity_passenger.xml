@@ -42,7 +42,7 @@
         android:layout_height="120dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:progress="80"
+        android:progress="1"
         android:progressDrawable="@drawable/circle_bar" />
 
 
