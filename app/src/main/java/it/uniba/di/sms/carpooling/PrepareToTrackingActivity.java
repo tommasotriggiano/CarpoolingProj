@@ -41,12 +41,12 @@ public class PrepareToTrackingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_prepare_to_tracking);
 
 
-/*
+
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (!mBluetoothAdapter.isEnabled()) {
             mBluetoothAdapter.enable();
         }
-*/
+
         Button button_driver = (Button) findViewById(R.id.btn_driver);
         button_driver.setOnClickListener(new View.OnClickListener() {
             @Override

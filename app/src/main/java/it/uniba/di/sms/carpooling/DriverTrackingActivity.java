@@ -200,7 +200,7 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //launchCheckDriverNear();//TODO togli e metti check per emulatore
+                launchCheckDriverNear();//TODO togli e metti check per emulatore
                 //isNear=true;
                 if(nPerson==1)
                 {
