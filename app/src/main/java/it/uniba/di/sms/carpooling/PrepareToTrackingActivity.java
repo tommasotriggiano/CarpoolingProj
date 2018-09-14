@@ -78,7 +78,7 @@ public class PrepareToTrackingActivity extends AppCompatActivity {
                     intent.putExtra("STRING_NPERSON",nPerson);
                     intent.putExtra("STRING_STREAT_ADDRESS","Via Roma 1");
                     intent.putExtra("STRING_STREAT_CITY","Barletta");
-                    String[] IMEIPasseggeri={"","","",""};//TODO IMEI da ricevere da firebase
+                    String[] IMEIPasseggeri={"EC:CB:30:D8:7D:A6","EC:CB:30:D8:7D:A6","",""};//TODO IMEI da ricevere da firebase
                     intent.putExtra("STRING_ARRAY_IMEI",IMEIPasseggeri);
                     startActivity(intent);
                 }

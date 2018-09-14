@@ -118,6 +118,7 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
     double[] longitude_array;
     String[] array_IMEI;
     boolean isNear=false;
+    boolean isTrackingNow=false;
     TextView textView;
     String via ;
     String citta ;
@@ -131,17 +132,26 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             Log.i("TAG","ACTION: "+action);
+
+            if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)){
+                if(!isTrackingNow)
+                    BluetoothAdapter.getDefaultAdapter().startDiscovery();
+            }
+
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 //bluetooth device found
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 Log.i("TAG","Device name: "+device.getName()+" IMEI: "+device.getAddress());
 
                 for (String IMEI: array_IMEI) {
+                    Log.i("TAG",IMEI+" = "+device.getAddress());
                     if(device.getAddress().compareTo(IMEI)==0)
                     {
                         isNear=true;
                         textView.setText(getString(R.string.tracking_valid));
                         textView.setVisibility(View.VISIBLE);
+                        isTrackingNow=true;
+                        StartTravel();
                     }
                 }
             }
@@ -193,19 +203,19 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
         nPerson = getIntent().getIntExtra("STRING_NPERSON",5);
 
 
-
+        launchCheckDriverNear();//TODO togli e metti check per emulatore
 
 
         btnStart = (Button) findViewById(R.id.btnStart);
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchCheckDriverNear();//TODO togli e metti check per emulatore
+                //launchCheckDriverNear();
                 //isNear=true;
                 if(nPerson==1)
                 {
-                     via = getIntent().getStringExtra("STRING_STREAT_ADDRESS");
-                     citta = getIntent().getStringExtra("STRING_STREAT_CITY");
+                    via = getIntent().getStringExtra("STRING_STREAT_ADDRESS");
+                    citta = getIntent().getStringExtra("STRING_STREAT_CITY");
                     Intent intent = new Intent(android.content.Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+via+","+citta));
                     startActivityForResult(intent, REQUEST_MAPS_CODE_ALONE);
                 }
@@ -312,8 +322,9 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
         //Log.i("TAG","Result "+requestCode+"  "+resultCode);
         if (REQUEST_MAPS_CODE==requestCode){
             if (resultCode==0)
-                Log.i("TAG","Result finish maps track");
+                Log.i("TAG","Result finish track with passengers");
            /*//TODO decidi dove ricevere il valore del tracking
+            launchCheckDriverNear();
            if(isNear){
                 Intent intent = new Intent(DriverTrackingActivity.this,RatingActivity.class);
                 intent.putExtra("CHECK",isNear);
@@ -494,8 +505,8 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
     private void launchCheckDriverNear(){
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         intentFilter = new IntentFilter();
-        //intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        //intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
         intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
         registerReceiver(deviceReceiver, intentFilter);
         if (mBluetoothAdapter.isDiscovering()) {
