@@ -3,6 +3,7 @@ package it.uniba.di.sms.carpooling;
 import android.*;
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -66,11 +68,11 @@ import static android.app.Activity.RESULT_OK;
 public class RegistrationForm extends Fragment {
     private static final String TAG = MainActivity.class.getSimpleName();
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-    private final int REQUEST_CAMERA=2, SELECT_FILE=0;
-    private final int CAMERA_PERMISSION_REQUEST_ID=3;
+    private final int REQUEST_CAMERA = 2, SELECT_FILE = 0, PERMISSION_READ_STATE = 4;
+    private final int CAMERA_PERMISSION_REQUEST_ID = 3;
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
     //dichiarazioni variabili per l'utente
-    private TextView indirizzoCasa,text;
+    private TextView indirizzoCasa, text;
     private EditText nome;
     private EditText cognome;
     private Spinner azienda;
@@ -79,6 +81,7 @@ public class RegistrationForm extends Fragment {
     private EditText automobile;
     private Button confermaAccount;
     private ImageButton addPhoto;
+    private String imei;
 
     private CircleImageView image;
     //creazione dello storage per la foto utente
@@ -97,10 +100,10 @@ public class RegistrationForm extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view= inflater.inflate(R.layout.activity_registration_form, container,false);
+        View view = inflater.inflate(R.layout.activity_registration_form, container, false);
 
-        image= (CircleImageView) view.findViewById(R.id.imageView2);
-        addPhoto=(ImageButton)view.findViewById(R.id.addPhoto);
+        image = (CircleImageView) view.findViewById(R.id.imageView2);
+        addPhoto = (ImageButton) view.findViewById(R.id.addPhoto);
         //istanza del profilo autenticato all'applicazione
         profile = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -114,21 +117,21 @@ public class RegistrationForm extends Fragment {
         cognome = (EditText) view.findViewById(R.id.Cognome);
         // Inserimento posto con autocompletamento
         indirizzoCasa = (TextView) view.findViewById(R.id.Indirizzo);
-        text=(TextView) view.findViewById(R.id.ind);
+        text = (TextView) view.findViewById(R.id.ind);
         azienda = (Spinner) view.findViewById(R.id.Azienda);
         countryPrefix = (Spinner) view.findViewById(R.id.spinnerCountries);
-        countryPrefix.setAdapter(new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_dropdown_item,CountryData.countryNames));
+        countryPrefix.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, CountryData.countryNames));
         telefono = (EditText) view.findViewById(R.id.Telefono);
         automobile = (EditText) view.findViewById(R.id.Auto);
         confermaAccount = (Button) view.findViewById(R.id.confirm);
 
         return view;
-        }
+    }
 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view,savedInstanceState);
+        super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle(R.string.profile);
 
         indirizzoCasa.setOnClickListener(new View.OnClickListener() {
@@ -168,11 +171,11 @@ public class RegistrationForm extends Fragment {
         });
 
     }
+
     // metodo per inviare l'email al mobility manager
     public void sendMail() {
-        try
-        {
-            LongOperation l=new LongOperation();
+        try {
+            LongOperation l = new LongOperation();
             l.execute();  //sends the email in background
             Toast.makeText(getActivity(), l.get(), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
@@ -182,7 +185,7 @@ public class RegistrationForm extends Fragment {
 
 
     //metodo per aggiungere un utente confermato
-    public void addUser(){
+    public void addUser() {
 
         final String name = nome.getText().toString().trim();
         final String surname = cognome.getText().toString().trim();
@@ -190,28 +193,35 @@ public class RegistrationForm extends Fragment {
         String company = azienda.getSelectedItem().toString().trim();
         final String phone = telefono.getText().toString().trim();
         final String car = automobile.getText().toString().trim();
-
-        if(name.isEmpty()){
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_PHONE_STATE},
+                    PERMISSION_READ_STATE);
+        } else {
+            TelephonyManager tm = (TelephonyManager)getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+            imei = tm.getDeviceId();
+        }
+        if (name.isEmpty()) {
             nome.setError(getResources().getString(R.string.EntName));
             nome.requestFocus();
             return;
         }
-        if(surname.isEmpty()){
+        if (surname.isEmpty()) {
             cognome.setError(getResources().getString(R.string.EntSurname));
             cognome.requestFocus();
             return;
         }
-        if(address.isEmpty()){
+        if (address.isEmpty()) {
             indirizzoCasa.setError(getResources().getString(R.string.EntAddress));
             indirizzoCasa.requestFocus();
             return;
         }
-        if(phone.isEmpty()){
+        if (phone.isEmpty()) {
             telefono.setError(getResources().getString(R.string.EntPhone));
             telefono.requestFocus();
             return;
         }
-        if(phone.length() < 10){
+        if (phone.length() < 10) {
             telefono.setError(getResources().getString(R.string.EntPhone2));
             telefono.requestFocus();
             return;
@@ -221,45 +231,42 @@ public class RegistrationForm extends Fragment {
         //ricavo l'email dall'autenticazione
         final String email = profile.getEmail();
 
-        final HashMap<String,Object> userAddress = new HashMap<>();
-        userAddress.put("address",address);
-        userAddress.put("latitude",position.latitude);
-        userAddress.put("longitude",position.longitude);
+        final HashMap<String, Object> userAddress = new HashMap<>();
+        userAddress.put("address", address);
+        userAddress.put("latitude", position.latitude);
+        userAddress.put("longitude", position.longitude);
 
         companyRef = FirebaseFirestore.getInstance().collection("Companies").document(company);
 
         companyRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                HashMap<String,Object> com = (HashMap<String,Object>) documentSnapshot.getData();
+                HashMap<String, Object> com = (HashMap<String, Object>) documentSnapshot.getData();
 
                 //creo un'instanza dell'oggetto User
-                Map<String,Object> user = new HashMap<>();
-                if(!(car.isEmpty())){
-                    user.put("car",car);
+                Map<String, Object> user = new HashMap<>();
+                if (!(car.isEmpty())) {
+                    user.put("car", car);
                 }
                 String code = CountryData.countryAreaCodes[countryPrefix.getSelectedItemPosition()];
-                final String phoneNumber = "+" + code +" "+ phone;
-                user.put("id",profile.getUid());
-                user.put("email",email);
-                user.put("name",name);
-                user.put("surname",surname);
-                user.put("userAddress",userAddress);
-                user.put("userCompany",com);
-                user.put("phone",phoneNumber);
-                user.put("approved",false);
+                final String phoneNumber = "+" + code + " " + phone;
+                user.put("id", profile.getUid());
+                user.put("email", email);
+                user.put("name", name);
+                user.put("surname", surname);
+                user.put("userAddress", userAddress);
+                user.put("userCompany", com);
+                user.put("phone", phoneNumber);
+                user.put("approved", false);
+                user.put("IMEI", imei);
 
                 rf.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Intent intent = new Intent(getActivity(),VerifyPhoneActivity.class);
-                            intent.putExtra("phone",phoneNumber);
+                        if (task.isSuccessful()) {
                             sendMail();
-                            startActivity(intent);
-                            getActivity().finish();
-                        }
-                        else{
+                            getActivity().recreate();
+                        } else {
                             //visualizza messaggio di errore
                             Toast.makeText(getContext(), R.string.Failure, Toast.LENGTH_SHORT).show();
                         }
@@ -268,13 +275,13 @@ public class RegistrationForm extends Fragment {
                     }
                 });
             }
-        });}
-
+        });
+    }
 
 
     // salvataggio dell'immagine profilo sullo storage
     public void addProfileImage() {
-        if (resultUri != null){
+        if (resultUri != null) {
             StorageReference filePath = mStorage.child("Foto profilo").child(profile.getUid());
             UploadTask uploadTask = filePath.putFile(resultUri);
 
@@ -283,7 +290,7 @@ public class RegistrationForm extends Fragment {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     Map newImage = new HashMap();
-                    newImage.put("urlProfileImage",downloadUrl.toString());
+                    newImage.put("urlProfileImage", downloadUrl.toString());
                     /*se l'utente ha inserito un'immagine di profilo allora nel database degli utenti verrà inserito un campo
                     in cui ci sarà l'url dell'immagine caricata*/
                     rf.update(newImage);
@@ -293,24 +300,26 @@ public class RegistrationForm extends Fragment {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.e(TAG,"l'immagine non è stata caricata nel database");
+                    Log.e(TAG, "l'immagine non è stata caricata nel database");
 
                 }
             });
-        }
-        else{
-            Log.e(TAG,"nessuna immagine trovata");
+        } else {
+            Log.e(TAG, "nessuna immagine trovata");
 
-        }}
+        }
+    }
 
     // classe per definire l'elenco da visualizzare nell'Alert Dialog per inserire l'immagine profilo
-    public static class Item{
+    public static class Item {
         public final String text;
         public final int icon;
+
         public Item(String text, Integer icon) {
             this.text = text;
             this.icon = icon;
         }
+
         @Override
         public String toString() {
             return text;
@@ -318,20 +327,19 @@ public class RegistrationForm extends Fragment {
     }
 
 
-
     //metodo per selezionare l'immagine
-    public void selectImage(){
+    public void selectImage() {
         final Item[] items = {
                 new Item(getResources().getString(R.string.Camera), android.R.drawable.ic_menu_camera),
                 new Item(getResources().getString(R.string.Gallery), android.R.drawable.ic_menu_gallery),
-                new Item(getResources().getString(R.string.Cancel),android.R.drawable.ic_menu_close_clear_cancel)
+                new Item(getResources().getString(R.string.Cancel), android.R.drawable.ic_menu_close_clear_cancel)
         };
 
-        ListAdapter adapter = new ArrayAdapter<Item>(getContext(), android.R.layout.select_dialog_item, android.R.id.text1, items){
+        ListAdapter adapter = new ArrayAdapter<Item>(getContext(), android.R.layout.select_dialog_item, android.R.id.text1, items) {
             public View getView(int position, View convertView, ViewGroup parent) {
                 //Use super class to create the View
                 View v = super.getView(position, convertView, parent);
-                TextView tv = (TextView)v.findViewById(android.R.id.text1);
+                TextView tv = (TextView) v.findViewById(android.R.id.text1);
 
                 //Put the image on the TextView
                 tv.setCompoundDrawablesWithIntrinsicBounds(items[position].icon, 0, 0, 0);
@@ -344,21 +352,21 @@ public class RegistrationForm extends Fragment {
             }
         };
 
-        AlertDialog.Builder builder= new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.addphoto);
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if ((items[i].text).equals(getResources().getString(R.string.Camera))){
+                if ((items[i].text).equals(getResources().getString(R.string.Camera))) {
                     //startPickImageCamera();
-                    Intent intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent,REQUEST_CAMERA);
-                }else if ((items[i].text).equals(getResources().getString(R.string.Gallery))){
-                    Intent intent= new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, REQUEST_CAMERA);
+                } else if ((items[i].text).equals(getResources().getString(R.string.Gallery))) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
-                    startActivityForResult(intent.createChooser(intent,getResources().getString(R.string.selectfile)),SELECT_FILE);
+                    startActivityForResult(intent.createChooser(intent, getResources().getString(R.string.selectfile)), SELECT_FILE);
 
-                }else if ((items[i].text).equals(getResources().getString(R.string.Cancel))) {
+                } else if ((items[i].text).equals(getResources().getString(R.string.Cancel))) {
                     dialogInterface.dismiss();
                 }
             }
@@ -371,9 +379,11 @@ public class RegistrationForm extends Fragment {
         List<String> permissionsNeeded = new ArrayList<String>();
 
         final List<String> permissionsList = new ArrayList<String>();
-        if (!addPermission(permissionsList,android.Manifest.permission.CAMERA))
+        if (!addPermission(permissionsList, android.Manifest.permission.CAMERA))
             permissionsNeeded.add("Camera");
-        if (!addPermission(permissionsList,android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        if (!addPermission(permissionsList, Manifest.permission.READ_PHONE_STATE))
+            permissionsNeeded.add("Imei");
+        if (!addPermission(permissionsList, android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
             permissionsNeeded.add("Write external storage");
         if (!addPermission(permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE))
             permissionsNeeded.add("Read external storage");
@@ -412,10 +422,10 @@ public class RegistrationForm extends Fragment {
     }
 
     private boolean addPermission(List<String> permissionsList, String permission) {
-        if (ContextCompat.checkSelfPermission(getContext(),permission) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
             permissionsList.add(permission);
             // Check for Rationale Option
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),permission))
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permission))
                 return false;
         }
         return true;
@@ -424,22 +434,24 @@ public class RegistrationForm extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS:
-            {
+            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
                 Map<String, Integer> perms = new HashMap<String, Integer>();
                 // Initial
                 perms.put(Manifest.permission.CAMERA, PackageManager.PERMISSION_GRANTED);
                 perms.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
                 perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+                perms.put(Manifest.permission.READ_PHONE_STATE, PackageManager.PERMISSION_GRANTED);
                 // Fill with results
                 for (int i = 0; i < permissions.length; i++)
                     perms.put(permissions[i], grantResults[i]);
                 // Check for ACCESS_FINE_LOCATION
                 if (perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                         && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                        && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                        && perms.get(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                     // All Permissions Granted
                     selectImage();
+
                 } else {
                     // Permission Denied
                     Toast.makeText(getContext(), "Some Permission is Denied", Toast.LENGTH_SHORT)
@@ -452,6 +464,10 @@ public class RegistrationForm extends Fragment {
         }
     }
 
+    private String getDeviceImei() {
+        TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+        return null;
+    }
 
    /* private void startPickImageCamera(){
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){

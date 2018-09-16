@@ -182,8 +182,6 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
                         case MODIFIED:
                             resultRequired.set(dc.getNewIndex(), richieste);
                             break;
-                        case REMOVED:
-                            resultRequired.remove(dc.getOldIndex());
 
                     }
 
@@ -286,9 +284,43 @@ public class MyRidesFragment extends Fragment implements RecyclerItemTouchHelper
             snackbar.setActionTextColor(Color.CYAN);
             snackbar.show();
 
-            // tommaso inserisci la cancellazione  della richiesta da firebase
-        }
-    }
+            snackbar.addCallback(new Snackbar.Callback() {
+                @Override
+                /*se la snackbar scompare vuol dire che il passaggio non può più essere ripristinato
+                * quindi posso cancellarlo dal database
+                */
+                public void onDismissed(Snackbar snackbar1, int event) {
+                    if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+
+                        Query findRequestToDelete = requests
+                                .whereEqualTo("idPasseggero", deleteRequest.get("idPasseggero"))
+                                .whereEqualTo("idPassaggio", deleteRequest.get("idPassaggio"));
+                        //Query deleteRequest = requests.whereEqualTo("idPassaggio",deleteRequest.get("idPassaggio"));
+
+                        findRequestToDelete.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                for (DocumentSnapshot d : task.getResult()) {
+                                    requests.document(d.getId()).delete();
+                                }
+                            }
+                        });
+                        /*deleteRequest.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                for (DocumentSnapshot d : task.getResult()) {
+                                    requests.document(d.getId()).delete();
+                                }
+
+                            }
+                        });
+                    }
+                }
+            });*/
+                        // tommaso inserisci la cancellazione  della richiesta da firebase
+                    }
+                }
+            });}}
 
 
 

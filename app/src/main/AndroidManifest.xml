@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
         android:name="android.support.multidex.MultiDexApplication"
@@ -78,7 +79,6 @@
         <activity
             android:name=".OfferedMapActivity"
             android:label="@string/title_activity_offered_map" />
-        <activity android:name=".VerifyPhoneActivity" />
         <activity android:name=".PrepareToTrackingActivity" />
         <activity android:name=".EditRide"/>
         <activity

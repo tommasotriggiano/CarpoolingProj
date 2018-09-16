@@ -12,12 +12,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by loiodice on 06/09/2018.
@@ -101,14 +107,50 @@ public class EditRide  extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //implementa il metodo tommaso
-                //editRide();
-                Intent back= new Intent(EditRide.this,OfferedMapActivity.class);
-                startActivity(back);
+                editRide();
+                //Intent back= new Intent(EditRide.this,OfferedMapActivity.class);
+                //startActivity(back);
                 finish();
             }
         });
 
     }
+
+    private void editRide() {
+        Map modifiche = new HashMap();
+
+        String data = dateText.getText().toString().trim();
+        if(!(data.isEmpty())){
+            modifiche.put("dataPassaggio",data);
+        }
+
+        String ora = tvTime.getText().toString().trim();
+        if(!(data.isEmpty())){
+            modifiche.put("ora",ora);
+        }
+        int postiMod = Integer.parseInt(posti.getText().toString());
+        modifiche.put("postiDisponibili",postiMod);
+
+        String campo1 = mHome.getText().toString().trim();
+        String tipo;
+        if(campo1.equals(getResources().getString(R.string.Home))){
+            tipo = getResources().getString(R.string.HomeWork);}
+        else {
+            tipo = getResources().getString(R.string.WorkHome);}
+            modifiche.put("tipoViaggio",tipo);
+
+        DocumentReference pass = FirebaseFirestore.getInstance().collection("Rides").document(idPassaggio);
+        pass.update(modifiche).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                Toast.makeText(EditRide.this,"Modifica effettuata",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+    }
+
     public View.OnClickListener btnInvertListener= new View.OnClickListener(){
         @Override
         public void onClick(View view) {

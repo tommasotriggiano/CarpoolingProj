@@ -276,6 +276,7 @@ public class EditProfile extends Fragment {
 
             }
         });
+
         user.update(modifiche).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
