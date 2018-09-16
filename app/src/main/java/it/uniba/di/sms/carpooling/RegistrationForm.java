@@ -3,6 +3,7 @@ package it.uniba.di.sms.carpooling;
 import android.*;
 import android.Manifest;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -54,6 +55,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -193,13 +196,17 @@ public class RegistrationForm extends Fragment {
         String company = azienda.getSelectedItem().toString().trim();
         final String phone = telefono.getText().toString().trim();
         final String car = automobile.getText().toString().trim();
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE)
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_PHONE_STATE},
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     PERMISSION_READ_STATE);
         } else {
-            TelephonyManager tm = (TelephonyManager)getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-            imei = tm.getDeviceId();
+            //TelephonyManager tm = (TelephonyManager)getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+            //imei = tm.getDeviceId();
+            BluetoothAdapter  mBluetoothAdapter   = BluetoothAdapter.getDefaultAdapter();
+            mBluetoothAdapter.enable();
+            imei = getBluetoothMacAddress();
+            Log.i("TAG","BT_IMEI: " + imei );
         }
         if (name.isEmpty()) {
             nome.setError(getResources().getString(R.string.EntName));
@@ -381,7 +388,7 @@ public class RegistrationForm extends Fragment {
         final List<String> permissionsList = new ArrayList<String>();
         if (!addPermission(permissionsList, android.Manifest.permission.CAMERA))
             permissionsNeeded.add("Camera");
-        if (!addPermission(permissionsList, Manifest.permission.READ_PHONE_STATE))
+        if (!addPermission(permissionsList, Manifest.permission.ACCESS_COARSE_LOCATION))
             permissionsNeeded.add("Imei");
         if (!addPermission(permissionsList, android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
             permissionsNeeded.add("Write external storage");
@@ -440,7 +447,7 @@ public class RegistrationForm extends Fragment {
                 perms.put(Manifest.permission.CAMERA, PackageManager.PERMISSION_GRANTED);
                 perms.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
                 perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.READ_PHONE_STATE, PackageManager.PERMISSION_GRANTED);
+                perms.put(Manifest.permission.ACCESS_COARSE_LOCATION, PackageManager.PERMISSION_GRANTED);
                 // Fill with results
                 for (int i = 0; i < permissions.length; i++)
                     perms.put(permissions[i], grantResults[i]);
@@ -448,7 +455,7 @@ public class RegistrationForm extends Fragment {
                 if (perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                         && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                         && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                        && perms.get(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                        && perms.get(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     // All Permissions Granted
                     selectImage();
 
@@ -550,6 +557,34 @@ public class RegistrationForm extends Fragment {
 
 
 
+
+    private String getBluetoothMacAddress() {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        String bluetoothMacAddress = "";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M){
+            try {
+                Field mServiceField = bluetoothAdapter.getClass().getDeclaredField("mService");
+                mServiceField.setAccessible(true);
+
+                Object btManagerService = mServiceField.get(bluetoothAdapter);
+
+                if (btManagerService != null) {
+                    bluetoothMacAddress = (String) btManagerService.getClass().getMethod("getAddress").invoke(btManagerService);
+                }
+            } catch (NoSuchFieldException e) {
+
+            } catch (NoSuchMethodException e) {
+
+            } catch (IllegalAccessException e) {
+
+            } catch (InvocationTargetException e) {
+
+            }
+        } else {
+            bluetoothMacAddress = bluetoothAdapter.getAddress();
+        }
+        return bluetoothMacAddress;
+    }
 
 
 
