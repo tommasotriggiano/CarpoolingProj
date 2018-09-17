@@ -1,7 +1,6 @@
 package it.uniba.di.sms.carpooling.rankUser;
 
-import android.content.Context;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -10,9 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -27,7 +24,6 @@ import java.util.Map;
 
 import it.uniba.di.sms.carpooling.R;
 import it.uniba.di.sms.carpooling.RankAdapter;
-import it.uniba.di.sms.carpooling.RankHistoryAdapter;
 
 
 public class RankOtherUsersFragment extends Fragment {
@@ -63,7 +59,8 @@ public class RankOtherUsersFragment extends Fragment {
     private void initializeRank() {
         resultUsers = new ArrayList<Map<String,Object>>();
         CollectionReference userCf = FirebaseFirestore.getInstance().collection("Users");
-        userCf.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        Query userCfOrder = userCf.orderBy("punti", Query.Direction.DESCENDING);
+        userCfOrder.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
                 for(DocumentSnapshot d : documentSnapshots.getDocuments()){
@@ -75,7 +72,6 @@ public class RankOtherUsersFragment extends Fragment {
                 }
                 rankAdapter= new RankAdapter(resultUsers,getActivity());
                 rankRecycler.setAdapter(rankAdapter);
-                Toast.makeText(getActivity(),""+rankAdapter.getItemCount(),Toast.LENGTH_SHORT).show();
 
             }
         });

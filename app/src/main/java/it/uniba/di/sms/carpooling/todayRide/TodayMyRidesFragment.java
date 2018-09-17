@@ -82,7 +82,6 @@ public class TodayMyRidesFragment extends Fragment {
 
         //per prendere la data corrente
         String today=getDate(System.currentTimeMillis());
-        Toast.makeText(getActivity(),today,Toast.LENGTH_SHORT).show();
         Query todayRides = passaggi.whereEqualTo("autista.id",user.getUid()).whereEqualTo("dataPassaggio",today);
         final Query todayRides2 = passaggi.whereEqualTo("dataPassaggio",today);
 

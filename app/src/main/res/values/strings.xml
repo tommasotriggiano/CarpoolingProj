@@ -169,5 +169,9 @@
     <string name="explanation_tracking">You have no passengers\nTry again near a passenger\nto start tracking</string>
     <string name="explanation_preview">Impossible to retrive a preview\ntry somewhere else</string>
 
+    <string name="point">points</string>;
+    <string name="chart">CHART</string>;
+    <string name="detail">DETAIL CHART</string>
+
 </resources>
 

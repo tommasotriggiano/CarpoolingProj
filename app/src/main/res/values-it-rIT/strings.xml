@@ -153,4 +153,8 @@
     <string name="explanation_tracking">Attento non hai passeggeri\navvicinati ad un passeggero per\navviare il tracking</string>
     <string name="explanation_preview">Impossibile trovare un anteprima,\nRiprova altrove </string>
 
+    <string name="point">punti</string>;
+    <string name="chart">CLASSIFICA</string>;
+    <string name="detail">DETTAGLIO PUNTEGGIO</string>
+
 </resources>
