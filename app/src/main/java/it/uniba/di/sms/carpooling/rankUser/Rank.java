@@ -37,9 +37,11 @@ public class Rank extends Fragment {
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         final PagerAdapter adapter = new PagerAdapter
-                (getActivity().getSupportFragmentManager(), tabLayout.getTabCount());
+                (getChildFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        //tabLayout.setupWithViewPager(viewPager);
+        //viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -53,6 +55,7 @@ public class Rank extends Fragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
 
             }
         });
