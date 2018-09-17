@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -36,7 +35,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
@@ -53,8 +51,8 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private GoogleApiClient googleApiClient;
-    private final double BARLETTA_LAT = 41.3196635f;
-    private final double BARLETTA_LON = 16.2838207f;
+    private double DESTINATION_LAT = 41.3196635f;
+    private double DESTINATION_LoN = 16.2838207f;
     private LocationCallback mLocationCallback;
     protected Location mLocationToConvert; //object containing the latitude and longitude that you want to convert to an address.
     private final String TAG = "TAG";
@@ -112,6 +110,8 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                 .findFragmentById(R.id.map_passenger);
         mapFragment.getMapAsync(this);
 
+        DESTINATION_LAT = getIntent().getDoubleExtra("LAT_DEST",41);
+        DESTINATION_LoN = getIntent().getDoubleExtra("LON_DEST",16);
         txt_driver_dist = (TextView) findViewById(R.id.text_driverdist) ;
         txt_luogo = (TextView) findViewById(R.id.txt_location);
         txt_distanza = (TextView) findViewById(R.id.txt_distance);
@@ -141,7 +141,7 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                     retriveAddress(mLocationToConvert);
 
                     Location.distanceBetween(mLocationToConvert.getLatitude(),mLocationToConvert.getLongitude(),
-                            BARLETTA_LAT, BARLETTA_LON, resultArray);
+                            DESTINATION_LAT, DESTINATION_LoN, resultArray);
                     Log.i(TAG, "Distance"+String.valueOf(resultArray[0]) );
                     txt_distanza.setText( "Distance"+String.valueOf(resultArray[0]) );
 
@@ -180,9 +180,9 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         //startService(new Intent(this,LocationService.class));
-        LatLng barletta = new LatLng(BARLETTA_LAT, BARLETTA_LON);
-        mMap.addMarker(new MarkerOptions().position(barletta).title("Marker in Barletta"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(barletta));
+        LatLng destination = new LatLng(DESTINATION_LAT, DESTINATION_LoN);
+        mMap.addMarker(new MarkerOptions().position(destination).title("Marker in Barletta"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(destination));
         if( checkLocationPermission() ){
             getDeviceLocation();
         }
@@ -295,7 +295,7 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                                 currentPosition = pos;
                                 start_location = currentLocation;
                                 Location.distanceBetween(start_location.getLatitude(), start_location.getLongitude(),
-                                        BARLETTA_LAT, BARLETTA_LON, resultArray);
+                                        DESTINATION_LAT, DESTINATION_LoN, resultArray);
                                 distanzaIniziale = resultArray[0];
                                 Log.i(TAG, "DistIniziale=" + distanzaIniziale);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 14));
