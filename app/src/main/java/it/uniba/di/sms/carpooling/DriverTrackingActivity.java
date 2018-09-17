@@ -116,7 +116,7 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
     public int nPerson=1;
     double[] latitude_array;
     double[] longitude_array;
-    String[] array_IMEI;
+    ArrayList<String> array_IMEI;
     boolean isNear=false;
     boolean isTrackingNow=false;
     TextView textView;
@@ -144,7 +144,7 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
                 Log.i("TAG","Device name: "+device.getName()+" IMEI: "+device.getAddress());
 
                 for (String IMEI: array_IMEI) {
-                    Log.i("TAG",IMEI+" = "+device.getAddress());
+                    Toast.makeText(DriverTrackingActivity.this,IMEI+" = "+device.getAddress(),Toast.LENGTH_SHORT).show();
                     if(device.getAddress().compareTo(IMEI)==0)
                     {
                         isNear=true;
@@ -191,7 +191,11 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
         }
 
         textView = (TextView) findViewById(R.id.tracking_validity);
-        array_IMEI = getIntent().getStringArrayExtra("STRING_ARRAY_IMEI");
+        array_IMEI = new ArrayList<>();
+        array_IMEI = getIntent().getExtras().getStringArrayList("STRING_ARRAY_IMEI");
+        if (array_IMEI != null) {
+            Toast.makeText(DriverTrackingActivity.this,"IMEI CHE DOVREBBE TROVARE"+""+array_IMEI.get(0),Toast.LENGTH_LONG).show();
+        }
         listPoints = new ArrayList<>();
         listPoints.clear();
         yourPosition=new LatLng(41,16);

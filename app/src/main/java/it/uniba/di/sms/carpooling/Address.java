@@ -15,6 +15,10 @@ public class Address {
         this.longitude = longitude;
     }
 
+    public Address(){
+
+    }
+
     public String getGoogleAddress() {
         return googleAddress;
     }
