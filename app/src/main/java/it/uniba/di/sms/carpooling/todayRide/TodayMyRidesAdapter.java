@@ -202,7 +202,6 @@ public class TodayMyRidesAdapter extends RecyclerView.Adapter<TodayMyRidesViewHo
 
                         }
                         else{
-
                             int nPerson = 1;
                             if(passaggio.get("tipoViaggio").equals(context.getResources().getString(R.string.HomeWork))){
                                 Map<String,Object> companyAddress = (Map<String, Object>) autista.get("userCompany");

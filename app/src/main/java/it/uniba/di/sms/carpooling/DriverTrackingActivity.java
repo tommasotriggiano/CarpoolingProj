@@ -84,6 +84,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -194,28 +195,26 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
 
         textView = (TextView) findViewById(R.id.tracking_validity);
         idPassaggio = getIntent().getStringExtra("IdPassaggio");
-        array_IMEI = getIntent().getExtras().getStringArray("STRING_ARRAY_IMEI");
 
         listPoints = new ArrayList<>();
         listPoints.clear();
         yourPosition=new LatLng(41,16);
+
         getDeviceLocation();
-
-
-        latitude_array = getIntent().getDoubleArrayExtra("STRING_ARRAY_DOUBLE_LAT");
-        longitude_array = getIntent().getDoubleArrayExtra("STRING_ARRAY_DOUBLE_LON");
         nPerson = getIntent().getIntExtra("STRING_NPERSON",5);
-
-
         launchCheckDriverNear();
-        if(nPerson==1)
-        {
+        if(nPerson==1) {
             via = getIntent().getStringExtra("STRING_STREAT_ADDRESS");
             textView.setVisibility(View.GONE);
             //citta = getIntent().getStringExtra("STRING_STREAT_CITY");
             Intent intent = new Intent(android.content.Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+via));
             startActivityForResult(intent, REQUEST_MAPS_CODE_ALONE);
         }
+        else{
+            array_IMEI = getIntent().getExtras().getStringArray("STRING_ARRAY_IMEI");
+            latitude_array = getIntent().getDoubleArrayExtra("STRING_ARRAY_DOUBLE_LAT");
+            longitude_array = getIntent().getDoubleArrayExtra("STRING_ARRAY_DOUBLE_LON");
+
 
         /*btnStart = (Button) findViewById(R.id.btnStart);
         btnStart.setOnClickListener(new View.OnClickListener() {
@@ -236,10 +235,6 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
             }
         });*/
 
-        latitude_array = getIntent().getDoubleArrayExtra("STRING_ARRAY_DOUBLE_LAT");
-        longitude_array = getIntent().getDoubleArrayExtra("STRING_ARRAY_DOUBLE_LON");
-        nPerson = getIntent().getIntExtra("STRING_NPERSON",1);
-
         try {
             for (int k = 0; k<latitude_array.length; k++){
                 listPoints.add(new LatLng(latitude_array[k],longitude_array[k]));
@@ -248,7 +243,7 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
             Log.i("TAG","array lat_lon vuoti");
         }
 
-    }
+    }}
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -277,11 +272,10 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
 
     private String getRequestUrl(  ) {
         via = getIntent().getStringExtra("STRING_STREAT_ADDRESS");
-        citta = getIntent().getStringExtra("STRING_STREAT_CITY");
         //Value of origin
         String str_org = "origin=" + yourPosition.latitude +","+yourPosition.longitude;
         //Value of destination
-        String str_dest = "destination=" + via + "," + citta;
+        String str_dest = "destination=" + via;
         //Set value enable the sensor
         String sensor = "sensor=false";
         //Mode for find direction
@@ -332,19 +326,11 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
         if (REQUEST_MAPS_CODE == requestCode) {
             if (resultCode == RESULT_OK) {
                 Log.i("TAG", "Result finish track with passengers");
+                //se il tracking va a buon fine inserisci i punti della classifica
                 assegnaPunteggio(idPassaggio);
                 Intent intent = new Intent(DriverTrackingActivity.this, MainActivity.class);
                 startActivity(intent);
             }
-           /*
-            launchCheckDriverNear();
-           if(isNear){
-                Intent intent = new Intent(DriverTrackingActivity.this,RatingActivity.class);
-                intent.putExtra("CHECK",isNear);
-                intent.putExtra("ALONE","false");
-                startActivity(intent);
-            }
-           */
             if (resultCode == RESULT_CANCELED) {
                 Intent intent = new Intent(DriverTrackingActivity.this, MainActivity.class);
                 startActivity(intent);
@@ -363,14 +349,6 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
                 startActivity(intent);
             }
 
-           /*
-           if(isNear){
-                Intent intent = new Intent(DriverTrackingActivity.this,RatingActivity.class);
-                intent.putExtra("CHECK",isNear);
-                intent.putExtra("ALONE","true");
-                startActivity(intent);
-            }
-           */
         }
     }
 
@@ -510,10 +488,10 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
                         }
                         else {
                             Location currentLocation = (Location) task.getResult();
-                            if(currentLocation!=null)
+                            if(currentLocation!=null){
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),DEFAULT_ZOOM);
 
-                            yourPosition = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            yourPosition = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());}
                         }
                     }else{
                         Log.d(TAG, "onComplete: current location is null");
@@ -551,19 +529,25 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 int count = 0;
                 Map<String,Object> map = documentSnapshot.getData();
+                //creo il database per il tracking dove inserisco anche lo storico dei punteggi
+                CollectionReference tracking = FirebaseFirestore.getInstance().collection("Tracking");
+                DocumentReference pass = tracking.document(idPassaggio);
+                HashMap<String,Object> idPass = new HashMap<>();
+                HashMap<String,Object> autista = (HashMap<String, Object>) map.get("autista");
+                HashMap<String,Object> autistaTracking = new HashMap<>();
+                autistaTracking.put("id",autista.get("id"));
+                idPass.put("idPassaggio",idPassaggio);
+                //se ci sono passeggeri
                 if(map.get("passeggeri")!= null){
                     HashMap<String,Object> passeggeri = (HashMap<String, Object>) map.get("passeggeri");
                     count = passeggeri.size();
                     final int puntiPasseggero = 5*count;
                     final int puntiAutista = puntiPasseggero +10;
-                    //creo il database per il tracking dove inserisco anche lo storico dei punteggi
-                    CollectionReference tracking = FirebaseFirestore.getInstance().collection("Tracking");
-                    DocumentReference pass = tracking.document(idPassaggio);
-                    HashMap<String,Object> autista = (HashMap<String, Object>) map.get("autista");
-                    HashMap<String,Object> autistaTracking = new HashMap<>();
-                    autistaTracking.put("id",autista.get("id"));
                     autistaTracking.put("punti",puntiAutista);
-                    pass.update("autista",autistaTracking);
+                    HashMap<String,Object> autistaTr = new HashMap();
+                    autistaTr.put("autista",autistaTracking);
+                    pass.set(autistaTr);
+                    pass.set(idPass,SetOptions.merge());
                     final DocumentReference userAutista = FirebaseFirestore.getInstance().collection("Users").document(autista.get("id").toString());
                     userAutista.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
@@ -575,16 +559,20 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
                                 userAutista.update("punti",punti);
                             }
                             else{
-                                userAutista.update("punti",puntiAutista);
+                                HashMap<String,Object> punti = new HashMap<>();
+                                punti.put("punti",puntiAutista);
+                                userAutista.set(punti);
                             }
 
                         }
                     });
-
                     //aggiungo i punti dei passeggeri
                     HashMap<String,Object> passeggeriTracking = new HashMap<>();
+                    HashMap<String,Object> passeggeriTr = new HashMap<>();
                     for(String id : passeggeri.keySet()){
                         passeggeriTracking.put(id,puntiPasseggero);
+                        passeggeriTr.put("passeggeri",passeggeriTracking);
+                        pass.set(passeggeriTr, SetOptions.merge());
                         final DocumentReference user = FirebaseFirestore.getInstance().collection("Users").document(id);
                         //aggiungo il totale dei punti passeggero al database degli user
                         user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -597,14 +585,41 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
                                     user.update("punti",punti);
                                 }
                                 else{
-                                    user.update("punti",puntiPasseggero);
+                                    HashMap<String,Object> punti = new HashMap<>();
+                                    punti.put("punti",puntiPasseggero);
+                                    user.set(punti,SetOptions.merge());
                                 }
 
                             }
                         });
                     }
-                    pass.update("passeggeri",passeggeriTracking);
+                }
+                //se non ci sono passeggeri
+                else{
+                    final int puntiAutista = 0;
+                    autistaTracking.put("punti",puntiAutista);
+                    HashMap<String,Object> autistaTr = new HashMap();
+                    autistaTr.put("autista",autistaTracking);
+                    pass.set(autistaTr);
+                    pass.set(idPass,SetOptions.merge());
+                    final DocumentReference userAutista = FirebaseFirestore.getInstance().collection("Users").document(autista.get("id").toString());
+                    userAutista.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Map<String,Object> userMap = documentSnapshot.getData();
+                            if(userMap.get("punti") != null){
+                                int punti = Integer.valueOf(userMap.get("punti").toString());
+                                punti += puntiAutista;
+                                userAutista.update("punti",punti);
+                            }
+                            else{
+                                HashMap<String,Object> punti = new HashMap<>();
+                                punti.put("punti",puntiAutista);
+                                userAutista.set(punti);
+                            }
 
+                        }
+                    });
 
 
 
