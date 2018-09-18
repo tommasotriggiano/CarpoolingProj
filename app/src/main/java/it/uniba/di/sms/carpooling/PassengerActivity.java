@@ -37,11 +37,17 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class PassengerActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -51,6 +57,8 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private GoogleApiClient googleApiClient;
+    String IMEIDriver;
+    String idPassaggio;
     private double DESTINATION_LAT = 41.3196635f;
     private double DESTINATION_LoN = 16.2838207f;
     private LocationCallback mLocationCallback;
@@ -69,7 +77,6 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
     ProgressBar progressBar ;
     Marker markerPosition;
     boolean isNear = false;
-    String IMEIDriver="";//TODO IMEI da ricevere da firebase
     BluetoothAdapter mBluetoothAdapter;
     IntentFilter intentFilter;
     static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -88,8 +95,8 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                     isNear=true;
                 }
                 else {
-                    isNear=false;//TODO vedi se va bene un toast o va bloccata l'activity
-                    Toast.makeText(PassengerActivity.this,"IMEI conducente non rilevato",Toast.LENGTH_LONG).show();
+                    isNear=false;
+                    //Toast.makeText(PassengerActivity.this,"IMEI conducente non rilevato",Toast.LENGTH_LONG).show();
                     Log.i("TAG","IMEI conducente non rilevato");
                 }
                 setTxt_driver_dist( getString(R.string.tracking_valid) );
@@ -109,6 +116,7 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_passenger);
         mapFragment.getMapAsync(this);
+        IMEIDriver= getIntent().getStringExtra("ImeiAutista");
 
         DESTINATION_LAT = getIntent().getDoubleExtra("LAT_DEST",41);
         DESTINATION_LoN = getIntent().getDoubleExtra("LON_DEST",16);
@@ -160,15 +168,14 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                         Log.i(TAG, "Sei arrivato" );
                         Toast.makeText(PassengerActivity.this,
                                 "Sei arrivato, controlla il tuo punteggio",
-                                Toast.LENGTH_SHORT  );
-                        //TODO ricevere in activity a scelta l'intent
+                                Toast.LENGTH_SHORT  ).show();
                         Intent intent = new Intent(PassengerActivity.this, MainActivity.class);
-                        intent.putExtra("VIAGGIO_COMPLETATO",true);
+                        //intent.putExtra("VIAGGIO_COMPLETATO",true);
                         startActivity(intent);
                     }
                     launchCheckDriverNear();
                 }
-            };
+            }
         };
 
 
@@ -176,12 +183,13 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
     }
 
 
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         //startService(new Intent(this,LocationService.class));
         LatLng destination = new LatLng(DESTINATION_LAT, DESTINATION_LoN);
-        mMap.addMarker(new MarkerOptions().position(destination).title("Marker in Barletta"));
+        mMap.addMarker(new MarkerOptions().position(destination).title("DESTINAZIONE"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(destination));
         if( checkLocationPermission() ){
             getDeviceLocation();
@@ -280,7 +288,7 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                             // Got last known location. In some rare situations this can be null.
                             if (location == null) {
                                 Log.i("TAG","task.getResult ha dato null");
-                                Toast.makeText(PassengerActivity.this, "task.getResult ha dato null", Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(PassengerActivity.this, "task.getResult ha dato null", Toast.LENGTH_SHORT).show();
                             }
                             else{
                                 Location currentLocation = location;
@@ -289,8 +297,7 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
                                 MarkerOptions markerOptions = new MarkerOptions()
                                         .position(pos)
                                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                                        .snippet("Tua posizione")
-                                        .title("YOU");
+                                        .snippet("Tua posizione");
                                 markerPosition = mMap.addMarker(markerOptions);
                                 currentPosition = pos;
                                 start_location = currentLocation;
@@ -343,14 +350,14 @@ public class PassengerActivity extends FragmentActivity implements OnMapReadyCal
             Log.i(TAG, "service_not_available");
         } catch (IllegalArgumentException illegalArgumentException) {
             // Catch invalid latitude or longitude values.
-            Toast.makeText(PassengerActivity.this, "invalid_lat_long_used " + "Lat= " +
-                    location.getLatitude() + ", Long = " + location.getLongitude(), Toast.LENGTH_LONG);
+            //Toast.makeText(PassengerActivity.this, "invalid_lat_long_used " + "Lat= " +
+                    //location.getLatitude() + ", Long = " + location.getLongitude(), Toast.LENGTH_LONG);
             Log.i(TAG, "invalid_lat_long_used " + "Lat= " + location.getLatitude() + ", Long = " + location.getLongitude());
         }
 
         // Handle case where no address was found.
         if (addresses == null || addresses.size()  == 0) {
-            Toast.makeText(PassengerActivity.this, "no_address_found",Toast.LENGTH_LONG);
+            //Toast.makeText(PassengerActivity.this, "no_address_found",Toast.LENGTH_LONG);
             Log.e(TAG, "no_address_found");
         } else {
             Address address = addresses.get(0);

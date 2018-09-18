@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import it.uniba.di.sms.carpooling.R;
-import it.uniba.di.sms.carpooling.RankAdapter;
 
 
 public class RankOtherUsersFragment extends Fragment {
@@ -59,7 +58,7 @@ public class RankOtherUsersFragment extends Fragment {
     private void initializeRank() {
         resultUsers = new ArrayList<Map<String,Object>>();
         CollectionReference userCf = FirebaseFirestore.getInstance().collection("Users");
-        Query userCfOrder = userCf.orderBy("punti", Query.Direction.DESCENDING);
+        Query userCfOrder = userCf.orderBy("punti", Query.Direction.ASCENDING);
         userCfOrder.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {

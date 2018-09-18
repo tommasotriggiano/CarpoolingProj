@@ -1,4 +1,4 @@
-package it.uniba.di.sms.carpooling;
+package it.uniba.di.sms.carpooling.rankUser;
 
 
 import android.content.Context;
@@ -11,6 +11,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Map;
+
+import it.uniba.di.sms.carpooling.R;
 
 public class RankAdapter extends RecyclerView.Adapter<RankViewHolder>  {
     private ArrayList<Map<String,Object>> classifica;

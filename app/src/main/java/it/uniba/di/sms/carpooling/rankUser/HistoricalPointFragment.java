@@ -2,20 +2,15 @@ package it.uniba.di.sms.carpooling.rankUser;
 
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -29,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import it.uniba.di.sms.carpooling.R;
-import it.uniba.di.sms.carpooling.RankHistoryAdapter;
 
 public class HistoricalPointFragment extends Fragment {
     FrameLayout rootLayout;

@@ -20,6 +20,7 @@
     <application
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
+
         android:icon="@mipmap/ic_launcher3"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher3_round"
@@ -27,6 +28,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SplashActivity"
@@ -40,17 +42,21 @@
         </activity>
         <activity
             android:name=".RegistrationActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AltervistaRequest" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PassengerActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PasswordActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".LoginActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -66,6 +72,7 @@
 
         <activity
             android:name=".MapsActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_maps"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -75,14 +82,19 @@
 
         <activity
             android:name=".RequiredMapsActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_required_maps" />
         <activity
             android:name=".OfferedMapActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_offered_map" />
-        <activity android:name=".PrepareToTrackingActivity" />
-        <activity android:name=".EditRide"/>
+        <activity android:name=".PrepareToTrackingActivity"
+            />
+        <activity android:name=".EditRide"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".DriverTrackingActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_driver_tracking"></activity>
     </application>
 

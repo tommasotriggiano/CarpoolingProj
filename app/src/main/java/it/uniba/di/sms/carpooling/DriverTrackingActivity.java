@@ -76,6 +76,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.common.collect.Maps;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -116,7 +117,8 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
     public int nPerson=1;
     double[] latitude_array;
     double[] longitude_array;
-    ArrayList<String> array_IMEI;
+    String[] array_IMEI;
+    String idPassaggio;
     boolean isNear=false;
     boolean isTrackingNow=false;
     TextView textView;
@@ -144,7 +146,7 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
                 Log.i("TAG","Device name: "+device.getName()+" IMEI: "+device.getAddress());
 
                 for (String IMEI: array_IMEI) {
-                    Toast.makeText(DriverTrackingActivity.this,IMEI+" = "+device.getAddress(),Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(DriverTrackingActivity.this,IMEI+" = "+device.getAddress(),Toast.LENGTH_SHORT).show();
                     if(device.getAddress().compareTo(IMEI)==0)
                     {
                         isNear=true;
@@ -155,8 +157,8 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
                     }
                 }
             }
-            if( !isNear) {
-                Toast.makeText(DriverTrackingActivity.this,getString(R.string.imei_driver_not_found),Toast.LENGTH_LONG).show();
+            if( !isNear  ||  nPerson!=1 ) {
+               // Toast.makeText(DriverTrackingActivity.this,getString(R.string.imei_driver_not_found),Toast.LENGTH_LONG).show();
                 Log.i("TAG","nessun IMEI rilevato");
                 textView.setText(getString(R.string.explanation_tracking));
                 textView.setVisibility(View.VISIBLE);
@@ -191,11 +193,9 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
         }
 
         textView = (TextView) findViewById(R.id.tracking_validity);
-        array_IMEI = new ArrayList<>();
-        array_IMEI = getIntent().getExtras().getStringArrayList("STRING_ARRAY_IMEI");
-        if (array_IMEI != null) {
-            Toast.makeText(DriverTrackingActivity.this,"IMEI CHE DOVREBBE TROVARE"+""+array_IMEI.get(0),Toast.LENGTH_LONG).show();
-        }
+        idPassaggio = getIntent().getStringExtra("IdPassaggio");
+        array_IMEI = getIntent().getExtras().getStringArray("STRING_ARRAY_IMEI");
+
         listPoints = new ArrayList<>();
         listPoints.clear();
         yourPosition=new LatLng(41,16);
@@ -207,29 +207,34 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
         nPerson = getIntent().getIntExtra("STRING_NPERSON",5);
 
 
-        launchCheckDriverNear();//TODO togli e metti check per emulatore
+        launchCheckDriverNear();
+        if(nPerson==1)
+        {
+            via = getIntent().getStringExtra("STRING_STREAT_ADDRESS");
+            textView.setVisibility(View.GONE);
+            //citta = getIntent().getStringExtra("STRING_STREAT_CITY");
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+via));
+            startActivityForResult(intent, REQUEST_MAPS_CODE_ALONE);
+        }
 
-
-        btnStart = (Button) findViewById(R.id.btnStart);
+        /*btnStart = (Button) findViewById(R.id.btnStart);
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //launchCheckDriverNear();
-                //isNear=true;
                 if(nPerson==1)
                 {
                     via = getIntent().getStringExtra("STRING_STREAT_ADDRESS");
-                    citta = getIntent().getStringExtra("STRING_STREAT_CITY");
-                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+via+","+citta));
+                    textView.setVisibility(View.GONE);
+                    //citta = getIntent().getStringExtra("STRING_STREAT_CITY");
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+via));
                     startActivityForResult(intent, REQUEST_MAPS_CODE_ALONE);
                 }
-                //else if(isNear)//TODO decommenta prima di mandarlo al prof,
                 else
                 {
                     StartTravel();
                 }
             }
-        });
+        });*/
 
         latitude_array = getIntent().getDoubleArrayExtra("STRING_ARRAY_DOUBLE_LAT");
         longitude_array = getIntent().getDoubleArrayExtra("STRING_ARRAY_DOUBLE_LON");
@@ -303,7 +308,7 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
 
     private void StartTravel(){
         String str_org = "origin=" + yourPosition.latitude +","+yourPosition.longitude;
-        String str_dest = "destination=" + via+","+citta;
+        String str_dest = "destination=" + via;
         String str_way = "";
         if (nPerson>=2){
             str_way = "waypoints=";
@@ -324,10 +329,14 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //Log.i("TAG","Result "+requestCode+"  "+resultCode);
-        if (REQUEST_MAPS_CODE==requestCode){
-            if (resultCode==0)
-                Log.i("TAG","Result finish track with passengers");
-           /*//TODO decidi dove ricevere il valore del tracking
+        if (REQUEST_MAPS_CODE == requestCode) {
+            if (resultCode == RESULT_OK) {
+                Log.i("TAG", "Result finish track with passengers");
+                assegnaPunteggio(idPassaggio);
+                Intent intent = new Intent(DriverTrackingActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+           /*
             launchCheckDriverNear();
            if(isNear){
                 Intent intent = new Intent(DriverTrackingActivity.this,RatingActivity.class);
@@ -336,11 +345,25 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
                 startActivity(intent);
             }
            */
+            if (resultCode == RESULT_CANCELED) {
+                Intent intent = new Intent(DriverTrackingActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
         }
+
+
         if (REQUEST_MAPS_CODE_ALONE==requestCode){
-            if (resultCode==0)
+            if (resultCode==RESULT_OK){
                 Log.i("TAG","Result finish maps track but alone");
-           /*//TODO decidi dove ricevere il valore del tracking
+                assegnaPunteggio(idPassaggio);
+                Intent intent = new Intent(DriverTrackingActivity.this, MainActivity.class);
+                startActivity(intent);}
+            if (resultCode == RESULT_CANCELED) {
+                Intent intent = new Intent(DriverTrackingActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+
+           /*
            if(isNear){
                 Intent intent = new Intent(DriverTrackingActivity.this,RatingActivity.class);
                 intent.putExtra("CHECK",isNear);
@@ -487,7 +510,9 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
                         }
                         else {
                             Location currentLocation = (Location) task.getResult();
+                            if(currentLocation!=null)
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),DEFAULT_ZOOM);
+
                             yourPosition = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                         }
                     }else{
@@ -517,6 +542,77 @@ public class DriverTrackingActivity extends FragmentActivity implements OnMapRea
             mBluetoothAdapter.cancelDiscovery();
         }
         mBluetoothAdapter.startDiscovery();
+    }
+
+    private void assegnaPunteggio(final String idPassaggio) {
+        DocumentReference passaggioRf = FirebaseFirestore.getInstance().collection("Rides").document(idPassaggio);
+        passaggioRf.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                int count = 0;
+                Map<String,Object> map = documentSnapshot.getData();
+                if(map.get("passeggeri")!= null){
+                    HashMap<String,Object> passeggeri = (HashMap<String, Object>) map.get("passeggeri");
+                    count = passeggeri.size();
+                    final int puntiPasseggero = 5*count;
+                    final int puntiAutista = puntiPasseggero +10;
+                    //creo il database per il tracking dove inserisco anche lo storico dei punteggi
+                    CollectionReference tracking = FirebaseFirestore.getInstance().collection("Tracking");
+                    DocumentReference pass = tracking.document(idPassaggio);
+                    HashMap<String,Object> autista = (HashMap<String, Object>) map.get("autista");
+                    HashMap<String,Object> autistaTracking = new HashMap<>();
+                    autistaTracking.put("id",autista.get("id"));
+                    autistaTracking.put("punti",puntiAutista);
+                    pass.update("autista",autistaTracking);
+                    final DocumentReference userAutista = FirebaseFirestore.getInstance().collection("Users").document(autista.get("id").toString());
+                    userAutista.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Map<String,Object> userMap = documentSnapshot.getData();
+                            if(userMap.get("punti") != null){
+                               int punti = Integer.valueOf(userMap.get("punti").toString());
+                                punti += puntiAutista;
+                                userAutista.update("punti",punti);
+                            }
+                            else{
+                                userAutista.update("punti",puntiAutista);
+                            }
+
+                        }
+                    });
+
+                    //aggiungo i punti dei passeggeri
+                    HashMap<String,Object> passeggeriTracking = new HashMap<>();
+                    for(String id : passeggeri.keySet()){
+                        passeggeriTracking.put(id,puntiPasseggero);
+                        final DocumentReference user = FirebaseFirestore.getInstance().collection("Users").document(id);
+                        //aggiungo il totale dei punti passeggero al database degli user
+                        user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                Map<String,Object> userMap = documentSnapshot.getData();
+                                if(userMap.get("punti") != null){
+                                    int punti = (int) userMap.get("punti");
+                                    punti += puntiPasseggero;
+                                    user.update("punti",punti);
+                                }
+                                else{
+                                    user.update("punti",puntiPasseggero);
+                                }
+
+                            }
+                        });
+                    }
+                    pass.update("passeggeri",passeggeriTracking);
+
+
+
+
+                }
+
+            }
+        });
+
     }
 
 }

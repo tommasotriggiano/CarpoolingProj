@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/cardview_light_background"
-        android:text="@string/start_tracking" />
+        android:text="@string/start_tracking"
+        android:visibility="gone"/>
 
     <fragment android:layout_height="match_parent"
         android:layout_width="match_parent"

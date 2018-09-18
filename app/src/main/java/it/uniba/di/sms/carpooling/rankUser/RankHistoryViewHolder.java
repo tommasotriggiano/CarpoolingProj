@@ -1,4 +1,4 @@
-package it.uniba.di.sms.carpooling;
+package it.uniba.di.sms.carpooling.rankUser;
 
 
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Map;
+
+import it.uniba.di.sms.carpooling.R;
 
 public class RankHistoryViewHolder extends RecyclerView.ViewHolder {
     public ConstraintLayout constraintlayout;

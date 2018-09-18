@@ -276,13 +276,12 @@ public class EditProfile extends Fragment {
 
             }
         });
+        snackbar = Snackbar.make(rootLayout,getActivity().getResources().getString(R.string.saved),Snackbar.LENGTH_SHORT);
 
         user.update(modifiche).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
-                snackbar = Snackbar.make(rootLayout,getActivity().getResources().getString(R.string.saved),Snackbar.LENGTH_SHORT);
                 snackbar.show();
-
             }
         });
     }

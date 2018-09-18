@@ -1,4 +1,4 @@
-package it.uniba.di.sms.carpooling;
+package it.uniba.di.sms.carpooling.rankUser;
 
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import it.uniba.di.sms.carpooling.R;
 
 
 public class RankViewHolder extends RecyclerView.ViewHolder {

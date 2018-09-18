@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,6 +49,11 @@ public class TodayMyRidesAdapter extends RecyclerView.Adapter<TodayMyRidesViewHo
     private Context context;
     private ArrayList passenger;
     FirebaseUser user;
+    String[] imeiPasseggeri;
+    double[] arrayLat;
+    double[] arrayLong;
+    private int i;
+    private int j;
     boolean GpsStatus = false;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
@@ -124,54 +130,101 @@ public class TodayMyRidesAdapter extends RecyclerView.Adapter<TodayMyRidesViewHo
                         context.startActivity(intentReqGPS);
                     }
                     if (GpsStatus) {
-                        final ArrayList<Double> array_lat = new ArrayList<>();
                         final ArrayList<Double> array_lon = new ArrayList<>();
                         final ArrayList<String> IMEIPasseggeri = new ArrayList<>();
                         final Intent intent = new Intent(context, DriverTrackingActivity.class);
                         if(itemTodayRide.get(position).get("passeggeri") != null){
-                        Map<String,Object> passeggeri = (Map<String, Object>) itemTodayRide.get(position).get("passeggeri");
-                        for(String id: passeggeri.keySet()){
-                            DocumentReference user = FirebaseFirestore.getInstance().collection("Users").document(id);
+                        final Map<String,Object> passeggeri = (Map<String, Object>) itemTodayRide.get(position).get("passeggeri");
+                            arrayLat = new double[passeggeri.size()];
+                            arrayLong = new double[passeggeri.size()];
+                            imeiPasseggeri = new String[passeggeri.size()];
+                            Log.i("TAG",""+passeggeri.size());
                             if(passaggio.get("tipoViaggio").equals(context.getResources().getString(R.string.HomeWork))){
-                                user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                              i = 0;
+                                for(String id: passeggeri.keySet()){
+                                    DocumentReference user = FirebaseFirestore.getInstance().collection("Users").document(id);
+                                    user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         Map<String,Object> userAddress = (Map<String, Object>) documentSnapshot.getData().get("userAddress");
-                                        array_lat.add((Double)userAddress.get("latitude"));
-                                        array_lon.add((Double)userAddress.get("longitude"));
-                                        IMEIPasseggeri.add(documentSnapshot.getData().get("IMEI").toString());
-                                        intent.putExtra("STRING_ARRAY_DOUBLE_LAT", array_lat);
-                                        intent.putExtra("STRING_ARRAY_DOUBLE_LON", array_lon);
-                                        intent.putStringArrayListExtra("STRING_ARRAY_IMEI", IMEIPasseggeri);
+                                        arrayLat[i] = (Double)userAddress.get("latitude");
+                                        arrayLong[i] = (Double)userAddress.get("longitude");
+                                        imeiPasseggeri[i]=documentSnapshot.getData().get("IMEI").toString();
+                                        i++;
 
+                                        intent.putExtra("STRING_ARRAY_DOUBLE_LAT", arrayLat);
+                                        intent.putExtra("STRING_ARRAY_DOUBLE_LON", arrayLong);
+                                        intent.putExtra("STRING_ARRAY_IMEI", imeiPasseggeri);
+                                        //Log.i("TAG","START ACTIVITY: "+imeiPasseggeri.toString());
+                                        if (i == passeggeri.size()){
+                                            int nPerson = passeggeri.size()+1;
+                                            intent.putExtra("STRING_NPERSON", nPerson);
+                                            Map<String,Object> companyAddress = (Map<String, Object>) autista.get("userCompany");
+                                            intent.putExtra("STRING_STREAT_ADDRESS", companyAddress.get("address").toString());
+                                            String idPassaggio = passaggio.get("idPassaggio").toString();
+                                            intent.putExtra("IdPassaggio",idPassaggio);
+                                            context.startActivity(intent);
+                                        }
                                     }
+
                                 });
+                            }
                             }
                             else{
-                                user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                j =0;
+                                for(String id: passeggeri.keySet()){
+                                    DocumentReference user = FirebaseFirestore.getInstance().collection("Users").document(id);
+                                    user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        Map<String,Object> userAddress = (Map<String, Object>) documentSnapshot.getData().get("userCompany");
-                                        array_lat.add((Double)userAddress.get("latitude"));
-                                        array_lon.add((Double)userAddress.get("longitude"));
+                                        Map<String,Object> userCompany = (Map<String, Object>) documentSnapshot.getData().get("userCompany");
+                                        arrayLat[j] = (Double)userCompany.get("latitude");
+                                        arrayLong[j] = (Double)userCompany.get("longitude");
+                                        imeiPasseggeri[j]=documentSnapshot.getData().get("IMEI").toString();
+                                        j++;
 
-                                        IMEIPasseggeri.add(documentSnapshot.getData().get("IMEI").toString());
-                                        intent.putExtra("STRING_ARRAY_DOUBLE_LAT", array_lat);
-                                        intent.putExtra("STRING_ARRAY_DOUBLE_LON", array_lon);
-                                        intent.putStringArrayListExtra("STRING_ARRAY_IMEI", IMEIPasseggeri);
+                                        intent.putExtra("STRING_ARRAY_DOUBLE_LAT", arrayLat);
+                                        intent.putExtra("STRING_ARRAY_DOUBLE_LON", arrayLong);
+                                        intent.putExtra("STRING_ARRAY_IMEI", imeiPasseggeri);
                                     }
                                 });
                             }
+                            if(j == passeggeri.size()){
+                                int nPerson = passeggeri.size()+1;
+                                intent.putExtra("STRING_NPERSON", nPerson);
+                                Map<String,Object> autistaAddress = (Map<String, Object>) autista.get("userAddress");
+                                intent.putExtra("STRING_STREAT_ADDRESS", autistaAddress.get("address").toString());
+                                String idPassaggio = passaggio.get("idPassaggio").toString();
+                                intent.putExtra("IdPassaggio",idPassaggio);
+                                context.startActivity(intent);
+                            }}
 
 
+                        }
+                        else{
+
+                            int nPerson = 1;
+                            if(passaggio.get("tipoViaggio").equals(context.getResources().getString(R.string.HomeWork))){
+                                Map<String,Object> companyAddress = (Map<String, Object>) autista.get("userCompany");
+                                intent.putExtra("STRING_STREAT_ADDRESS", companyAddress.get("address").toString());
+                                intent.putExtra("STRING_NPERSON", nPerson);
+                                String idPassaggio = passaggio.get("idPassaggio").toString();
+                                intent.putExtra("IdPassaggio",idPassaggio);
+                                context.startActivity(intent);
+
+                            }else {
+                                intent.putExtra("STRING_NPERSON", nPerson);
+                                Map<String,Object> autistaAddress = (Map<String, Object>) autista.get("userAddress");
+                                intent.putExtra("STRING_STREAT_ADDRESS", autistaAddress.get("address").toString());
+                                String idPassaggio = passaggio.get("idPassaggio").toString();
+                                intent.putExtra("IdPassaggio",idPassaggio);
+                                context.startActivity(intent);
 
                             }
-                            int nPerson = array_lat.size()+1;
-                            intent.putExtra("STRING_NPERSON", nPerson);
+
                         }
-                        Map<String,Object> autistaAddress = (Map<String, Object>) autista.get("userAddress");
-                        intent.putExtra("STRING_STREAT_ADDRESS", autistaAddress.get("address").toString());
-                        context.startActivity(intent);
+
+
                     }
                 } else {
                     checkLocationPermission();
@@ -189,6 +242,9 @@ public class TodayMyRidesAdapter extends RecyclerView.Adapter<TodayMyRidesViewHo
                            double dest_lon = (Double) userCompany.get("longitude");
                             intent.putExtra("LAT_DEST", dest_lat);
                             intent.putExtra("LON_DEST", dest_lon);
+                            String imeiAutista = autista.get("IMEI").toString();
+                            intent.putExtra("ImeiAutista",imeiAutista);
+                            context.startActivity(intent);
                         }
                         else{
                             DocumentReference userRf = FirebaseFirestore.getInstance().collection("Users").document(user.getUid());
@@ -200,13 +256,13 @@ public class TodayMyRidesAdapter extends RecyclerView.Adapter<TodayMyRidesViewHo
                                     double dest_lon = (Double) userAddress.get("longitude");
                                     intent.putExtra("LAT_DEST", dest_lat);
                                     intent.putExtra("LON_DEST", dest_lon);
-
-
+                                    String imeiAutista = autista.get("IMEI").toString();
+                                    intent.putExtra("ImeiAutista",imeiAutista);
+                                    context.startActivity(intent);
                                 }
                             });
 
                         }
-                        context.startActivity(intent);
                     }
                 }
 
